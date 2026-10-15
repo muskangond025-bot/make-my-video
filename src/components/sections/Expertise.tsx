@@ -295,55 +295,55 @@ export const Expertise = () => {
                     <stop offset="0%" stopColor="#c5cbd8" />
                     <stop offset="20%" stopColor="#454955" />
                     <stop offset="42%" stopColor="#8c94a6" />
-                    <stop offset="68%" stopColor="#22252c" />
+                    <stop offset="68%" stopColor="#211747" />
                     <stop offset="88%" stopColor="#646b7a" />
                     <stop offset="100%" stopColor="#2a2d36" />
                   </radialGradient>
                   <linearGradient id="specularRim3D" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
                     <stop offset="25%" stopColor="#3d424e" />
-                    <stop offset="50%" stopColor="#e2e8f4" />
-                    <stop offset="75%" stopColor="#1f2229" />
+                    <stop offset="50%" stopColor="#B9A1F7" stopOpacity="0.6" />
+                    <stop offset="75%" stopColor="#211747" />
                     <stop offset="100%" stopColor="#9da5b5" />
                   </linearGradient>
                   <radialGradient id="woundStock3D" cx="50%" cy="50%" r="50%">
-                    <stop offset="30%" stopColor="#0a0b0e" />
-                    <stop offset="60%" stopColor="#1c1e28" />
-                    <stop offset="85%" stopColor="#0e0f14" />
-                    <stop offset="98%" stopColor="#242732" />
-                    <stop offset="100%" stopColor="#08090c" />
+                    <stop offset="30%" stopColor="#0b0817" />
+                    <stop offset="60%" stopColor="#181232" />
+                    <stop offset="85%" stopColor="#0b0817" />
+                    <stop offset="98%" stopColor="#211747" />
+                    <stop offset="100%" stopColor="#090614" />
                   </radialGradient>
                   <radialGradient id="centerHub3D" cx="36%" cy="32%" r="68%">
                     <stop offset="0%" stopColor="#ffffff" />
                     <stop offset="28%" stopColor="#a8b0c0" />
-                    <stop offset="65%" stopColor="#22252c" />
+                    <stop offset="65%" stopColor="#211747" />
                     <stop offset="85%" stopColor="#555a68" />
                     <stop offset="100%" stopColor="#16181f" />
                   </radialGradient>
                   <linearGradient id="bevelLight3D" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#08090c" stopOpacity="0.95" />
-                    <stop offset="50%" stopColor="#22252c" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.8" />
+                    <stop offset="0%" stopColor="#0b0817" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#211747" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#B9A1F7" stopOpacity="0.6" />
                   </linearGradient>
                   <radialGradient id="boltHead3D" cx="30%" cy="30%" r="70%">
                     <stop offset="0%" stopColor="#ffffff" />
                     <stop offset="45%" stopColor="#828896" />
-                    <stop offset="85%" stopColor="#22242a" />
+                    <stop offset="85%" stopColor="#211747" />
                     <stop offset="100%" stopColor="#121316" />
                   </radialGradient>
                 </defs>
 
                 {/* 1. Underlying Coiled 35mm Raw Stock wound on core */}
-                <circle cx="100" cy="100" r="92" fill="url(#woundStock3D)" stroke="#060709" strokeWidth="2.5" />
-                <circle cx="100" cy="100" r="84" fill="none" stroke="#2e313c" strokeWidth="0.8" strokeDasharray="16 4" opacity="0.65" />
-                <circle cx="100" cy="100" r="74" fill="none" stroke="#252732" strokeWidth="0.8" strokeDasharray="20 5" opacity="0.6" />
-                <circle cx="100" cy="100" r="64" fill="none" stroke="#323642" strokeWidth="0.8" strokeDasharray="14 4" opacity="0.65" />
-                <circle cx="100" cy="100" r="54" fill="none" stroke="#21232c" strokeWidth="0.8" strokeDasharray="18 5" opacity="0.6" />
+                <circle cx="100" cy="100" r="92" fill="url(#woundStock3D)" stroke="#090614" strokeWidth="2.5" />
+                <circle cx="100" cy="100" r="84" fill="none" stroke="#B9A1F7" strokeWidth="0.8" strokeDasharray="16 4" opacity="0.35" />
+                <circle cx="100" cy="100" r="74" fill="none" stroke="#211747" strokeWidth="0.8" strokeDasharray="20 5" opacity="0.6" />
+                <circle cx="100" cy="100" r="64" fill="none" stroke="#B9A1F7" strokeWidth="0.8" strokeDasharray="14 4" opacity="0.35" />
+                <circle cx="100" cy="100" r="54" fill="none" stroke="#211747" strokeWidth="0.8" strokeDasharray="18 5" opacity="0.6" />
 
                 {/* 2. Main Machined Aluminum Flange Plate */}
                 <circle cx="100" cy="100" r="97" fill="url(#titaniumFlange3D)" stroke="url(#specularRim3D)" strokeWidth="3" />
                 <circle cx="100" cy="100" r="94" fill="none" stroke="#121317" strokeWidth="1.2" opacity="0.8" />
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#5d6372" strokeWidth="0.6" strokeDasharray="2 3" opacity="0.45" />
+                <circle cx="100" cy="100" r="90" fill="none" stroke="#B9A1F7" strokeWidth="0.6" strokeDasharray="2 3" opacity="0.35" />
 
                 {/* 3. Engraved Metric Calibration Markings */}
                 {REEL_CALIBRATION_TICKS.map((tick, i) => (
@@ -353,9 +353,9 @@ export const Expertise = () => {
                     y1={tick.y1}
                     x2={tick.x2}
                     y2={tick.y2}
-                    stroke={tick.m ? "#ffffff" : "#4a4f5b"}
+                    stroke={tick.m ? "#D5FF3F" : "#B9A1F7"}
                     strokeWidth={tick.m ? "0.9" : "0.5"}
-                    opacity={tick.m ? "0.6" : "0.35"}
+                    opacity={tick.m ? "0.8" : "0.4"}
                   />
                 ))}
 
@@ -363,16 +363,16 @@ export const Expertise = () => {
                 {REEL_INSPECTION_WINDOWS.map((win, idx) => (
                   <g key={`win-${idx}`}>
                     <circle cx={win.cx} cy={win.cy} r="18" fill="url(#woundStock3D)" />
-                    <circle cx={100} cy={100} r={win.trackR} fill="none" stroke="#2d303a" strokeWidth="0.8" opacity="0.5" />
+                    <circle cx={100} cy={100} r={win.trackR} fill="none" stroke="#211747" strokeWidth="0.8" opacity="0.5" />
                     <circle cx={win.cx} cy={win.cy} r="18" fill="none" stroke="url(#bevelLight3D)" strokeWidth="2.4" />
                     <circle cx={win.cx} cy={win.cy} r="18.5" fill="none" stroke="#0e0f12" strokeWidth="0.8" opacity="0.8" />
-                    <circle cx={win.cx} cy={win.cy} r="15.8" fill="none" stroke="#ffffff" strokeWidth="0.5" opacity="0.3" />
+                    <circle cx={win.cx} cy={win.cy} r="15.8" fill="none" stroke="#B9A1F7" strokeWidth="0.5" opacity="0.3" />
                   </g>
                 ))}
 
                 {/* 5. Center Mounting Ring with Stainless Hex Bolts */}
                 <circle cx="100" cy="100" r="32" fill="none" stroke="#16171c" strokeWidth="2.2" />
-                <circle cx="100" cy="100" r="31" fill="none" stroke="#484d5a" strokeWidth="0.8" opacity="0.6" />
+                <circle cx="100" cy="100" r="31" fill="none" stroke="#B9A1F7" strokeWidth="0.8" opacity="0.4" />
                 
                 {REEL_HEX_BOLTS.map((bolt, idx) => (
                   <g key={`bolt-${idx}`}>
@@ -383,7 +383,7 @@ export const Expertise = () => {
 
                 {/* 6. Heavy-Duty Cinema Center Hub Core with Arriflex Drive Lugs */}
                 <circle cx="100" cy="100" r="20" fill="url(#centerHub3D)" stroke="#14151a" strokeWidth="2.2" />
-                <circle cx="100" cy="100" r="19" fill="none" stroke="#ffffff" strokeWidth="0.75" opacity="0.5" />
+                <circle cx="100" cy="100" r="19" fill="none" stroke="#B9A1F7" strokeWidth="0.75" opacity="0.5" />
                 
                 {REEL_DRIVE_LUGS.map((lug, idx) => (
                   <circle key={`lug-${idx}`} cx={lug.kx} cy={lug.ky} r="2.4" fill="#0a0b0e" stroke="#2e313b" strokeWidth="0.7" />
@@ -395,21 +395,21 @@ export const Expertise = () => {
                 <circle cx="100" cy="100" r="2.5" fill="#000000" />
               </svg>
 
-              {/* 2. CHROME TENSION GUIDE ROLLER PIN (Spans full 126px film height right at the reel exit point!) */}
+              {/* 2. CHROME TENSION GUIDE ROLLER PIN */}
               <div
                 className="absolute -right-2 sm:-right-3 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-between pointer-events-none drop-shadow-[5px_0_10px_rgba(0,0,0,0.75)]"
                 style={{ height: "126px" }}
               >
-                {/* Top Roller Mounting Bracket Cap */}
-                <div className="w-4 h-3.5 rounded-t-sm bg-gradient-to-b from-[#949cb0] to-[#252830] border border-black/80 flex items-center justify-center shadow-md">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-inner" />
+                {/* Top Roller Mounting Bracket Cap with Neon Lime Tally Indicator */}
+                <div className="w-4 h-3.5 rounded-t-sm bg-gradient-to-b from-[#949cb0] to-[#211747] border border-black/80 flex items-center justify-center shadow-md">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D5FF3F] shadow-[0_0_6px_#D5FF3F]" />
                 </div>
 
                 {/* Chrome Roller Pin (Specular cylinder along full 126px film height) */}
                 <div
                   className="w-2.5 flex-1 shadow-inner relative"
                   style={{
-                    background: "linear-gradient(90deg, #4b505c 0%, #ffffff 35%, #252830 65%, #8890a0 85%, #181a20 100%)",
+                    background: "linear-gradient(90deg, #4b505c 0%, #ffffff 35%, #211747 65%, #B9A1F7 85%, #181a20 100%)",
                     borderRadius: "1px",
                   }}
                 >
@@ -417,8 +417,8 @@ export const Expertise = () => {
                 </div>
 
                 {/* Bottom Roller Mounting Bracket Cap */}
-                <div className="w-4 h-3.5 rounded-b-sm bg-gradient-to-b from-[#252830] to-[#949cb0] border border-black/80 flex items-center justify-center shadow-md">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-inner" />
+                <div className="w-4 h-3.5 rounded-b-sm bg-gradient-to-b from-[#211747] to-[#949cb0] border border-black/80 flex items-center justify-center shadow-md">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D5FF3F] shadow-[0_0_6px_#D5FF3F]" />
                 </div>
               </div>
 
@@ -431,7 +431,7 @@ export const Expertise = () => {
               {[...FILM_TAPE_FRAMES, ...FILM_TAPE_FRAMES].map((item, idx) => (
                 <div
                   key={`${item.id}-${idx}`}
-                  className="film-frame-cell flex-shrink-0 bg-[#0c0d10] border-y-[3px] border-black/90 rounded-[3px] px-1.5 py-1.5 mx-1 flex flex-col justify-between shadow-xl relative group cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
+                  className="film-frame-cell flex-shrink-0 bg-[#0e0a1f] border-y-[3px] border-[#211747] rounded-[3px] px-1.5 py-1.5 mx-1 flex flex-col justify-between shadow-xl relative group cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
                   style={{
                     width: "196px",
                     height: "126px",
@@ -442,38 +442,38 @@ export const Expertise = () => {
                     {Array.from({ length: 6 }).map((_, sIdx) => (
                       <span
                         key={sIdx}
-                        className="w-2.5 h-1.5 rounded-[1px] bg-white/45 block shadow-inner border border-black/40"
+                        className="w-2.5 h-1.5 rounded-[1px] bg-[#F3EBDD]/60 block shadow-inner border border-black/50"
                       />
                     ))}
                   </div>
 
                   {/* Frame Image Area */}
-                  <div className="relative w-full h-[76px] rounded-[2px] overflow-hidden bg-black border border-white/10 shadow-inner">
+                  <div className="relative w-full h-[76px] rounded-[2px] overflow-hidden bg-black border border-[#B9A1F7]/20 shadow-inner">
                     <img
                       src={item.image}
                       alt={item.tag}
                       className="w-full h-full object-cover grayscale-[10%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-300"
                       loading="lazy"
                     />
-                    <div className="absolute top-1 left-1.5 text-[9px] font-mono font-bold tracking-wider text-white/95 bg-black/70 px-1.5 py-0.5 rounded-[2px] backdrop-blur-[3px] border border-white/10">
+                    <div className="absolute top-1 left-1.5 text-[9px] font-mono font-bold tracking-wider text-[#211747] bg-[#B9A1F7] px-1.5 py-0.5 rounded-[2px] shadow-sm">
                       {item.tag}
                     </div>
                   </div>
 
                   {/* Bottom Sprocket Holes with Authentic Film Code */}
                   <div className="flex items-center justify-between px-1 h-3.5 opacity-80 mt-0.5">
-                    <span className="text-[7.5px] font-mono tracking-tighter text-amber-400 font-semibold select-none">
+                    <span className="text-[7.5px] font-mono tracking-tighter text-[#D5FF3F] font-semibold select-none">
                       {item.code}
                     </span>
                     <div className="flex items-center gap-1.5">
                       {Array.from({ length: 4 }).map((_, sIdx) => (
                         <span
                           key={sIdx}
-                          className="w-2 h-1.5 rounded-[1px] bg-white/45 block shadow-inner border border-black/40"
+                          className="w-2 h-1.5 rounded-[1px] bg-[#F3EBDD]/60 block shadow-inner border border-black/50"
                         />
                       ))}
                     </div>
-                    <span className="text-[7.5px] font-mono tracking-tighter text-white/60 select-none">
+                    <span className="text-[7.5px] font-mono tracking-tighter text-[#B9A1F7]/80 select-none">
                       ▶ {item.tc}
                     </span>
                   </div>
@@ -486,7 +486,7 @@ export const Expertise = () => {
       </section>
 
       {/* 2. MAIN EXPERTISE SECTION */}
-      <div className="section-expertise w-full bg-[#1b4fd8] text-white relative flex flex-col justify-start select-none overflow-visible">
+      <div className="section-expertise w-full bg-[#211747] text-[#F3EBDD] relative flex flex-col justify-start select-none overflow-visible">
         <div className="expertise-outer w-full">
           <div className="padding-global w-full">
             <div className="container-large w-full">
@@ -499,12 +499,12 @@ export const Expertise = () => {
                       <div className="sticky-title-inner text-center flex flex-col items-center justify-center relative w-full">
 
                         {/* Heading 1: EXPERTISE */}
-                        <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-white text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none">
+                        <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#F3EBDD] text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none">
                           {splitWordsAndChars("SERVICES")}
                         </h2>
 
                         {/* Heading 2: Description */}
-                        <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[2.5rem] leading-[1.2] font-semibold text-white max-w-[900px] select-none uppercase">
+                        <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[2.5rem] leading-[1.2] font-semibold text-[#B9A1F7] max-w-[900px] select-none uppercase">
                           {splitWordsAndChars("Multi-City Video Production, Remote Editing, and Corporate AV Solutions")}
                         </h2>
 

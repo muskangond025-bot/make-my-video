@@ -42,10 +42,10 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // -------------------------------------------------------------
-    // 2. LIGHTING (Crisp architectural studio illumination)
+    // 2. LIGHTING (Crisp architectural studio illumination with Lavender rim)
     // -------------------------------------------------------------
-    // Clean ambient light: ensures white surfaces stay luminous paper white
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+    // Clean ambient light: warm studio ambient
+    const ambientLight = new THREE.AmbientLight(0xfbf8f2, 1.25);
     scene.add(ambientLight);
 
     // Key directional light: crisp cast shadows and subtle relief
@@ -57,13 +57,18 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     keyLight.shadow.bias = -0.0008;
     scene.add(keyLight);
 
-    // Front soft fill: maintains pure white faceplates
-    const fillLight = new THREE.DirectionalLight(0xf8fafc, 0.9);
+    // Lavender purple rim light for subtle brand reflections
+    const lavenderRimLight = new THREE.DirectionalLight(0xb9a1f7, 2.5);
+    lavenderRimLight.position.set(-6, 3, -3);
+    scene.add(lavenderRimLight);
+
+    // Front soft fill: maintains warm beige / luminous metallic body
+    const fillLight = new THREE.DirectionalLight(0xf5eedf, 0.85);
     fillLight.position.set(-4, 2, 5);
     scene.add(fillLight);
 
-    // Subtle bottom bounce: softens under-mount shadows
-    const bounceLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    // Subtle bottom bounce: softens under-mount shadows with warm beige tone
+    const bounceLight = new THREE.DirectionalLight(0xf3ebdd, 0.55);
     bounceLight.position.set(0, -6, 2);
     scene.add(bounceLight);
 
@@ -78,15 +83,15 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      // Solid pure white paper base
-      ctx.fillStyle = "#ffffff";
+      // Warm beige paper base
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillRect(0, 0, 512, 512);
 
       const cx = 256;
       const cy = 256;
 
-      // Outer ink border rings
-      ctx.strokeStyle = "#000000";
+      // Outer ink border rings in Deep Indigo
+      ctx.strokeStyle = "#211747";
       ctx.lineWidth = 6;
       ctx.beginPath();
       ctx.arc(cx, cy, 240, 0, Math.PI * 2);
@@ -97,24 +102,27 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       ctx.arc(cx, cy, 226, 0, Math.PI * 2);
       ctx.stroke();
 
+      ctx.strokeStyle = "#6B6478";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(cx, cy, 210, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Hand-drawn mechanical tick marks (sprocket indexing)
+      // Hand-drawn mechanical tick marks (sprocket indexing with lavender accents)
       ctx.lineWidth = 2.5;
       for (let i = 0; i < 48; i++) {
         const angle = (i / 48) * Math.PI * 2;
         const r1 = i % 4 === 0 ? 210 : 218;
         const r2 = 226;
+        ctx.strokeStyle = i % 4 === 0 ? "#B9A1F7" : "#211747";
         ctx.beginPath();
         ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
         ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
         ctx.stroke();
       }
 
-      // Ink crosshatching on lower quadrant (matching reference drawing)
+      // Ink crosshatching on lower quadrant
+      ctx.strokeStyle = "rgba(33, 23, 71, 0.45)";
       ctx.lineWidth = 1.8;
       for (let x = 60; x <= 220; x += 9) {
         ctx.beginPath();
@@ -124,34 +132,37 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       }
 
       // Center Spindle Hub
+      ctx.strokeStyle = "#211747";
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(cx, cy, 80, 0, Math.PI * 2);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#ECE3D3";
       ctx.fill();
       ctx.stroke();
 
       ctx.lineWidth = 2;
+      ctx.strokeStyle = "#B9A1F7";
       ctx.beginPath();
       ctx.arc(cx, cy, 48, 0, Math.PI * 2);
       ctx.stroke();
 
-      // 4 Spindle Screws
+      // 4 Spindle Screws with neon-lime center dot
       const screwR = 64;
       for (let i = 0; i < 4; i++) {
         const angle = (i / 4) * Math.PI * 2 + Math.PI / 4;
         const sx = cx + Math.cos(angle) * screwR;
         const sy = cy + Math.sin(angle) * screwR;
         ctx.lineWidth = 2;
+        ctx.strokeStyle = "#211747";
         ctx.beginPath();
         ctx.arc(sx, sy, 7, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = "#D5FF3F";
         ctx.fill();
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(sx - 5, sy);
-        ctx.lineTo(sx + 5, sy);
+        ctx.moveTo(sx - 4, sy);
+        ctx.lineTo(sx + 4, sy);
         ctx.stroke();
       }
 
@@ -168,12 +179,12 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillRect(0, 0, 512, 512);
 
-      // Distinct hand-drawn diagonal ink hatching & cross-hatching
-      ctx.strokeStyle = "#000000";
-      ctx.lineWidth = 3.5;
+      // Distinct hand-drawn diagonal ink hatching in Deep Indigo
+      ctx.strokeStyle = "#211747";
+      ctx.lineWidth = 3.2;
 
       // Primary diagonal hatching
       for (let i = -512; i < 1024; i += 14) {
@@ -183,8 +194,9 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
         ctx.stroke();
       }
 
-      // Dense secondary cross-hatch near edges
-      ctx.lineWidth = 2.5;
+      // Dense secondary cross-hatch near edges with lavender tint
+      ctx.strokeStyle = "rgba(185, 161, 247, 0.4)";
+      ctx.lineWidth = 2.2;
       for (let i = -512; i < 1024; i += 18) {
         ctx.beginPath();
         ctx.moveTo(i + 512, 0);
@@ -207,14 +219,15 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillRect(0, 0, 512, 512);
 
-      // Inset perimeter border
-      ctx.strokeStyle = "#000000";
+      // Inset perimeter border in Deep Indigo
+      ctx.strokeStyle = "#211747";
       ctx.lineWidth = 6;
       ctx.strokeRect(24, 24, 464, 464);
 
+      ctx.strokeStyle = "#B9A1F7";
       ctx.lineWidth = 2;
       ctx.strokeRect(36, 36, 440, 440);
 
@@ -228,8 +241,9 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       corners.forEach(([x, y]) => {
         ctx.beginPath();
         ctx.arc(x, y, 9, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = "#ECE3D3";
         ctx.fill();
+        ctx.strokeStyle = "#211747";
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(x - 6, y - 6);
@@ -238,20 +252,23 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
       });
 
       // Technical Typography
-      ctx.fillStyle = "#000000";
+      ctx.fillStyle = "#211747";
       ctx.font = "bold 24px monospace";
       ctx.fillText("MAKE MY VID", 54, 88);
 
+      ctx.fillStyle = "#6B6478";
       ctx.font = "14px monospace";
       ctx.fillText("MODEL: MMV-35MM PRO", 54, 114);
       ctx.fillText("SHUTTER: 180° / 24 FPS", 54, 134);
 
       // Main Circular Footage Dial
+      ctx.strokeStyle = "#211747";
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(256, 260, 90, 0, Math.PI * 2);
       ctx.stroke();
 
+      ctx.strokeStyle = "#B9A1F7";
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(256, 260, 78, 0, Math.PI * 2);
@@ -261,32 +278,38 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
         const a = (i / 24) * Math.PI * 2;
         const r1 = i % 6 === 0 ? 66 : 72;
         const r2 = 78;
+        ctx.strokeStyle = i % 6 === 0 ? "#211747" : "#6B6478";
         ctx.beginPath();
         ctx.moveTo(256 + Math.cos(a) * r1, 260 + Math.sin(a) * r1);
         ctx.lineTo(256 + Math.cos(a) * r2, 260 + Math.sin(a) * r2);
         ctx.stroke();
       }
 
-      // Indicator dial needle
-      ctx.lineWidth = 3;
+      // Neon-lime Indicator dial needle
+      ctx.strokeStyle = "#D5FF3F";
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
       ctx.moveTo(256, 260);
       ctx.lineTo(256 + Math.cos(-0.6) * 54, 260 + Math.sin(-0.6) * 54);
       ctx.stroke();
 
-      // Row of 4 indicator ports at bottom
+      // Row of 4 indicator ports at bottom: 3 lavender + 1 neon lime active tally
       for (let i = 0; i < 4; i++) {
         const x = 110 + i * 96;
         const y = 415;
+        const isTally = i === 3;
         ctx.lineWidth = 3;
+        ctx.strokeStyle = "#211747";
         ctx.beginPath();
         ctx.arc(x, y, 16, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = isTally ? "#D5FF3F" : "#B9A1F7";
         ctx.fill();
         ctx.stroke();
 
         ctx.beginPath();
         ctx.arc(x, y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = isTally ? "#211747" : "#ECE3D3";
+        ctx.fill();
         ctx.stroke();
       }
 
@@ -300,13 +323,23 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     const bodySideTex = createBodySideTexture();
 
     // -------------------------------------------------------------
-    // 4. MATERIALS (Solid White Paper Body + Crisp Black Ink Lines)
+    // 4. MATERIALS (Warm Beige & Deep Indigo Body + Lavender Reflections)
     // -------------------------------------------------------------
-    // Pure White Matte Fill
+    // Luminous Warm Beige Base Material
     const whiteMatteMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.85,
-      metalness: 0.04,
+      color: 0xf5eee2,
+      roughness: 0.82,
+      metalness: 0.08,
+      polygonOffset: true,
+      polygonOffsetFactor: 1,
+      polygonOffsetUnits: 1,
+    });
+
+    // Deep Indigo Material for Selected Architectural Panels
+    const deepIndigoMaterial = new THREE.MeshStandardMaterial({
+      color: 0x211747,
+      roughness: 0.65,
+      metalness: 0.25,
       polygonOffset: true,
       polygonOffsetFactor: 1,
       polygonOffsetUnits: 1,
@@ -316,8 +349,8 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     const reelFaceMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       map: reelTex,
-      roughness: 0.85,
-      metalness: 0.04,
+      roughness: 0.82,
+      metalness: 0.08,
       polygonOffset: true,
       polygonOffsetFactor: 1,
       polygonOffsetUnits: 1,
@@ -327,7 +360,7 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     const matteBoxInnerMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       map: matteBoxTex,
-      roughness: 0.9,
+      roughness: 0.88,
       metalness: 0.0,
       side: THREE.DoubleSide,
       polygonOffset: true,
@@ -339,38 +372,38 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     const bodySideMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       map: bodySideTex,
-      roughness: 0.85,
-      metalness: 0.04,
+      roughness: 0.82,
+      metalness: 0.08,
       polygonOffset: true,
       polygonOffsetFactor: 1,
       polygonOffsetUnits: 1,
     });
 
-    // Black Ink Line Materials
+    // Deep Indigo Line Materials (CAD / blueprint ink contours)
     const inkLineMaterial = new THREE.LineBasicMaterial({
-      color: 0x0a0a0a,
+      color: 0x211747,
       linewidth: 1.8,
     });
 
     const boldInkLineMaterial = new THREE.LineBasicMaterial({
-      color: 0x000000,
+      color: 0x191138,
       linewidth: 2.8,
     });
 
-    // Optical glass lens element (deep dark high-contrast pupil)
+    // Optical glass lens element (deep dark anti-reflective pupil with subtle purple tint)
     const lensGlassMaterial = new THREE.MeshStandardMaterial({
-      color: 0x09090b,
-      roughness: 0.1,
-      metalness: 0.9,
+      color: 0x181030,
+      roughness: 0.08,
+      metalness: 0.95,
     });
 
-    // Inverted-hull outline material (creates hand-drawn silhouette on curved edges)
+    // Inverted-hull outline material
     const silhouetteMaterial = new THREE.MeshBasicMaterial({
-      color: 0x000000,
+      color: 0x211747,
       side: THREE.BackSide,
     });
 
-    // Helper: Wrap geometry in a mesh with solid white fill + crisp black ink contours
+    // Helper: Wrap geometry in a mesh with warm beige fill + crisp deep indigo contours
     const createInkedObject = (
       geo: THREE.BufferGeometry,
       mat: THREE.Material = whiteMatteMaterial,
@@ -425,9 +458,9 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     sidePlate.group.position.set(bodyWidth * 0.5 + 0.02, 0, 0);
     cameraRig.add(sidePlate.group);
 
-    // Left Side Inset Plate
+    // Left Side Inset Plate (Selected Deep Indigo feature panel!)
     const leftSidePlateGeo = new THREE.BoxGeometry(0.04, 1.38, 1.68);
-    const leftSidePlate = createInkedObject(leftSidePlateGeo, whiteMatteMaterial, 30, 1.0);
+    const leftSidePlate = createInkedObject(leftSidePlateGeo, deepIndigoMaterial, 30, 1.0);
     leftSidePlate.group.position.set(-bodyWidth * 0.5 - 0.02, 0, 0);
     cameraRig.add(leftSidePlate.group);
 
@@ -449,11 +482,18 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     magazineGroup.position.set(0, bodyHeight * 0.5 + 0.04, -0.15);
     cameraRig.add(magazineGroup);
 
-    // Magazine base saddle bracket
+    // Magazine base saddle bracket (Deep Indigo architectural panel)
     const magBaseGeo = new THREE.BoxGeometry(1.0, 0.22, 1.4);
-    const magBase = createInkedObject(magBaseGeo, whiteMatteMaterial, 30, 1.02);
+    const magBase = createInkedObject(magBaseGeo, deepIndigoMaterial, 30, 1.02);
     magBase.group.position.set(0, 0.1, 0);
     magazineGroup.add(magBase.group);
+
+    // Tiny Neon-Lime Tally Indicator LED on front magazine edge
+    const tallyLedGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.06, 16);
+    const tallyLedMat = new THREE.MeshBasicMaterial({ color: 0xd5ff3f });
+    const tallyLed = new THREE.Mesh(tallyLedGeo, tallyLedMat);
+    tallyLed.position.set(0.38, 0.22, 0.65);
+    magazineGroup.add(tallyLed);
 
     // Rear Reel Canister
     const reelRearRadius = 0.82;
@@ -789,9 +829,9 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
     bowl.group.position.set(0, -0.02, 0);
     tripodGroup.add(bowl.group);
 
-    // Pan-tilt geared swivel collar
+    // Pan-tilt geared swivel collar (Deep Indigo mechanical accent)
     const collarGeo = new THREE.CylinderGeometry(0.55, 0.65, 0.42, 32);
-    const collar = createInkedObject(collarGeo, whiteMatteMaterial, 24, 1.03);
+    const collar = createInkedObject(collarGeo, deepIndigoMaterial, 24, 1.03);
     collar.group.position.set(0, -0.42, 0);
     tripodGroup.add(collar.group);
 
@@ -1035,11 +1075,12 @@ export const CinemaCamera3D: React.FC<CinemaCamera3DProps> = ({ className = "" }
 
       {/* Subtle interaction pill badge */}
       <div
-        className={`absolute bottom-1 px-3 py-1 rounded-full bg-black/60 border border-white/15 text-[10px] font-mono tracking-wider text-white/75 backdrop-blur-md transition-opacity duration-300 pointer-events-none uppercase ${
+        className={`absolute bottom-1 px-3 py-1 rounded-full bg-[#211747]/90 border border-[#B9A1F7]/30 text-[10px] font-mono tracking-wider text-[#F3EBDD] backdrop-blur-md transition-opacity duration-300 pointer-events-none uppercase flex items-center gap-2 ${
           isInteracting ? "opacity-100" : "opacity-0 hover:opacity-100"
         }`}
       >
-        3D CINEMA RIG • DRAG TO ORBIT
+        <span className="w-1.5 h-1.5 rounded-full bg-[#D5FF3F] animate-pulse" />
+        <span>3D CINEMA RIG • DRAG TO ORBIT</span>
       </div>
     </div>
   );

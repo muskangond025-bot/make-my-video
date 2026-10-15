@@ -331,7 +331,7 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="section-hero relative bg-background select-none">
+    <section ref={containerRef} className="section-hero relative bg-[#F3EBDD] bg-dots-pattern text-[#211747] select-none">
 
       {/* Background radial soft light gradient image overlay */}
       <img
@@ -339,7 +339,7 @@ export const Hero = () => {
         loading="lazy"
         alt=""
         data-parallax-layer="3"
-        className="hero-bg-dots is--upper pointer-events-none select-none"
+        className="hero-bg-dots is--upper pointer-events-none select-none opacity-40 mix-blend-multiply"
       />
 
       {/* 2. INNER HERO CONTENT WRAPPER */}
@@ -369,7 +369,7 @@ export const Hero = () => {
 
               {/* Introduction Eyebrow */}
               <div className="hero-top mb-12">
-                <p className="text-size-tiny text-style-allcaps text-align-center text-white/60 tracking-[0.2em] font-sans max-w-[500px]">
+                <p className="text-size-tiny text-style-allcaps text-align-center text-[#6B6478] tracking-[0.2em] font-sans max-w-[500px]">
                   FILMS • CREATIVE DIRECTION • SOCIAL MEDIA • SCRIPTING
                 </p>
               </div>
@@ -381,15 +381,15 @@ export const Hero = () => {
                 <div data-parallax-layer="9" className="heading-wrapper relative flex flex-col items-center">
 
                   {/* First Line */}
-                  <h1 className="heading-style-h1 is-smaller font-heading text-white tracking-widest text-[5vw] mb-4">
+                  <h1 className="heading-style-h1 is-smaller font-heading text-[#211747] tracking-widest text-[5vw] mb-4">
                     MAKE MY VID
                   </h1>
 
                   {/* Second Line in Corners Frame */}
-                  <div className="corners-wrapper is--hero relative px-10 py-6 border border-black/5 rounded-2xl flex items-center justify-center min-h-[14vw]">
+                  <div className="corners-wrapper is--hero relative px-10 py-6 border border-[#211747]/15 rounded-2xl flex items-center justify-center min-h-[14vw]">
 
-                    {/* The Tall condensed "DIGITAL DESIGNER" text in yellow */}
-                    <span className="heading-style-h1 relative font-humane text-[#1b4fd8] text-[18vw] leading-[0.8] tracking-wider uppercase font-semibold">
+                    {/* The Tall condensed "ELEVATING BRAND" text in deep indigo */}
+                    <span className="heading-style-h1 relative font-humane text-[#211747] text-[18vw] leading-[0.8] tracking-wider uppercase font-semibold">
                       ELEVATING BRAND
                     </span>
 
@@ -416,15 +416,15 @@ export const Hero = () => {
               {/* 3. HERO BOTTOM FOOTER */}
               <div className="hero-bottom w-full absolute bottom-6 left-0 right-0 px-8 flex justify-between items-center font-sans z-10 pointer-events-none">
                 {/* Left Side: Copyright */}
-                <div className="text-size-tiny text-white/50 tracking-wider font-semibold uppercase pointer-events-auto">
+                <div className="text-size-tiny text-[#6B6478] tracking-wider font-semibold uppercase pointer-events-auto">
                   ©COPYRIGHT 2026
                 </div>
 
-                {/* Right Side: CET clock */}
-                <div className="eyebrow-wrap is--border-white is--nav flex items-center gap-3 pointer-events-auto">
-                  <div className="circle-dot pulse is--nav" />
-                  <p className="pill-text is--nav text-white/80 text-size-tiny font-bold tracking-widest uppercase">
-                    {cetTime} <span className="text-[#1b4fd8] text-weight-semibold ml-1">CET</span>
+                {/* Right Side: CET clock with Neon Lime pulsing dot */}
+                <div className="eyebrow-wrap border border-[#211747]/20 bg-[#F3EBDD]/90 backdrop-blur-md px-3.5 py-1.5 rounded-full flex items-center gap-2.5 pointer-events-auto shadow-sm">
+                  <div className="w-2 h-2 rounded-full bg-[#D5FF3F] animate-pulse shadow-[0_0_8px_#D5FF3F]" />
+                  <p className="pill-text is--nav text-[#211747] text-[11px] font-mono font-bold tracking-widest uppercase">
+                    {cetTime} <span className="text-[#B9A1F7] font-semibold ml-1">CET</span>
                   </p>
                 </div>
               </div>
@@ -445,7 +445,7 @@ export const Hero = () => {
               <div className="hero-video-padding w-full py-4">
                 <div
                   ref={videoInnerRef}
-                  className="hero-video-inner relative w-full aspect-video rounded-[96px] object-cover justify-center items-center flex overflow-hidden select-none border border-black/10 shadow-2xl bg-black cursor-pointer"
+                  className="hero-video-inner relative w-full aspect-video rounded-[96px] object-cover justify-center items-center flex overflow-hidden select-none border-2 border-[#211747] shadow-[0_24px_64px_rgba(33,23,71,0.22)] bg-[#211747] cursor-pointer"
                   onPointerEnter={() => setIsHovered(true)}
                   onPointerLeave={() => setIsHovered(false)}
                   onPointerMove={handlePointerMove}
@@ -466,11 +466,11 @@ export const Hero = () => {
                     className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 scale-[1.12]"
                   />
 
-                  <div className="absolute inset-0 bg-black/10 pointer-events-none z-10" />
+                  <div className="absolute inset-0 bg-[#211747]/10 pointer-events-none z-10" />
 
                   {isHovered && (
                     <div
-                      className="absolute bg-[#1b4fd8] text-white font-sans text-xs font-bold tracking-widest uppercase rounded-full w-24 h-24 flex items-center justify-center pointer-events-none z-30 transition-transform duration-75 ease-out shadow-xl"
+                      className="absolute bg-[#D5FF3F] text-[#211747] font-sans text-xs font-black tracking-widest uppercase rounded-full w-24 h-24 flex items-center justify-center pointer-events-none z-30 transition-transform duration-75 ease-out shadow-[0_0_24px_rgba(213,255,63,0.5)]"
                       style={{
                         left: cursorPos.x,
                         top: cursorPos.y,
@@ -487,7 +487,7 @@ export const Hero = () => {
                       type="button"
                       aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                       onClick={toggleMute}
-                      className="w-14 h-14 bg-black/80 hover:bg-[#1b4fd8] hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300 border border-white/20 backdrop-blur-md shadow-lg"
+                      className="w-14 h-14 bg-[#211747]/85 hover:bg-[#D5FF3F] hover:text-[#211747] text-[#F3EBDD] rounded-full flex items-center justify-center transition-all duration-300 border border-[#B9A1F7]/30 backdrop-blur-md shadow-lg cursor-pointer"
                     >
                       {isMuted ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -511,7 +511,7 @@ export const Hero = () => {
                         e.stopPropagation();
                         togglePlay();
                       }}
-                      className="w-14 h-14 bg-black/80 hover:bg-[#1b4fd8] hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300 border border-white/20 backdrop-blur-md shadow-lg"
+                      className="w-14 h-14 bg-[#211747]/85 hover:bg-[#D5FF3F] hover:text-[#211747] text-[#F3EBDD] rounded-full flex items-center justify-center transition-all duration-300 border border-[#B9A1F7]/30 backdrop-blur-md shadow-lg cursor-pointer"
                     >
                       {isPlaying ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

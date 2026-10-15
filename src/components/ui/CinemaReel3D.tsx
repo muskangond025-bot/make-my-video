@@ -43,36 +43,36 @@ export const CinemaReel3D: React.FC<CinemaReel3DProps> = ({ className = "" }) =>
     keyLight.position.set(-3.5, 4.0, 5.0);
     scene.add(keyLight);
 
-    // Cool Cinema Rim Light (Cyan/Blue reflection on metal edges)
-    const rimLight = new THREE.DirectionalLight(0x60a5fa, 2.2);
+    // Lavender Rim Light (Purple reflection on metal edges)
+    const rimLight = new THREE.DirectionalLight(0xb9a1f7, 2.5);
     rimLight.position.set(4.0, -2.5, -2.0);
     scene.add(rimLight);
 
-    // Warm Soft Fill Light (Bottom-front)
-    const fillLight = new THREE.DirectionalLight(0xfef08a, 0.8);
+    // Warm Beige Soft Fill Light (Bottom-front)
+    const fillLight = new THREE.DirectionalLight(0xf3ebdd, 0.9);
     fillLight.position.set(1.5, -3.0, 3.5);
     scene.add(fillLight);
 
     // 3. Procedural Textures for Maximum Realism
-    // A. Film winding layers texture
+    // A. Film winding layers texture (Deep Indigo celluloid mass)
     const filmTexCanvas = document.createElement("canvas");
     filmTexCanvas.width = 512;
     filmTexCanvas.height = 512;
     const filmCtx = filmTexCanvas.getContext("2d");
     if (filmCtx) {
       const grad = filmCtx.createRadialGradient(256, 256, 40, 256, 256, 256);
-      grad.addColorStop(0, "#090a0d");
-      grad.addColorStop(0.5, "#181a24");
-      grad.addColorStop(0.85, "#0b0c10");
-      grad.addColorStop(1, "#1c1e28");
+      grad.addColorStop(0, "#0b0817");
+      grad.addColorStop(0.5, "#181232");
+      grad.addColorStop(0.85, "#0b0817");
+      grad.addColorStop(1, "#211747");
       filmCtx.fillStyle = grad;
       filmCtx.fillRect(0, 0, 512, 512);
 
-      // Fine concentric winding micro-grooves
+      // Fine concentric winding micro-grooves with subtle lavender sheen
       for (let r = 50; r < 250; r += 3) {
         filmCtx.beginPath();
         filmCtx.arc(256, 256, r, 0, Math.PI * 2);
-        filmCtx.strokeStyle = r % 6 === 0 ? "rgba(70, 75, 95, 0.45)" : "rgba(25, 27, 35, 0.7)";
+        filmCtx.strokeStyle = r % 6 === 0 ? "rgba(185, 161, 247, 0.25)" : "rgba(33, 23, 71, 0.7)";
         filmCtx.lineWidth = 1;
         filmCtx.stroke();
       }
@@ -85,20 +85,20 @@ export const CinemaReel3D: React.FC<CinemaReel3DProps> = ({ className = "" }) =>
     ribbonCanvas.height = 128;
     const ribCtx = ribbonCanvas.getContext("2d");
     if (ribCtx) {
-      ribCtx.fillStyle = "#0a0b0e";
+      ribCtx.fillStyle = "#0c0919";
       ribCtx.fillRect(0, 0, 512, 128);
 
-      // Glossy celluloid highlight stripe
+      // Glossy celluloid highlight stripe with lavender sheen
       const glossGrad = ribCtx.createLinearGradient(0, 0, 0, 128);
-      glossGrad.addColorStop(0, "rgba(255, 255, 255, 0.12)");
-      glossGrad.addColorStop(0.3, "rgba(255, 255, 255, 0.02)");
-      glossGrad.addColorStop(0.7, "rgba(0, 0, 0, 0.4)");
-      glossGrad.addColorStop(1, "rgba(255, 255, 255, 0.1)");
+      glossGrad.addColorStop(0, "rgba(185, 161, 247, 0.15)");
+      glossGrad.addColorStop(0.3, "rgba(255, 255, 255, 0.04)");
+      glossGrad.addColorStop(0.7, "rgba(0, 0, 0, 0.5)");
+      glossGrad.addColorStop(1, "rgba(185, 161, 247, 0.12)");
       ribCtx.fillStyle = glossGrad;
       ribCtx.fillRect(0, 0, 512, 128);
 
       // Top and bottom sprocket perforations (KS-1870 standard 35mm)
-      ribCtx.fillStyle = "rgba(255, 255, 255, 0.75)";
+      ribCtx.fillStyle = "rgba(243, 235, 221, 0.85)";
       for (let x = 16; x < 500; x += 32) {
         // Top holes
         ribCtx.beginPath();
@@ -111,10 +111,10 @@ export const CinemaReel3D: React.FC<CinemaReel3DProps> = ({ className = "" }) =>
         ribCtx.fill();
       }
 
-      // Edge markings
-      ribCtx.fillStyle = "#f59e0b";
+      // Edge markings in Neon Lime (#D5FF3F) for authentic lab print
+      ribCtx.fillStyle = "#D5FF3F";
       ribCtx.font = "bold 13px monospace";
-      ribCtx.fillText("EASTMAN 5219 ▶ 35MM", 140, 70);
+      ribCtx.fillText("MMV-35MM ▶ KODAK 5219", 140, 70);
     }
     const ribbonTexture = new THREE.CanvasTexture(ribbonCanvas);
     ribbonTexture.wrapS = THREE.RepeatWrapping;

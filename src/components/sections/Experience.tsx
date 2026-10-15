@@ -88,17 +88,17 @@ export const Experience = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="about" className="section-experience relative w-full overflow-hidden bg-[#1b4fd8] py-24 flex flex-col justify-between" style={{ minHeight: '85vh' }}>
+    <section id="about" className="section-experience relative w-full overflow-hidden bg-[#F3EBDD] bg-dots-pattern py-24 flex flex-col justify-between" style={{ minHeight: '85vh' }}>
       
       {/* Decorative top strip */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-white/10" />
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#211747]/10" />
 
       {/* Centered Heading */}
       <div className="relative w-full max-w-[1440px] mx-auto px-6 md:px-16 flex flex-col z-10 text-left mb-12">
-        <h3 className="font-heading text-4xl md:text-6xl text-white uppercase leading-none font-bold tracking-tight">
-          PROVEN <span className="text-blue-200">TRACK RECORD</span>
+        <h3 className="font-heading text-4xl md:text-6xl text-[#211747] uppercase leading-none font-bold tracking-tight">
+          PROVEN <span className="text-[#B9A1F7]">TRACK RECORD</span>
         </h3>
-        <p className="font-sans text-xs md:text-sm text-blue-100/70 mt-3 uppercase tracking-widest">
+        <p className="font-sans text-xs md:text-sm text-[#6B6478] mt-3 uppercase tracking-widest">
           Over 1,000+ films crafted for global enterprises, MSMEs, and top innovators
         </p>
       </div>
@@ -116,8 +116,8 @@ export const Experience = () => {
                 onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => window.location.href = card.link}
               >
-                {/* Exoflora Luxury Card Inner Structure */}
-                <div className="w-full h-full flex flex-col justify-between text-white select-none">
+                {/* Luxury Card Inner Structure */}
+                <div className="w-full h-full flex flex-col justify-between text-[#F3EBDD] select-none">
                   
                   {/* Top Content Block */}
                   <div>
@@ -131,20 +131,20 @@ export const Experience = () => {
                     </div>
 
                     {/* Number & Icon Meta Row */}
-                    <div className="flex flex-row justify-between items-center text-[10px] uppercase font-bold tracking-widest text-neutral-400 mb-1">
+                    <div className="flex flex-row justify-between items-center text-[10px] uppercase font-bold tracking-widest text-[#B9A1F7] mb-1">
                       <span>NO. 0{card.id}</span>
-                      <span className="text-neutral-400 flex items-center justify-center">
+                      <span className="text-[#B9A1F7] flex items-center justify-center">
                         {renderIcon(card.icon)}
                       </span>
                     </div>
 
                     {/* Editorial Title (Serif Italic) */}
-                    <h4 className="font-serif italic text-2xl text-white mt-2 mb-1.5 leading-none font-medium text-left">
+                    <h4 className="font-serif italic text-2xl text-[#F3EBDD] mt-2 mb-1.5 leading-none font-medium text-left">
                       {card.title}
                     </h4>
 
                     {/* Description */}
-                    <p className="font-sans text-[11px] text-neutral-400 leading-relaxed text-left">
+                    <p className="font-sans text-[11px] text-[#F3EBDD]/70 leading-relaxed text-left">
                       {card.description}
                     </p>
                   </div>
@@ -152,12 +152,12 @@ export const Experience = () => {
                   {/* Bottom Content Block */}
                   <div>
                     {/* Subtle Line Divider */}
-                    <div className="w-full h-[1px] bg-white/5 my-3.5" />
+                    <div className="w-full h-[1px] bg-[#B9A1F7]/15 my-3.5" />
 
                     {/* Price & View Actions */}
                     <div className="flex flex-row justify-between items-center font-sans text-xs">
-                      <span className="font-bold text-white text-[13px] tracking-wide">{card.price}</span>
-                      <span className="font-semibold text-white/90 group-hover:text-white flex items-center gap-1 text-[10px] uppercase tracking-widest">
+                      <span className="font-bold text-[#D5FF3F] text-[13px] tracking-wide">{card.price}</span>
+                      <span className="font-semibold text-[#B9A1F7] group-hover:text-[#D5FF3F] flex items-center gap-1 text-[10px] uppercase tracking-widest transition-colors">
                         View &rarr;
                       </span>
                     </div>
@@ -173,14 +173,14 @@ export const Experience = () => {
       {/* Bottom Footer Info Details */}
       <div className="relative w-full max-w-[1440px] mx-auto px-6 md:px-16 mt-12 flex flex-col sm:flex-row justify-between items-center gap-6 z-10">
         <div className="text-left max-w-sm sm:max-w-md">
-          <p className="font-sans text-[11px] md:text-xs text-blue-100/60 leading-relaxed font-semibold uppercase tracking-wider">
+          <p className="font-sans text-[11px] md:text-xs text-[#6B6478] leading-relaxed font-semibold uppercase tracking-wider">
             Pan-India multi-camera shoots, frame-accurate cloud editing, and cinematic storytelling combined into one dedicated agency.
           </p>
         </div>
         <div>
           <a
             href="https://rohanjoshi.in/all-projects"
-            className="group inline-flex items-center gap-2 border border-white/20 hover:border-white text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 bg-white/5 hover:bg-white hover:text-[#1b4fd8]"
+            className="group inline-flex items-center gap-2 border border-[#211747]/20 hover:border-[#211747] text-[#211747] hover:bg-[#211747] hover:text-[#D5FF3F] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 bg-[#F3EBDD] shadow-sm cursor-pointer"
           >
             Explore All Projects
             <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>

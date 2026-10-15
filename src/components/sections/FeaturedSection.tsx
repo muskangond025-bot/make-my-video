@@ -112,7 +112,7 @@ export const FeaturedSection = ({ title = "Projects" }: { title?: string }) => {
   return (
     <section 
       ref={containerRef} 
-      className="section-featured w-full bg-background relative select-none"
+      className="section-featured w-full bg-[#F3EBDD] bg-dots-pattern relative select-none"
     >
       <div className="padding-global align-center w-full">
         <div className="container-large align-center w-full">
@@ -173,7 +173,7 @@ export const FeaturedSection = ({ title = "Projects" }: { title?: string }) => {
                         <div 
                           key={idx} 
                           className="marquee-advanced-item flex items-center gap-12"
-                          style={{ color: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 16, 16, 0.15)' }}
+                          style={{ color: isDark ? 'rgba(185, 161, 247, 0.25)' : 'rgba(33, 23, 71, 0.12)' }}
                         >
                           <span className="marquee-large">
                             {title}
@@ -194,7 +194,7 @@ export const FeaturedSection = ({ title = "Projects" }: { title?: string }) => {
                         <div 
                           key={idx} 
                           className="marquee-advanced-item flex items-center gap-12"
-                          style={{ color: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 16, 16, 0.15)' }}
+                          style={{ color: isDark ? 'rgba(185, 161, 247, 0.25)' : 'rgba(33, 23, 71, 0.12)' }}
                         >
                           <span className="marquee-large">
                             {title}

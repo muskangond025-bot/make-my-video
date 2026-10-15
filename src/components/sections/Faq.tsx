@@ -161,7 +161,7 @@ export const Faq = () => {
   }, []);
 
   return (
-    <div className="section-faq-wrap w-full relative">
+    <div className="section-faq-wrap w-full relative bg-[#F3EBDD] bg-dots-pattern text-[#211747]">
       <div id="faq" className="section-faq w-full relative">
         <div className="padding-global">
           <div className="container-large">
@@ -169,7 +169,7 @@ export const Faq = () => {
               <div className="faq-inner flex flex-col lg:flex-row items-stretch">
                 
                 {/* Left Side: Interactive Eye Graphic */}
-                <div ref={leftPanelRef} className="faq-left relative overflow-hidden flex-shrink-0 aspect-square lg:aspect-auto">
+                <div ref={leftPanelRef} className="faq-left relative overflow-hidden flex-shrink-0 aspect-square lg:aspect-auto rounded-3xl border border-[#211747]/12 bg-[#ECE3D3]/40 shadow-sm">
                   
                   {/* Eye graphic frames */}
                   <div className="image-container is--faq">
@@ -177,7 +177,7 @@ export const Faq = () => {
                       src="/image-frame-main.svg" 
                       loading="lazy" 
                       alt="Eye Graphic Frame" 
-                      className="vector-image"
+                      className="vector-image opacity-70"
                     />
                     <div className="eye-wrapper">
                       <img 
@@ -202,23 +202,23 @@ export const Faq = () => {
                       src="https://cdn.prod.website-files.com/67b873ab284925c72f7f5176/67c880774b52bc873ce2eb61_outer-grid-bigger.svg" 
                       loading="lazy" 
                       alt="Background Grid" 
-                      className="background-grid-image"
+                      className="background-grid-image opacity-15"
                     />
                   </div>
 
                 </div>
 
-                {/* Center Spine Element */}
+                {/* Center Spine Element: Deep Indigo diamond with Lavender icon */}
                 <div className="line-block flex flex-col items-center">
-                  <div className="square-block is--faq">
+                  <div className="square-block is--faq !bg-[#211747] !text-[#B9A1F7] border border-[#B9A1F7]/30 shadow-md">
                     <div className="icon-embed-small w-embed">
                       <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M33.7734 22.3427L41.9995 20.9997L33.7734 19.6573C27.9031 18.6985 23.3015 14.0964 22.3427 8.22612L20.9997 0L19.6567 8.22612C18.6985 14.0964 14.0964 18.6985 8.22612 19.6573L0 20.9997L8.22612 22.3427C14.0964 23.301 18.6985 27.9031 19.6567 33.7739L20.9997 42L22.3427 33.7739C23.3015 27.9031 27.9031 23.301 33.7734 22.3427Z" fill="currentColor"/>
                       </svg>
                     </div>
                   </div>
-                  <div className="vertical-line">
-                    <div className="text-size-xxsmall is--rotated text-[#1b1c1e] font-semibold uppercase">
+                  <div className="vertical-line !border-[#211747]/20">
+                    <div className="text-size-xxsmall is--rotated text-[#6B6478] font-bold tracking-widest uppercase">
                       FREQUENTLY ASKED QUESTIONS
                     </div>
                   </div>
@@ -229,8 +229,8 @@ export const Faq = () => {
                   
                   {/* Top Header details */}
                   <div className="faq-top">
-                    <h2 className="heading-style-h2 is--larger text-shadow-glow">QUESTIONS?</h2>
-                    <p className="text-size-regular text-color-secondary mt-4 leading-relaxed">
+                    <h2 className="heading-style-h2 is--larger text-[#211747] font-heading">QUESTIONS?</h2>
+                    <p className="text-size-regular text-[#6B6478] mt-4 leading-relaxed font-sans">
                       Here are answers to frequently asked questions about Make My Vid's video production process, remote editing workflows, and technical capabilities.
                     </p>
                   </div>
@@ -243,25 +243,28 @@ export const Faq = () => {
                       return (
                         <div 
                           key={index} 
-                          className="dropdown-accordion cursor-pointer border-b border-[#2e2e2e]"
+                          className="dropdown-accordion cursor-pointer border-b border-[#211747]/15 transition-colors duration-200"
                           onClick={() => setOpenIndex(isOpen ? null : index)}
                         >
                           
                           {/* Accordion header click wrapper */}
                           <div className="dropdown-top flex justify-between items-center py-6">
-                            <h3 className="heading-style-h3 text-white text-3xl font-heading uppercase">
+                            <h3 className="heading-style-h3 text-[#211747] text-3xl font-heading uppercase">
                               {faq.category}
                             </h3>
                             <div className="max-width-medium flex-1 px-8 hidden md:block">
-                              <p className="text-size-small text-gray-600 font-sans leading-tight">
+                              <p className="text-size-small text-[#6B6478] font-sans leading-tight">
                                 {faq.question}
                               </p>
                             </div>
                             <div className="faq-icon flex-shrink-0">
                               <div 
                                 ref={el => { iconRefs.current[index] = el; }}
-                                data-wf--button-icon--variant="dark" 
-                                className="button-icon bg-background/5 border border-black/10 rounded-full w-12 h-12 flex items-center justify-center text-white"
+                                className={`button-icon rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 border ${
+                                  isOpen 
+                                    ? "bg-[#D5FF3F] text-[#211747] border-[#D5FF3F] shadow-[0_0_14px_rgba(213,255,63,0.45)]" 
+                                    : "bg-[#211747] text-[#F3EBDD] border-[#211747]/20 hover:bg-[#B9A1F7] hover:text-[#211747]"
+                                }`}
                               >
                                 <div className="icon-embed-small is--small w-embed">
                                   <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -279,10 +282,10 @@ export const Faq = () => {
                             className="dropdown-bottom overflow-hidden h-0 opacity-0"
                           >
                             <div className="margin-top margin-medium pb-8 max-w-xl">
-                              <p className="text-size-small text-gray-600 font-sans leading-relaxed md:hidden mb-4 font-semibold">
+                              <p className="text-size-small text-[#211747] font-sans leading-relaxed md:hidden mb-4 font-semibold">
                                 {faq.question}
                               </p>
-                              <p className="text-size-tiny text-color-secondary font-sans leading-relaxed">
+                              <p className="text-size-tiny text-[#6B6478] font-sans leading-relaxed">
                                 {faq.answer}
                               </p>
                             </div>
@@ -301,8 +304,8 @@ export const Faq = () => {
         </div>
       </div>
       
-      {/* Checkered flags marquee below section-faq */}
-      <section data-gsap="marquee" className="section-check-marquee w-full overflow-hidden">
+      {/* Checkered flags marquee below section-faq in Deep Indigo & Warm Beige */}
+      <section data-gsap="marquee" className="section-check-marquee w-full overflow-hidden border-y border-[#211747]/15 bg-[#F3EBDD]">
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes faqMarqueeCheckers {
             0% { transform: translate3d(0, 0, 0); }
@@ -313,13 +316,19 @@ export const Faq = () => {
             width: max-content;
             animation: faqMarqueeCheckers 25s linear infinite;
           }
+          .square-ornament .square {
+            background-color: #F3EBDD !important;
+          }
+          .square-ornament .square.is--black {
+            background-color: #211747 !important;
+          }
         `}} />
-        <div className="ticker-section w-full">
+        <div className="ticker-section w-full py-2">
           <div className="ticker-component align-center w-full">
             <div className="ticker-main overflow-hidden flex flex-row">
               <div className="animate-faq-checkers">
                 {Array.from({ length: 30 }).map((_, idx) => (
-                  <div key={idx} className="square-ornament flex flex-row">
+                  <div key={idx} className="square-ornament flex flex-row border border-[#211747]/10">
                     <div className="square" />
                     <div className="square is--black" />
                     <div className="square is--black" />

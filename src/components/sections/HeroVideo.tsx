@@ -88,7 +88,7 @@ export const HeroVideo = () => {
   return (
     <section
       ref={containerRef}
-      className="hero-video w-full bg-background py-24 flex flex-col items-center relative overflow-hidden"
+      className="hero-video w-full bg-[#F3EBDD] bg-dots-pattern py-24 flex flex-col items-center relative overflow-hidden"
     >
       <header className="hero-video-border w-full max-w-[1440px] px-4 md:px-8">
         <div className="padding-global w-full">
@@ -98,7 +98,7 @@ export const HeroVideo = () => {
               {/* VIDEO WRAPPER WITH EXPANSION AND HOVER INTERACTION */}
               <div
                 ref={videoInnerRef}
-                className="hero-video-inner relative w-full aspect-video rounded-[96px] object-cover justify-center items-center flex overflow-hidden select-none border border-black/10 shadow-2xl bg-black cursor-pointer"
+                className="hero-video-inner relative w-full aspect-video rounded-[96px] object-cover justify-center items-center flex overflow-hidden select-none border-2 border-[#211747]/20 shadow-2xl bg-black cursor-pointer"
                 onPointerEnter={() => setIsHovered(true)}
                 onPointerLeave={() => setIsHovered(false)}
                 onPointerMove={handlePointerMove}
@@ -126,7 +126,7 @@ export const HeroVideo = () => {
                 {/* CUSTOM PLAY/PAUSE FLOATING CURSOR BADGE */}
                 {isHovered && (
                   <div
-                    className="absolute bg-[#1b4fd8] text-white font-sans text-xs font-bold tracking-widest uppercase rounded-full w-24 h-24 flex items-center justify-center pointer-events-none z-30 transition-transform duration-75 ease-out shadow-xl"
+                    className="absolute bg-[#D5FF3F] text-[#211747] font-sans text-xs font-bold tracking-widest uppercase rounded-full w-24 h-24 flex items-center justify-center pointer-events-none z-30 transition-transform duration-75 ease-out shadow-xl"
                     style={{
                       left: cursorPos.x,
                       top: cursorPos.y,
@@ -144,7 +144,7 @@ export const HeroVideo = () => {
                     type="button"
                     aria-label={isMuted ? "Unmute audio" : "Mute audio"}
                     onClick={toggleMute}
-                    className="w-14 h-14 bg-black/80 hover:bg-[#1b4fd8] hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300 border border-white/20 backdrop-blur-md shadow-lg"
+                    className="w-14 h-14 bg-[#211747]/85 hover:bg-[#D5FF3F] hover:text-[#211747] text-[#F3EBDD] rounded-full flex items-center justify-center transition-colors duration-300 border border-[#B9A1F7]/30 backdrop-blur-md shadow-lg"
                   >
                     {isMuted ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -168,7 +168,7 @@ export const HeroVideo = () => {
                       e.stopPropagation();
                       togglePlay();
                     }}
-                    className="w-14 h-14 bg-black/80 hover:bg-[#1b4fd8] hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300 border border-white/20 backdrop-blur-md shadow-lg"
+                    className="w-14 h-14 bg-[#211747]/85 hover:bg-[#D5FF3F] hover:text-[#211747] text-[#F3EBDD] rounded-full flex items-center justify-center transition-colors duration-300 border border-[#B9A1F7]/30 backdrop-blur-md shadow-lg"
                   >
                     {isPlaying ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

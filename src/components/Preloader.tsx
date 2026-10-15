@@ -53,7 +53,7 @@ export const Preloader: React.FC = () => {
         animate={{ opacity: isExiting ? 0 : 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
-        className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FFFFFF] text-black select-none overflow-hidden"
+        className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#F3EBDD] text-[#211747] select-none overflow-hidden"
       >
         {/* Fullscreen Camera Viewfinder Overlay (active throughout preloader duration) */}
         <ViewfinderOverlay />
@@ -62,7 +62,7 @@ export const Preloader: React.FC = () => {
         <div className="absolute top-8 md:top-12 right-8 md:right-16 z-30">
           <button
             onClick={handleSkip}
-            className="px-3.5 py-1.5 rounded-full bg-black/5 hover:bg-black/10 border border-black/15 text-[10px] md:text-xs font-mono tracking-widest text-black/70 hover:text-black transition-all cursor-pointer"
+            className="px-3.5 py-1.5 rounded-full bg-[#211747]/8 hover:bg-[#211747] border border-[#211747]/15 text-[10px] md:text-xs font-mono tracking-widest text-[#211747] hover:text-[#F3EBDD] transition-all cursor-pointer"
           >
             SKIP [ESC]
           </button>

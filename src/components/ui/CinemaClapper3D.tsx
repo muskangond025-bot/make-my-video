@@ -51,7 +51,7 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
     // -------------------------------------------------------------
     // 2. CINEMATIC STUDIO LIGHTING
     // -------------------------------------------------------------
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    const ambientLight = new THREE.AmbientLight(0xfbf8f2, 1.25);
     scene.add(ambientLight);
 
     // Key Light (Top-Right Studio Spotlight)
@@ -63,20 +63,20 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
     keyLight.shadow.bias = -0.0005;
     scene.add(keyLight);
 
-    // Rim / Backlight (Cool Cinema Blue Accent along edges)
-    const rimLight = new THREE.DirectionalLight(0x60a5fa, 2.0);
+    // Rim / Backlight (Lavender Purple Rim Accent along edges)
+    const rimLight = new THREE.DirectionalLight(0xb9a1f7, 2.5);
     rimLight.position.set(-6, 4, -4);
     scene.add(rimLight);
 
-    // Soft Warm Fill (Bottom-Left)
-    const fillLight = new THREE.DirectionalLight(0xfef08a, 0.6);
+    // Soft Warm Beige Fill (Bottom-Left)
+    const fillLight = new THREE.DirectionalLight(0xf3ebdd, 0.75);
     fillLight.position.set(-4, -5, 5);
     scene.add(fillLight);
 
     // -------------------------------------------------------------
     // 3. PROCEDURAL TEXTURES (CHALKBOARD SLATE & ZEBRA STRIPES)
     // -------------------------------------------------------------
-    // A. 45° Black & White Zebra Chevrons for Clapper Sticks
+    // A. 45° Deep Indigo & Warm Beige Zebra Chevrons for Clapper Sticks
     const createZebraTexture = () => {
       const texCanvas = document.createElement("canvas");
       texCanvas.width = 1024;
@@ -84,12 +84,12 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      // White base
-      ctx.fillStyle = "#f4f4f5";
+      // Warm Beige base
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillRect(0, 0, 1024, 128);
 
-      // Angled Black Chevrons (45°)
-      ctx.fillStyle = "#111113";
+      // Angled Deep Indigo Chevrons (45°)
+      ctx.fillStyle = "#211747";
       const stripeW = 96;
       for (let x = -128; x < 1024 + 128; x += stripeW * 2) {
         ctx.beginPath();
@@ -101,8 +101,8 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
         ctx.fill();
       }
 
-      // Subtle wooden grain line
-      ctx.strokeStyle = "rgba(0,0,0,0.15)";
+      // Subtle edge line
+      ctx.strokeStyle = "rgba(33, 23, 71, 0.25)";
       ctx.lineWidth = 2;
       ctx.strokeRect(2, 2, 1020, 124);
 
@@ -119,32 +119,32 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      // Deep dark slate with subtle texture
-      ctx.fillStyle = "#18181b";
+      // Deep Indigo slate base
+      ctx.fillStyle = "#211747";
       ctx.fillRect(0, 0, 1024, 768);
 
-      // Chalk dust smudge gradients
+      // Lavender chalk dust smudge gradients
       const grad = ctx.createRadialGradient(512, 384, 50, 512, 384, 450);
-      grad.addColorStop(0, "rgba(255, 255, 255, 0.06)");
-      grad.addColorStop(0.5, "rgba(255, 255, 255, 0.02)");
-      grad.addColorStop(1, "rgba(0, 0, 0, 0.35)");
+      grad.addColorStop(0, "rgba(185, 161, 247, 0.12)");
+      grad.addColorStop(0.5, "rgba(185, 161, 247, 0.04)");
+      grad.addColorStop(1, "rgba(10, 6, 26, 0.45)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 1024, 768);
 
       // Horizontal chalk dust wiping streaks
-      ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
+      ctx.fillStyle = "rgba(185, 161, 247, 0.04)";
       for (let y = 60; y < 700; y += 35) {
         ctx.fillRect(40, y, 944, 18);
       }
 
-      // Outer Slate Frame Border
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+      // Outer Slate Frame Border in Lavender
+      ctx.strokeStyle = "rgba(185, 161, 247, 0.35)";
       ctx.lineWidth = 4;
       ctx.strokeRect(32, 32, 960, 704);
 
       // Grid Layout Lines
-      ctx.strokeStyle = "#e4e4e7";
-      ctx.lineWidth = 5;
+      ctx.strokeStyle = "rgba(185, 161, 247, 0.5)";
+      ctx.lineWidth = 4;
 
       // Divider below PRODUCTION
       ctx.beginPath();
@@ -185,60 +185,61 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       // ----------------------------------------
       // Typography & Slate Headings
       // ----------------------------------------
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 32px 'Montserrat', sans-serif";
 
       // 1. PRODUCTION
       ctx.fillText("PRODUCTION", 60, 95);
       ctx.font = "bold 44px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#facc15"; // Cinema Yellow
+      ctx.fillStyle = "#D5FF3F"; // Neon Lime brand accent
       ctx.fillText("MAKE MY VID", 340, 102);
 
       // 2. SCENE
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 28px 'Montserrat', sans-serif";
       ctx.fillText("SCENE", 160, 195);
       ctx.font = "bold 96px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillText("01", 150, 340);
 
       // 3. TAKE
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 28px 'Montserrat', sans-serif";
       ctx.fillText("TAKE", 475, 195);
       ctx.font = "bold 96px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillText("01", 465, 340);
 
       // 4. ROLL
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 28px 'Montserrat', sans-serif";
       ctx.fillText("ROLL", 780, 195);
       ctx.font = "bold 96px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillText("A", 780, 340);
 
       // 5. DIRECTOR
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 28px 'Montserrat', sans-serif";
       ctx.fillText("DIRECTOR", 60, 480);
       ctx.font = "bold 34px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#e4e4e7";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillText("ROHAN JOSHI", 340, 482);
 
       // 6. CAMERA
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 28px 'Montserrat', sans-serif";
       ctx.fillText("CAMERA", 60, 590);
       ctx.font = "bold 34px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#e4e4e7";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillText("35MM ANAMORPHIC", 340, 592);
 
       // 7. DATE & FPS
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#B9A1F7";
       ctx.font = "bold 28px 'Montserrat', sans-serif";
       ctx.fillText("DATE", 60, 695);
       ctx.font = "bold 32px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#e4e4e7";
+      ctx.fillStyle = "#F3EBDD";
       ctx.fillText("2026 • 24 FPS", 340, 698);
 
       const tex = new THREE.CanvasTexture(texCanvas);
@@ -259,11 +260,11 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       metalness: 0.08,
     });
 
-    // Dark Matte Slate Body Material
+    // Dark Matte Slate Body Material in Deep Indigo
     const slateBodyMaterial = new THREE.MeshStandardMaterial({
-      color: 0x18181b,
+      color: 0x211747,
       roughness: 0.65,
-      metalness: 0.12,
+      metalness: 0.15,
     });
 
     // Zebra Clapper Sticks Material
@@ -275,7 +276,7 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
 
     // Gunmetal Steel Hinge Plate Material
     const steelHingeMaterial = new THREE.MeshStandardMaterial({
-      color: 0x27272a,
+      color: 0x191138,
       roughness: 0.35,
       metalness: 0.85,
     });

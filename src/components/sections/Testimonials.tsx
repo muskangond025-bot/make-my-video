@@ -59,7 +59,7 @@ const TestimonialQuote = ({ text, active }: { text: string; active: boolean }) =
 
     tl.to(words, {
       opacity: 1,
-      color: "#ffffff",
+      color: "#F3EBDD",
       stagger: 0.05,
       ease: "none"
     });
@@ -76,7 +76,7 @@ const TestimonialQuote = ({ text, active }: { text: string; active: boolean }) =
           <span 
             key={idx} 
             className="word inline-block mr-[0.25em]"
-            style={{ opacity: 0.2, color: 'rgba(255, 255, 255, 0.2)', transition: 'color 0.3s' }}
+            style={{ opacity: 0.25, color: 'rgba(243, 235, 221, 0.25)', transition: 'color 0.3s' }}
           >
             {word}
           </span>
@@ -200,21 +200,21 @@ export const Testimonials = () => {
 
   if (isMobile) {
     return (
-      <section id="testimonials" className="section-testimonials-mobile w-full bg-background py-16">
+      <section id="testimonials" className="section-testimonials-mobile w-full bg-[#211747] text-[#F3EBDD] py-16">
         <div className="padding-global">
           <div className="container-large">
             <div className="testimonials-inner">
               
               {/* Tagline */}
               <div className="top-tagline">
-                <div className="text-size-regular text-color-primary text-weight-medium">WHAT OTHERS</div>
-                <div className="plus-icon w-embed">
+                <div className="text-size-regular text-[#B9A1F7] text-weight-medium">WHAT OTHERS</div>
+                <div className="plus-icon w-embed text-[#B9A1F7]">
                   <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.5083 11.7651V0.197266H12.8586V9.46042L9.01862 12.8732H0.5V18.369H11.9317L18.5083 11.7651Z" fill="currentColor"/>
                     <path d="M14.4917 20.6294L14.4917 32.1973L20.1414 32.1973L20.1414 22.9341L23.9814 19.5214L32.5 19.5214L32.5 14.0255L21.0683 14.0255L14.4917 20.6294Z" fill="currentColor"/>
                   </svg>
                 </div>
-                <div className="text-size-regular text-color-secondary text-weight-medium">SAY ABOUT MAKE MY VID</div>
+                <div className="text-size-regular text-[#F3EBDD] text-weight-medium">SAY ABOUT MAKE MY VID</div>
               </div>
 
               {/* Slider View */}
@@ -226,22 +226,22 @@ export const Testimonials = () => {
                       className="flex flex-col gap-6"
                       style={{ display: activeIndex === idx ? 'flex' : 'none' }}
                     >
-                      <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-white p-4 relative flex items-center justify-center">
+                      <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-white p-4 relative flex items-center justify-center border border-[#B9A1F7]/25 shadow-xl">
                         <img src={t.photo} alt={t.name} className="w-full h-full object-contain rounded-xl" />
                       </div>
                       
                       <div className="flex flex-col gap-4">
-                        <p className="text-2xl text-white font-heading uppercase leading-tight">
+                        <p className="text-2xl text-[#F3EBDD] font-heading uppercase leading-tight">
                           {t.quote}
                         </p>
-                        <p className="text-gray-600 text-sm leading-relaxed">
+                        <p className="text-[#F3EBDD]/70 text-sm leading-relaxed">
                           "{t.subQuote}"
                         </p>
                         <div className="flex items-center gap-4 mt-2">
-                          <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
+                          <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover border border-[#B9A1F7]/30" />
                           <div className="flex flex-col">
-                            <span className="text-white text-sm font-semibold uppercase">{t.name}</span>
-                            <span className="text-gray-600 text-xs uppercase">{t.role} • {t.company}</span>
+                            <span className="text-[#F3EBDD] text-sm font-semibold uppercase">{t.name}</span>
+                            <span className="text-[#B9A1F7] text-xs uppercase">{t.role} • {t.company}</span>
                           </div>
                         </div>
                       </div>
@@ -285,14 +285,14 @@ export const Testimonials = () => {
               
               {/* Top Tagline */}
               <div className="top-tagline">
-                <div className="text-size-regular text-color-primary text-weight-medium">WHAT OTHERS</div>
-                <div className="plus-icon w-embed">
+                <div className="text-size-regular text-[#B9A1F7] text-weight-medium">WHAT OTHERS</div>
+                <div className="plus-icon w-embed text-[#B9A1F7]">
                   <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.5083 11.7651V0.197266H12.8586V9.46042L9.01862 12.8732H0.5V18.369H11.9317L18.5083 11.7651Z" fill="currentColor"/>
                     <path d="M14.4917 20.6294L14.4917 32.1973L20.1414 32.1973L20.1414 22.9341L23.9814 19.5214L32.5 19.5214L32.5 14.0255L21.0683 14.0255L14.4917 20.6294Z" fill="currentColor"/>
                   </svg>
                 </div>
-                <div className="text-size-regular text-color-white text-weight-medium">SAY ABOUT MAKE MY VID</div>
+                <div className="text-size-regular text-[#F3EBDD] text-weight-medium">SAY ABOUT MAKE MY VID</div>
               </div>
 
               {/* Main Testimonials Slider Frame */}
@@ -407,7 +407,7 @@ export const Testimonials = () => {
 
                             {/* Sub Quote description text */}
                             <div className="slider-info-middle">
-                              <p className="text-size-regular text-color-secondary">
+                              <p className="text-size-regular text-[#F3EBDD]/75 leading-relaxed">
                                 "{t.subQuote}"
                               </p>
                             </div>
@@ -415,19 +415,19 @@ export const Testimonials = () => {
                             {/* Author info & avatar */}
                             <div className="testimonial-author-wrapper">
                               <div 
-                                className="testimonial-author-image"
+                                className="testimonial-author-image border border-[#B9A1F7]/30"
                                 style={{ backgroundImage: `url(${t.avatar})` }}
                               />
                               <div className="blog-author-text">
-                                <div className="text-size-small text-color-primary text-weight-semibold text-style-allcaps">
+                                <div className="text-size-small text-[#F3EBDD] font-bold text-style-allcaps">
                                   {t.name}
                                 </div>
-                                <div className="blog-date-wrapper">
-                                  <div className="text-size-tiny text-style-allcaps">
+                                <div className="blog-date-wrapper flex items-center gap-2 mt-1">
+                                  <div className="text-size-tiny text-[#B9A1F7] font-semibold text-style-allcaps">
                                     {t.role}
                                   </div>
-                                  <div className="circle-dot is--smaller" />
-                                  <div className="text-size-tiny text-color-secondary text-style-allcaps">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-[#D5FF3F]" />
+                                  <div className="text-size-tiny text-[#F3EBDD]/70 text-style-allcaps">
                                     {t.company}
                                   </div>
                                 </div>
@@ -435,7 +435,7 @@ export const Testimonials = () => {
                             </div>
 
                             {/* Big Quote symbol indicator */}
-                            <div className="quote-vector w-embed">
+                            <div className="quote-vector w-embed text-[#B9A1F7]/25">
                               <svg width="69" height="65" viewBox="0 0 69 65" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M37.6364 37.8443V0.197266H69V37.8443L62.1 64.1973H46.1045L52.6909 37.8443H37.6364ZM0 37.8443V0.197266H31.3636V37.8443L24.4636 64.1973H8.46818L15.0545 37.8443H0Z" fill="currentColor"/>
                               </svg>

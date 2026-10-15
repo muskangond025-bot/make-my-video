@@ -117,7 +117,7 @@ export const CardSwing = () => {
   }, []);
 
   return (
-    <section id="features" ref={containerRef} className="section-expertise-two w-full bg-background relative select-none">
+    <section id="features" ref={containerRef} className="section-expertise-two w-full bg-[#F3EBDD] bg-dots-pattern relative select-none">
       <div className="padding-global w-full">
         <div className="container-large align-center w-full">
           <div className="expertise-inner-wrap w-full flex flex-col items-center">
@@ -125,16 +125,16 @@ export const CardSwing = () => {
             {/* Tagline title and header details */}
             <div className="title-top-wrap w-full flex flex-col items-center py-20 text-center gap-6">
               <div className="top-tagline flex items-center justify-center gap-4 text-xs font-sans tracking-widest font-semibold uppercase">
-                <span className="text-[#ffd600]">MAKE MY VID</span>
-                <div className="plus-icon text-white w-6 h-6 flex items-center justify-center">
+                <span className="text-[#211747] font-bold">MAKE MY VID</span>
+                <div className="plus-icon text-[#B9A1F7] w-6 h-6 flex items-center justify-center">
                   <svg width="100%" height="100%" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.5083 11.7651V0.197266H12.8586V9.46042L9.01862 12.8732H0.5V18.369H11.9317L18.5083 11.7651Z" fill="currentColor" />
                     <path d="M14.4917 20.6294L14.4917 32.1973L20.1414 32.1973L20.1414 22.9341L23.9814 19.5214L32.5 19.5214L32.5 14.0255L21.0683 14.0255L14.4917 20.6294Z" fill="currentColor" />
                   </svg>
                 </div>
-                <span className="text-blue-200">PRODUCTION CAPABILITIES</span>
+                <span className="text-[#B9A1F7] font-semibold">PRODUCTION CAPABILITIES</span>
               </div>
-              <p className="text-blue-100/70 font-sans text-lg md:text-xl max-w-[800px] leading-relaxed">
+              <p className="text-[#6B6478] font-sans text-lg md:text-xl max-w-[800px] leading-relaxed">
                 Discover our comprehensive video production capabilities designed to elevate brands, empower creators, and captivate audiences worldwide.
               </p>
             </div>
@@ -154,11 +154,11 @@ export const CardSwing = () => {
 
                 {/* Concentric Circle Backdrops - Forced flex layout to avoid media query display overrides */}
                 <div className="hero-bg is--hero !flex pointer-events-none select-none">
-                  <div className="circle-1" style={{ borderColor: 'rgba(255,255,255,0.08)' }}></div>
-                  <div className="circle-2" style={{ borderColor: 'rgba(255,255,255,0.08)' }}></div>
-                  <div className="circle-3" style={{ borderColor: 'rgba(255,255,255,0.08)' }}></div>
-                  <div className="circle-4" style={{ borderColor: 'rgba(255,255,255,0.08)' }}></div>
-                  <div className="circle-5" style={{ borderColor: 'rgba(255,255,255,0.08)' }}></div>
+                  <div className="circle-1" style={{ borderColor: 'rgba(33,23,71,0.08)' }}></div>
+                  <div className="circle-2" style={{ borderColor: 'rgba(33,23,71,0.08)' }}></div>
+                  <div className="circle-3" style={{ borderColor: 'rgba(33,23,71,0.08)' }}></div>
+                  <div className="circle-4" style={{ borderColor: 'rgba(33,23,71,0.08)' }}></div>
+                  <div className="circle-5" style={{ borderColor: 'rgba(33,23,71,0.08)' }}></div>
                 </div>
 
                 {/* Horizontal slider cards track */}

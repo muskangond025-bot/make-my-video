@@ -88,17 +88,17 @@ export const Experience = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="about" className="section-experience relative w-full overflow-hidden bg-[#F3EBDD] bg-dots-pattern py-24 flex flex-col justify-between" style={{ minHeight: '85vh' }}>
+    <section id="about" className="section-experience relative w-full overflow-hidden bg-[#F3EBDD] dark:bg-[#191138] bg-dots-pattern py-24 flex flex-col justify-between" style={{ minHeight: '85vh' }}>
       
       {/* Decorative top strip */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#211747]/10" />
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-[#211747]/10 dark:bg-[#B9A1F7]/20" />
 
       {/* Centered Heading */}
       <div className="relative w-full max-w-[1440px] mx-auto px-6 md:px-16 flex flex-col z-10 text-left mb-12">
-        <h3 className="font-heading text-4xl md:text-6xl text-[#211747] uppercase leading-none font-bold tracking-tight">
+        <h3 className="font-heading text-4xl md:text-6xl text-[#211747] dark:text-[#F3EBDD] uppercase leading-none font-bold tracking-tight">
           PROVEN <span className="text-[#B9A1F7]">TRACK RECORD</span>
         </h3>
-        <p className="font-sans text-xs md:text-sm text-[#6B6478] mt-3 uppercase tracking-widest">
+        <p className="font-sans text-xs md:text-sm text-[#6B6478] dark:text-[#B9A1F7] mt-3 uppercase tracking-widest font-semibold">
           Over 1,000+ films crafted for global enterprises, MSMEs, and top innovators
         </p>
       </div>
@@ -121,7 +121,7 @@ export const Experience = () => {
                   
                   {/* Top Content Block */}
                   <div>
-                    {/* Image Frame */}
+                    {/* Image Frame - Big & High Visibility */}
                     <div className="grow-card-image-wrap">
                       <img
                         src={card.image}
@@ -131,33 +131,38 @@ export const Experience = () => {
                     </div>
 
                     {/* Number & Icon Meta Row */}
-                    <div className="flex flex-row justify-between items-center text-[10px] uppercase font-bold tracking-widest text-[#B9A1F7] mb-1">
-                      <span>NO. 0{card.id}</span>
-                      <span className="text-[#B9A1F7] flex items-center justify-center">
+                    <div className="flex flex-row justify-between items-center text-[11px] uppercase font-bold tracking-wider text-[#B9A1F7] mb-1">
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#D5FF3F]" />
+                        NO. 0{card.id}
+                      </span>
+                      <span className="text-[#B9A1F7] flex items-center justify-center p-1 rounded-md bg-[#B9A1F7]/10 border border-[#B9A1F7]/20">
                         {renderIcon(card.icon)}
                       </span>
                     </div>
 
-                    {/* Editorial Title (Serif Italic) */}
-                    <h4 className="font-serif italic text-2xl text-[#F3EBDD] mt-2 mb-1.5 leading-none font-medium text-left">
+                    {/* Editorial Title (Serif Italic) - High Contrast & Crisp */}
+                    <h4 className="font-serif italic text-xl md:text-2xl text-[#FFFFFF] dark:text-[#F3EBDD] mt-2 mb-1 leading-snug font-semibold text-left drop-shadow-sm">
                       {card.title}
                     </h4>
 
-                    {/* Description */}
-                    <p className="font-sans text-[11px] text-[#F3EBDD]/70 leading-relaxed text-left">
+                    {/* Description - 100% Crisp Visible Text */}
+                    <p className="font-sans text-[12px] md:text-[12.5px] text-[#F3EBDD] leading-relaxed text-left font-normal drop-shadow-sm">
                       {card.description}
                     </p>
                   </div>
 
                   {/* Bottom Content Block */}
-                  <div>
+                  <div className="mt-auto pt-2">
                     {/* Subtle Line Divider */}
-                    <div className="w-full h-[1px] bg-[#B9A1F7]/15 my-3.5" />
+                    <div className="w-full h-[1px] bg-[#B9A1F7]/25 my-3" />
 
                     {/* Price & View Actions */}
                     <div className="flex flex-row justify-between items-center font-sans text-xs">
-                      <span className="font-bold text-[#D5FF3F] text-[13px] tracking-wide">{card.price}</span>
-                      <span className="font-semibold text-[#B9A1F7] group-hover:text-[#D5FF3F] flex items-center gap-1 text-[10px] uppercase tracking-widest transition-colors">
+                      <span className="font-bold text-[#D5FF3F] text-[12px] tracking-wide px-2.5 py-1 rounded-full bg-[#D5FF3F]/10 border border-[#D5FF3F]/30 backdrop-blur-md">
+                        {card.price}
+                      </span>
+                      <span className="font-bold text-[#B9A1F7] group-hover:text-[#D5FF3F] flex items-center gap-1 text-[11px] uppercase tracking-wider transition-colors drop-shadow-sm">
                         View &rarr;
                       </span>
                     </div>
@@ -173,14 +178,14 @@ export const Experience = () => {
       {/* Bottom Footer Info Details */}
       <div className="relative w-full max-w-[1440px] mx-auto px-6 md:px-16 mt-12 flex flex-col sm:flex-row justify-between items-center gap-6 z-10">
         <div className="text-left max-w-sm sm:max-w-md">
-          <p className="font-sans text-[11px] md:text-xs text-[#6B6478] leading-relaxed font-semibold uppercase tracking-wider">
+          <p className="font-sans text-[11px] md:text-xs text-[#6B6478] dark:text-[#B9A1F7] leading-relaxed font-semibold uppercase tracking-wider">
             Pan-India multi-camera shoots, frame-accurate cloud editing, and cinematic storytelling combined into one dedicated agency.
           </p>
         </div>
         <div>
           <a
             href="https://rohanjoshi.in/all-projects"
-            className="group inline-flex items-center gap-2 border border-[#211747]/20 hover:border-[#211747] text-[#211747] hover:bg-[#211747] hover:text-[#D5FF3F] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 bg-[#F3EBDD] shadow-sm cursor-pointer"
+            className="group inline-flex items-center gap-2 border border-[#211747]/20 dark:border-[#B9A1F7]/30 hover:border-[#211747] text-[#211747] dark:text-[#F3EBDD] hover:bg-[#211747] dark:hover:bg-[#B9A1F7] hover:text-[#D5FF3F] dark:hover:text-[#211747] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 bg-[#F3EBDD] dark:bg-[#211747]/80 backdrop-blur-md shadow-sm cursor-pointer"
           >
             Explore All Projects
             <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>

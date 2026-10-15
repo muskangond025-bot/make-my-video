@@ -159,6 +159,8 @@ export const Expertise = () => {
           stagger: { amount: revealDuration, from: "start" },
           duration: revealDuration
         });
+        // Hold the description fully visible and readable as user continues scrolling
+        h2Tl.to({}, { duration: 0.8 });
 
         masterTl.add(h1Tl);
         masterTl.add(h2Tl, `-=${overlapOffset}`);
@@ -183,20 +185,11 @@ export const Expertise = () => {
 
       if (!pinHeight || !container || cards.length === 0) return;
 
-      // Pin container during scroll
-      const pinTrigger = ScrollTrigger.create({
-        trigger: pinHeight,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: container,
-        pinSpacing: false,
-        scrub: 0.4
-      });
-
       // Set initial card position (offset down off screen)
       gsap.set(cards, {
         yPercent: 50,
-        y: 0.5 * window.innerHeight
+        y: 0.5 * window.innerHeight,
+        rotation: 0
       });
 
       // Re-create the Webflow exact custom ease curve for the cards reveal
@@ -205,37 +198,22 @@ export const Expertise = () => {
       // Animate cards staggered reveal timeline
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: root,
+          trigger: pinHeight,
           start: 'top top',
           end: 'bottom bottom',
           scrub: 0.4
         }
       });
 
-      // Translate up
+      // Translate up smoothly with staggered reveal, keeping cards perfectly upright with no overlap
       tl.to(cards, {
         yPercent: -50,
         y: -0.5 * window.innerHeight,
+        rotation: 0,
         duration: 1,
         stagger: 0.12,
         ease: "expertiseCurve"
       }, 'step');
-
-      // Add random rotation swings
-      tl.to(cards, {
-        rotation: () => (Math.random() - 0.5) * 20,
-        duration: 0.5,
-        stagger: 0.12,
-        ease: 'power3.out'
-      }, 'step');
-
-      // Straighten out rotation at the end
-      tl.to(cards, {
-        rotation: 0,
-        duration: 0.5,
-        stagger: 0.12,
-        ease: 'power3.in'
-      }, 'step+=0.5');
 
     }, containerRef);
 
@@ -505,7 +483,7 @@ export const Expertise = () => {
 
                         {/* Heading 2: Description */}
                         <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[2.5rem] leading-[1.2] font-semibold text-[#B9A1F7] max-w-[900px] select-none uppercase">
-                          {splitWordsAndChars("Multi-City Video Production, Remote Editing, and Corporate AV Solutions")}
+                          {splitWordsAndChars("MULTI-CITY VIDEO PRODUCTION, REMOTE EDITING, AND CORPORATE AV SOLUTIONS")}
                         </h2>
 
                       </div>
@@ -513,9 +491,25 @@ export const Expertise = () => {
                   </section>
 
                   {/* DESKTOP STICKY STAGGER REVEAL CARDS */}
-                  <div className="expertise-cards">
-                    <div className="pin-height">
-                      <div className="expertise-container">
+                  <div className="expertise-cards w-full relative" style={{ margin: "0 auto", overflow: "visible" }}>
+                    <div className="pin-height w-full relative" style={{ height: "500vh", margin: "0 auto" }}>
+                      <div
+                        className="expertise-container w-full"
+                        style={{
+                          position: "sticky",
+                          top: 0,
+                          height: "100vh",
+                          display: "flex",
+                          flexFlow: "row nowrap",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "22px",
+                          margin: "0 auto",
+                          padding: 0,
+                          boxSizing: "border-box",
+                          zIndex: 5,
+                        }}
+                      >
 
                         {/* CARD 1: MULTI CITY PRODUCTION */}
                         <div className="expertise-card">

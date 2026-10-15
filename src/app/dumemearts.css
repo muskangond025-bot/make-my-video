@@ -9581,11 +9581,11 @@ figcaption {
 }
 
 .expertise-card {
-  margin-right: -1.5vw;
+  margin-right: 0;
 }
 
 .expertise-cards {
-  margin-top: -50vh;
+  margin: 0 auto;
 }
 
 .layout-component {
@@ -9604,8 +9604,10 @@ figcaption {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding-right: 1.5vw;
+  padding: 0;
+  margin: 0 auto;
   display: flex;
+  gap: 22px;
 }
 
 .vogue {

@@ -44,15 +44,14 @@ export const Header = () => {
             {/* ========================================================= */}
             <div className="relative pointer-events-auto w-full sm:w-auto">
               <div
-                className={`flex items-center justify-between sm:justify-start rounded-[1.6rem] transition-all duration-300 border ${
+                className={`flex items-center justify-between sm:justify-start rounded-full transition-all duration-300 border ${
                   isScrolled
-                    ? "bg-[#F3EBDD]/90 dark:bg-[#211747]/90 shadow-[0_12px_36px_rgba(33,23,71,0.12)] backdrop-blur-xl border-[#211747]/12 dark:border-[#B9A1F7]/20"
-                    : "bg-[#F3EBDD]/95 dark:bg-[#211747]/95 shadow-[0_6px_24px_rgba(33,23,71,0.06)] backdrop-blur-md border-[#211747]/10 dark:border-[#B9A1F7]/15"
+                    ? "bg-[#0A0B0E]/90 shadow-[0_12px_36px_rgba(0,0,0,0.5)] backdrop-blur-xl border-white/15 text-white"
+                    : "bg-[#0A0B0E]/75 shadow-[0_6px_24px_rgba(0,0,0,0.3)] backdrop-blur-md border-white/10 text-white"
                 }`}
                 style={{
-                  padding: "1.25rem 2.2rem",
-                  color: isDark ? "#F3EBDD" : "#211747",
-                  gap: "44px",
+                  padding: "0.85rem 1.8rem",
+                  gap: "36px",
                 }}
               >
                 {/* Brand Logo */}
@@ -64,7 +63,7 @@ export const Header = () => {
                   <img
                     src="https://storage.googleapis.com/mkv_imagesbackend/navbar_logo/677e52686d8ba_navbarlogo.png"
                     alt="Make My Vid Logo"
-                    className="h-6 sm:h-[26px] w-auto object-contain dark:brightness-110"
+                    className="h-6 sm:h-[26px] w-auto object-contain brightness-0 invert"
                   />
                 </a>
 
@@ -74,7 +73,7 @@ export const Header = () => {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "44px",
+                    gap: "36px",
                   }}
                 >
                   {navItems.map((item) => (
@@ -83,14 +82,13 @@ export const Header = () => {
                       href={item.href}
                       target={item.target || "_self"}
                       rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
-                      className="transition-colors duration-200 text-decoration-none hover:text-[#B9A1F7] block flex-shrink-0"
+                      className="transition-colors duration-200 text-decoration-none hover:text-[#B9A1F7] block flex-shrink-0 text-white/85 hover:text-white"
                       style={{
                         fontFamily: "'HK Guise', -apple-system, BlinkMacSystemFont, sans-serif",
-                        fontSize: "15px",
+                        fontSize: "14px",
                         lineHeight: 1.5,
-                        letterSpacing: "0.04em",
+                        letterSpacing: "0.03em",
                         fontWeight: 500,
-                        color: isDark ? "#F3EBDD" : "#211747",
                       }}
                     >
                       {item.name}
@@ -98,7 +96,7 @@ export const Header = () => {
                   ))}
                 </nav>
 
-                {/* Theme Mode Toggle Button placed directly where the cross/more menu icon was */}
+                {/* Theme Mode Toggle Button */}
                 <ThemeToggle />
               </div>
             </div>

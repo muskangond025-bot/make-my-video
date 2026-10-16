@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 interface CinemaClapper3DProps {
@@ -18,7 +18,8 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [clapped, setClapped] = useState(false);
+  const hasClappedRef = useRef(false);
+  const hasCompletedRef = useRef(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -33,8 +34,8 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
     let width = container.clientWidth || window.innerWidth;
     let height = container.clientHeight || window.innerHeight;
 
-    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
-    camera.position.set(0, 0.2, 9.5);
+    const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
+    camera.position.set(0, 0, 9.2);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -45,38 +46,65 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(width, height);
     renderer.setClearColor(0x000000, 0);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // -------------------------------------------------------------
     // 2. CINEMATIC STUDIO LIGHTING
     // -------------------------------------------------------------
-    const ambientLight = new THREE.AmbientLight(0xfbf8f2, 1.25);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    // Key Light (Top-Right Studio Spotlight)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
-    keyLight.position.set(6, 8, 7);
+    // Key Light: warm top-right studio directional light
+    const keyLight = new THREE.DirectionalLight(0xfff3e5, 2.6);
+    keyLight.position.set(5, 7, 6);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
     keyLight.shadow.mapSize.height = 1024;
     keyLight.shadow.bias = -0.0005;
     scene.add(keyLight);
 
-    // Rim / Backlight (Lavender Purple Rim Accent along edges)
-    const rimLight = new THREE.DirectionalLight(0xb9a1f7, 2.5);
-    rimLight.position.set(-6, 4, -4);
+    // Cool Titanium Rim Light: sharp edge specular on the top sticks and hinge
+    const rimLight = new THREE.DirectionalLight(0x78a8ff, 3.2);
+    rimLight.position.set(-6, 3, -4);
     scene.add(rimLight);
 
-    // Soft Warm Beige Fill (Bottom-Left)
-    const fillLight = new THREE.DirectionalLight(0xf3ebdd, 0.75);
-    fillLight.position.set(-4, -5, 5);
+    // Soft Ambient Fill from below
+    const fillLight = new THREE.DirectionalLight(0x283040, 0.8);
+    fillLight.position.set(-2, -4, 4);
     scene.add(fillLight);
 
+    // Ground contact shadow below clapperboard for white background
+    const shadowCanvas = document.createElement("canvas");
+    shadowCanvas.width = 256;
+    shadowCanvas.height = 256;
+    const sCtx = shadowCanvas.getContext("2d");
+    if (sCtx) {
+      const grad = sCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
+      grad.addColorStop(0, "rgba(0, 0, 0, 0.16)");
+      grad.addColorStop(0.5, "rgba(0, 0, 0, 0.05)");
+      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, 256, 256);
+    }
+    const shadowTex = new THREE.CanvasTexture(shadowCanvas);
+    const shadowGeo = new THREE.PlaneGeometry(7.5, 3.5);
+    const shadowMat = new THREE.MeshBasicMaterial({
+      map: shadowTex,
+      transparent: true,
+      opacity: 0.65,
+      depthWrite: false,
+    });
+    const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+    shadowMesh.position.set(0, -2.5, -0.1);
+    scene.add(shadowMesh);
+
     // -------------------------------------------------------------
-    // 3. PROCEDURAL TEXTURES (CHALKBOARD SLATE & ZEBRA STRIPES)
+    // 3. REALISTIC TEXTURES (ZEBRA CHEVRONS & MATTE ACRYLIC SLATE)
     // -------------------------------------------------------------
-    // A. 45° Deep Indigo & Warm Beige Zebra Chevrons for Clapper Sticks
+    // A. High-Contrast Black & White Zebra Chevrons (Satin Lacquer)
     const createZebraTexture = () => {
       const texCanvas = document.createElement("canvas");
       texCanvas.width = 1024;
@@ -84,12 +112,12 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      // Warm Beige base
-      ctx.fillStyle = "#F3EBDD";
+      // Deep Charcoal Base
+      ctx.fillStyle = "#0B0C0E";
       ctx.fillRect(0, 0, 1024, 128);
 
-      // Angled Deep Indigo Chevrons (45°)
-      ctx.fillStyle = "#211747";
+      // Pure White 45° Chevrons
+      ctx.fillStyle = "#F5F6F8";
       const stripeW = 96;
       for (let x = -128; x < 1024 + 128; x += stripeW * 2) {
         ctx.beginPath();
@@ -101,17 +129,18 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
         ctx.fill();
       }
 
-      // Subtle edge line
-      ctx.strokeStyle = "rgba(33, 23, 71, 0.25)";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(2, 2, 1020, 124);
+      // Edge accent borders
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.4)";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(1, 1, 1022, 126);
 
       const tex = new THREE.CanvasTexture(texCanvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       return tex;
     };
 
-    // B. Film Chalkboard Slate Face Texture
+    // B. Matte Obsidian Acrylic Slate Texture
     const createChalkboardTexture = () => {
       const texCanvas = document.createElement("canvas");
       texCanvas.width = 1024;
@@ -119,273 +148,219 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       const ctx = texCanvas.getContext("2d");
       if (!ctx) return new THREE.CanvasTexture(texCanvas);
 
-      // Deep Indigo slate base
-      ctx.fillStyle = "#211747";
+      // Deep matte obsidian slate
+      ctx.fillStyle = "#111215";
       ctx.fillRect(0, 0, 1024, 768);
 
-      // Lavender chalk dust smudge gradients
-      const grad = ctx.createRadialGradient(512, 384, 50, 512, 384, 450);
-      grad.addColorStop(0, "rgba(185, 161, 247, 0.12)");
-      grad.addColorStop(0.5, "rgba(185, 161, 247, 0.04)");
-      grad.addColorStop(1, "rgba(10, 6, 26, 0.45)");
+      // Subtle surface grain
+      const grad = ctx.createRadialGradient(512, 384, 100, 512, 384, 500);
+      grad.addColorStop(0, "rgba(255, 255, 255, 0.03)");
+      grad.addColorStop(1, "rgba(0, 0, 0, 0.35)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 1024, 768);
 
-      // Horizontal chalk dust wiping streaks
-      ctx.fillStyle = "rgba(185, 161, 247, 0.04)";
-      for (let y = 60; y < 700; y += 35) {
-        ctx.fillRect(40, y, 944, 18);
-      }
+      // Outer Slate Frame Border
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(28, 28, 968, 712);
 
-      // Outer Slate Frame Border in Lavender
-      ctx.strokeStyle = "rgba(185, 161, 247, 0.35)";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(32, 32, 960, 704);
+      // Grid Dividers
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.lineWidth = 3;
 
-      // Grid Layout Lines
-      ctx.strokeStyle = "rgba(185, 161, 247, 0.5)";
-      ctx.lineWidth = 4;
-
-      // Divider below PRODUCTION
+      // Divider below Header
       ctx.beginPath();
-      ctx.moveTo(50, 150);
-      ctx.lineTo(974, 150);
+      ctx.moveTo(40, 150);
+      ctx.lineTo(984, 150);
       ctx.stroke();
 
       // Divider below SCENE / TAKE / ROLL
       ctx.beginPath();
-      ctx.moveTo(50, 410);
-      ctx.lineTo(974, 410);
+      ctx.moveTo(40, 410);
+      ctx.lineTo(984, 410);
       ctx.stroke();
 
-      // Vertical column divider 1 (between Scene and Take)
+      // Vertical column dividers
       ctx.beginPath();
-      ctx.moveTo(358, 150);
-      ctx.lineTo(358, 410);
-      ctx.stroke();
-
-      // Vertical column divider 2 (between Take and Roll)
-      ctx.beginPath();
-      ctx.moveTo(666, 150);
-      ctx.lineTo(666, 410);
+      ctx.moveTo(354, 150);
+      ctx.lineTo(354, 410);
+      ctx.moveTo(670, 150);
+      ctx.lineTo(670, 410);
       ctx.stroke();
 
       // Divider below DIRECTOR
       ctx.beginPath();
-      ctx.moveTo(50, 520);
-      ctx.lineTo(974, 520);
+      ctx.moveTo(40, 520);
+      ctx.lineTo(984, 520);
       ctx.stroke();
 
       // Divider below CAMERA
       ctx.beginPath();
-      ctx.moveTo(50, 630);
-      ctx.lineTo(974, 630);
+      ctx.moveTo(40, 630);
+      ctx.lineTo(984, 630);
       ctx.stroke();
 
-      // ----------------------------------------
-      // Typography & Slate Headings
-      // ----------------------------------------
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 32px 'Montserrat', sans-serif";
+      // HEADER TEXT: BRAND
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 32px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.letterSpacing = "4px";
+      ctx.fillText("MAKE MY VID  ·  STUDIOS", 56, 95);
 
-      // 1. PRODUCTION
-      ctx.fillText("PRODUCTION", 60, 95);
-      ctx.font = "bold 44px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#D5FF3F"; // Neon Lime brand accent
-      ctx.fillText("MAKE MY VID", 340, 102);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.font = "bold 18px 'Courier New', monospace";
+      ctx.fillText("CINEMA 4K PRODUCTION", 56, 126);
 
-      // 2. SCENE
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 28px 'Montserrat', sans-serif";
-      ctx.fillText("SCENE", 160, 195);
-      ctx.font = "bold 96px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#F3EBDD";
-      ctx.fillText("01", 150, 340);
+      // Timecode stamp in header right
+      ctx.fillStyle = "#FFC83B";
+      ctx.font = "bold 20px 'Courier New', monospace";
+      ctx.textAlign = "right";
+      ctx.fillText("SYNC TC  24.00 FPS", 965, 110);
+      ctx.textAlign = "left";
 
-      // 3. TAKE
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 28px 'Montserrat', sans-serif";
-      ctx.fillText("TAKE", 475, 195);
-      ctx.font = "bold 96px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#F3EBDD";
-      ctx.fillText("01", 465, 340);
+      // SCENE / TAKE / ROLL LABELS
+      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.font = "bold 22px 'Courier New', monospace";
+      ctx.fillText("SCENE", 60, 185);
+      ctx.fillText("TAKE", 375, 185);
+      ctx.fillText("ROLL", 690, 185);
 
-      // 4. ROLL
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 28px 'Montserrat', sans-serif";
-      ctx.fillText("ROLL", 780, 195);
-      ctx.font = "bold 96px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#F3EBDD";
-      ctx.fillText("A", 780, 340);
+      // Large High-Contrast Hand-Written Style Values
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "900 115px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      ctx.fillText("01", 115, 335);
+      ctx.fillText("01", 435, 335);
+      ctx.fillText("A1", 750, 335);
 
-      // 5. DIRECTOR
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 28px 'Montserrat', sans-serif";
-      ctx.fillText("DIRECTOR", 60, 480);
-      ctx.font = "bold 34px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#F3EBDD";
-      ctx.fillText("ROHAN JOSHI", 340, 482);
+      // DIRECTOR & CAMERA ROWS
+      ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+      ctx.font = "bold 20px 'Courier New', monospace";
+      ctx.fillText("DIRECTOR:", 60, 480);
+      ctx.fillText("CAMERA:", 60, 590);
+      ctx.fillText("DATE:", 60, 695);
 
-      // 6. CAMERA
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 28px 'Montserrat', sans-serif";
-      ctx.fillText("CAMERA", 60, 590);
-      ctx.font = "bold 34px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#F3EBDD";
-      ctx.fillText("35MM ANAMORPHIC", 340, 592);
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 24px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      ctx.fillText("ROHAN JOSHI", 220, 480);
+      ctx.fillText("SONY α7 III  ·  4K 60P RAW", 220, 590);
+      ctx.fillText("2026", 160, 695);
 
-      // 7. DATE & FPS
-      ctx.fillStyle = "#B9A1F7";
-      ctx.font = "bold 28px 'Montserrat', sans-serif";
-      ctx.fillText("DATE", 60, 695);
-      ctx.font = "bold 32px 'Montserrat', sans-serif";
-      ctx.fillStyle = "#F3EBDD";
-      ctx.fillText("2026 • 24 FPS", 340, 698);
+      // Metadata Tags in Bottom-Right
+      ctx.font = "bold 18px 'Courier New', monospace";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+      ctx.textAlign = "right";
+      ctx.fillText("[ EXT · DAY · SYNC ]", 965, 695);
+      ctx.textAlign = "left";
 
       const tex = new THREE.CanvasTexture(texCanvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       return tex;
     };
 
-    const zebraTex = createZebraTexture();
-    const chalkboardTex = createChalkboardTexture();
-
     // -------------------------------------------------------------
-    // 4. MATERIALS
+    // 4. REALISTIC PBR MATERIALS
     // -------------------------------------------------------------
-    // Chalkboard Face Material
-    const slateFaceMaterial = new THREE.MeshStandardMaterial({
-      map: chalkboardTex,
-      roughness: 0.72,
-      metalness: 0.08,
-    });
-
-    // Dark Matte Slate Body Material in Deep Indigo
-    const slateBodyMaterial = new THREE.MeshStandardMaterial({
-      color: 0x211747,
-      roughness: 0.65,
+    const zebraMaterial = new THREE.MeshStandardMaterial({
+      map: createZebraTexture(),
+      roughness: 0.28,
       metalness: 0.15,
     });
 
-    // Zebra Clapper Sticks Material
-    const zebraMaterial = new THREE.MeshStandardMaterial({
-      map: zebraTex,
-      roughness: 0.42,
-      metalness: 0.05,
+    const slateMaterial = new THREE.MeshStandardMaterial({
+      map: createChalkboardTexture(),
+      roughness: 0.65,
+      metalness: 0.08,
     });
 
-    // Gunmetal Steel Hinge Plate Material
+    // Dark hardwood back for the slate
+    const slateBackMaterial = new THREE.MeshStandardMaterial({
+      color: 0x141518,
+      roughness: 0.55,
+      metalness: 0.1,
+    });
+
+    // Brushed stainless steel hinge bracket
     const steelHingeMaterial = new THREE.MeshStandardMaterial({
-      color: 0x191138,
-      roughness: 0.35,
-      metalness: 0.85,
+      color: 0xd8dde6,
+      roughness: 0.25,
+      metalness: 0.88,
     });
 
-    // Chrome Rivets & Screws Material
+    // Mirror chrome rivets
     const chromeRivetMaterial = new THREE.MeshStandardMaterial({
-      color: 0xe4e4e7,
-      roughness: 0.15,
-      metalness: 0.95,
+      color: 0xffffff,
+      roughness: 0.1,
+      metalness: 0.98,
     });
-
-    // Ink Edge Line Material (for CAD / blueprint edge emphasis)
-    const edgeLineMaterial = new THREE.LineBasicMaterial({
-      color: 0x09090b,
-      linewidth: 1.5,
-    });
-
-    // Helper: Wrap geometry in a mesh with black bevel wire edges
-    const createOutlinedMesh = (
-      geo: THREE.BufferGeometry,
-      mat: THREE.Material,
-      threshold = 28
-    ) => {
-      const group = new THREE.Group();
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      group.add(mesh);
-
-      const edges = new THREE.EdgesGeometry(geo, threshold);
-      const lines = new THREE.LineSegments(edges, edgeLineMaterial);
-      group.add(lines);
-
-      return { group, mesh, edges, lines };
-    };
 
     // -------------------------------------------------------------
-    // 5. 3D CLAPPERBOARD GEOMETRIC ASSEMBLY
+    // 5. ASSEMBLE 3D CLAPPERBOARD RIG
     // -------------------------------------------------------------
     const clapperRig = new THREE.Group();
     scene.add(clapperRig);
 
-    // Initial scale and heroic perspective
-    clapperRig.scale.set(1.15, 1.15, 1.15);
+    const boardWidth = 5.2;
+    const boardHeight = 3.8;
+    const boardDepth = 0.14;
+    const stickHeight = 0.58;
+    const stickDepth = 0.16;
 
-    const boardWidth = 4.4;
-    const boardHeight = 3.2;
-    const boardDepth = 0.16;
-    const stickHeight = 0.52;
-    const stickDepth = 0.18;
-
-    // A. MAIN CHALKBOARD SLATE
+    // A. MAIN SLATE BOARD
+    const slateMaterials = [
+      slateBackMaterial, // right
+      slateBackMaterial, // left
+      slateBackMaterial, // top
+      slateBackMaterial, // bottom
+      slateMaterial,     // front face with engraved text
+      slateBackMaterial, // back
+    ];
     const slateGeo = new THREE.BoxGeometry(boardWidth, boardHeight, boardDepth);
-    // Face mapping: front face (+z) gets chalkboard texture, others get slate dark body
-    const slateMesh = new THREE.Mesh(slateGeo, [
-      slateBodyMaterial, // right
-      slateBodyMaterial, // left
-      slateBodyMaterial, // top
-      slateBodyMaterial, // bottom
-      slateFaceMaterial, // front (+z)
-      slateBodyMaterial, // back (-z)
-    ]);
+    const slateMesh = new THREE.Mesh(slateGeo, slateMaterials);
+    slateMesh.position.set(0, -boardHeight * 0.5, 0);
     slateMesh.castShadow = true;
     slateMesh.receiveShadow = true;
-
-    const slateGroup = new THREE.Group();
-    slateGroup.position.set(0, -boardHeight * 0.5 + 0.1, 0);
-    slateGroup.add(slateMesh);
-
-    const slateEdges = new THREE.EdgesGeometry(slateGeo, 28);
-    slateGroup.add(new THREE.LineSegments(slateEdges, edgeLineMaterial));
-    clapperRig.add(slateGroup);
+    clapperRig.add(slateMesh);
 
     // B. FIXED LOWER CLAPPER BAR (Mounted on top edge of slate)
     const lowerStickGeo = new THREE.BoxGeometry(boardWidth, stickHeight, stickDepth);
-    const lowerStick = createOutlinedMesh(lowerStickGeo, zebraMaterial, 25);
-    lowerStick.group.position.set(0, stickHeight * 0.5 + 0.08, 0.01);
-    clapperRig.add(lowerStick.group);
+    const lowerStick = new THREE.Mesh(lowerStickGeo, zebraMaterial);
+    lowerStick.position.set(0, stickHeight * 0.5 + 0.01, 0.01);
+    lowerStick.castShadow = true;
+    lowerStick.receiveShadow = true;
+    clapperRig.add(lowerStick);
 
     // C. HINGED UPPER CLAPPER STICK
-    // Pivot is located at the top-left hinge: x = -boardWidth * 0.5, y = stickHeight + 0.08
+    // Pivot at top-left hinge: x = -boardWidth * 0.5, y = stickHeight + 0.01
     const hingePivotGroup = new THREE.Group();
-    hingePivotGroup.position.set(-boardWidth * 0.5, stickHeight + 0.08, 0.01);
+    hingePivotGroup.position.set(-boardWidth * 0.5, stickHeight + 0.01, 0.01);
     clapperRig.add(hingePivotGroup);
 
-    // The stick itself is offset so its left edge is aligned with the pivot
     const upperStickGeo = new THREE.BoxGeometry(boardWidth, stickHeight, stickDepth);
-    const upperStick = createOutlinedMesh(upperStickGeo, zebraMaterial, 25);
-    upperStick.group.position.set(boardWidth * 0.5, stickHeight * 0.5, 0);
-    hingePivotGroup.add(upperStick.group);
+    const upperStick = new THREE.Mesh(upperStickGeo, zebraMaterial);
+    upperStick.position.set(boardWidth * 0.5, stickHeight * 0.5, 0);
+    upperStick.castShadow = true;
+    upperStick.receiveShadow = true;
+    hingePivotGroup.add(upperStick);
 
-    // Initial state: wide open angle (ready to smash!)
-    const OPEN_ANGLE = 0.58; // ~33 degrees
+    // Initial angle: open at ~30 degrees
+    const OPEN_ANGLE = 0.52;
     hingePivotGroup.rotation.z = OPEN_ANGLE;
 
-    // D. METAL HINGE BRACKET & RIVETS (Left corner)
-    const hingeBracketGeo = new THREE.BoxGeometry(0.85, 1.15, stickDepth + 0.06);
-    const hingeBracket = createOutlinedMesh(hingeBracketGeo, steelHingeMaterial, 28);
-    hingeBracket.group.position.set(-boardWidth * 0.5 + 0.42, 0.65, 0.02);
-    clapperRig.add(hingeBracket.group);
+    // D. STEEL HINGE BRACKET & RIVETS
+    const hingeBracketGeo = new THREE.BoxGeometry(0.85, 1.15, stickDepth + 0.05);
+    const hingeBracket = new THREE.Mesh(hingeBracketGeo, steelHingeMaterial);
+    hingeBracket.position.set(-boardWidth * 0.5 + 0.42, 0.58, 0.02);
+    hingeBracket.castShadow = true;
+    clapperRig.add(hingeBracket);
 
-    // 3 Chrome Screws / Rivets on Hinge Plate
+    // Chrome Rivets
     const rivetPositions = [
-      [-boardWidth * 0.5 + 0.28, 0.95],
-      [-boardWidth * 0.5 + 0.58, 0.95],
-      [-boardWidth * 0.5 + 0.42, 0.35],
+      [-boardWidth * 0.5 + 0.28, 0.88],
+      [-boardWidth * 0.5 + 0.58, 0.88],
+      [-boardWidth * 0.5 + 0.42, 0.28],
     ];
     rivetPositions.forEach(([rx, ry]) => {
-      const rivetGeo = new THREE.CylinderGeometry(0.065, 0.065, stickDepth + 0.12, 16);
+      const rivetGeo = new THREE.CylinderGeometry(0.06, 0.06, stickDepth + 0.1, 16);
       rivetGeo.rotateX(Math.PI / 2);
       const rivet = new THREE.Mesh(rivetGeo, chromeRivetMaterial);
       rivet.position.set(rx, ry, 0.02);
@@ -393,7 +368,7 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
     });
 
     // -------------------------------------------------------------
-    // 6. SYNTHETIC WOODEN CLAP AUDIO FX (Zero-dependency Web Audio API)
+    // 6. SYNTHETIC WOODEN CLAP AUDIO FX (Zero-dependency Web Audio)
     // -------------------------------------------------------------
     const playClapperSound = () => {
       try {
@@ -405,27 +380,27 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
         }
         const t = ctx.currentTime;
 
-        // 1. Sharp High-Impact Wooden Snap (Click Transient)
+        // Sharp wooden transient
         const osc = ctx.createOscillator();
         const oscGain = ctx.createGain();
         osc.type = "triangle";
-        osc.frequency.setValueAtTime(520, t);
-        osc.frequency.exponentialRampToValueAtTime(75, t + 0.07);
+        osc.frequency.setValueAtTime(540, t);
+        osc.frequency.exponentialRampToValueAtTime(70, t + 0.06);
 
         oscGain.gain.setValueAtTime(0.85, t);
-        oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
 
         osc.connect(oscGain);
         oscGain.connect(ctx.destination);
         osc.start(t);
-        osc.stop(t + 0.07);
+        osc.stop(t + 0.06);
 
-        // 2. Heavy Wood Body Resonance / Acoustic Slap
-        const bufferSize = ctx.sampleRate * 0.14;
+        // Body acoustic resonance
+        const bufferSize = ctx.sampleRate * 0.12;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.018));
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.016));
         }
 
         const noise = ctx.createBufferSource();
@@ -433,39 +408,32 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
 
         const filter = ctx.createBiquadFilter();
         filter.type = "bandpass";
-        filter.frequency.setValueAtTime(1400, t);
-        filter.Q.setValueAtTime(2.8, t);
+        filter.frequency.setValueAtTime(1350, t);
+        filter.Q.setValueAtTime(2.6, t);
 
         const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.95, t);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+        noiseGain.gain.setValueAtTime(0.9, t);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
 
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(ctx.destination);
         noise.start(t);
-        noise.stop(t + 0.14);
+        noise.stop(t + 0.12);
       } catch (err) {
         // Audio policy fallback
       }
     };
 
     // -------------------------------------------------------------
-    // 7. PRELOADER DROP-DOWN & STATIC CLAP TIMELINE
+    // 7. CINEMATIC 3D TIMELINE WITH DELIBERATE MOMENTUM (~2.1s Total)
     // -------------------------------------------------------------
-    // Static straight-on front perspective (matching reference photo)
-    const DEFAULT_ROT_X = 0;
-    const DEFAULT_ROT_Y = 0;
-    const DEFAULT_ROT_Z = 0;
-
-    clapperRig.rotation.set(DEFAULT_ROT_X, DEFAULT_ROT_Y, DEFAULT_ROT_Z);
-    // Starts above the viewport so it drops down smoothly like a real preloader
-    clapperRig.position.set(0, 9.5, 0);
+    // Heroic 3D perspective angle showing slate edge bevel & steel hinge
+    clapperRig.position.set(0, 0, 0);
+    clapperRig.rotation.set(0.06, -0.12, 0.015);
+    clapperRig.scale.set(0.95, 0.95, 0.95);
 
     let startTime = performance.now();
-    let hasClapped = false;
-    let hasCompleted = false;
-
     let animId = 0;
 
     const animate = (currentTime: number) => {
@@ -473,66 +441,71 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
 
       const elapsed = (currentTime - startTime) / 1000;
 
-      // ---------------------------------------------------------
-      // STAGE 1: DROP DOWN FROM TOP (0.0s - 0.7s)
-      // ---------------------------------------------------------
-      if (elapsed < 0.7) {
-        const dropProgress = Math.min(1, elapsed / 0.7);
-        const easeDrop = 1 - Math.pow(1 - dropProgress, 3);
-        clapperRig.position.y = 9.5 * (1 - easeDrop);
-        clapperRig.position.z = 0;
-        hingePivotGroup.rotation.z = OPEN_ANGLE;
+      // PHASE 1: Float & Smooth Dolly-In with Wrist Anticipation (0.0s – 0.70s)
+      if (elapsed < 0.70) {
+        const p = elapsed / 0.70;
+        const ease = 1 - Math.pow(1 - p, 3);
+        camera.position.z = 9.2 - 0.6 * ease;
+        clapperRig.scale.setScalar(0.95 + 0.05 * ease);
+
+        // Subtle organic breathing float
+        clapperRig.position.y = Math.sin(elapsed * 2.2) * 0.035;
+        clapperRig.rotation.y = -0.12 + Math.sin(elapsed * 1.5) * 0.02;
+        clapperRig.rotation.x = 0.06 + Math.cos(elapsed * 1.8) * 0.01;
+
+        // Anticipation wrist lift in the last 0.08s before the strike
+        if (elapsed > 0.62) {
+          const liftP = (elapsed - 0.62) / 0.08;
+          hingePivotGroup.rotation.z = OPEN_ANGLE + 0.04 * Math.sin(liftP * Math.PI);
+        } else {
+          hingePivotGroup.rotation.z = OPEN_ANGLE;
+        }
       }
 
-      // ---------------------------------------------------------
-      // STAGE 2: HOLD OPEN IN STATIC FORM (0.7s - 3.7s, 3s PAUSE)
-      // ---------------------------------------------------------
-      else if (elapsed >= 0.7 && elapsed < 3.7) {
-        // Clapper rests centered, perfectly visible, breathing subtly
-        const holdTime = elapsed - 0.7;
-        clapperRig.position.y = Math.sin(holdTime * 2.2) * 0.03;
-        clapperRig.position.z = 0;
-        hingePivotGroup.rotation.z = OPEN_ANGLE;
-      }
-
-      // ---------------------------------------------------------
-      // STAGE 3: THE SMASH IMPACT (3.7s - 4.0s)
-      // ---------------------------------------------------------
-      else if (elapsed >= 3.7 && elapsed < 4.05) {
-        clapperRig.position.y = 0;
-        clapperRig.position.z = 0;
-
-        const smashProgress = (elapsed - 3.7) / 0.14;
+      // PHASE 2: SWIFT DECISIVE CLAP & PHYSICAL REBOUND (0.70s – 0.96s)
+      else if (elapsed >= 0.70 && elapsed < 0.96) {
+        camera.position.z = 8.6;
+        const clapDuration = 0.15;
+        const smashProgress = (elapsed - 0.70) / clapDuration;
 
         if (smashProgress <= 1.0) {
-          const easeDown = Math.pow(smashProgress, 3);
+          // Sharp acceleration down (cinematic snap)
+          const easeDown = Math.pow(smashProgress, 3.2);
           hingePivotGroup.rotation.z = OPEN_ANGLE * (1 - easeDown);
         } else {
-          // Subtle micro elastic rebound on impact
-          const reboundTime = (elapsed - 3.84) / 0.16;
-          const bounce = Math.sin(reboundTime * Math.PI * 3) * Math.exp(-reboundTime * 6) * 0.05;
+          // Micro elastic rebound on contact
+          const reboundTime = (elapsed - (0.70 + clapDuration)) / 0.11;
+          const bounce = Math.sin(reboundTime * Math.PI * 4) * Math.exp(-reboundTime * 8) * 0.04;
           hingePivotGroup.rotation.z = Math.max(0, bounce);
         }
 
-        // Trigger Clap sound and callback at contact
-        if (!hasClapped && elapsed >= 3.84) {
-          hasClapped = true;
-          setClapped(true);
+        // Camera recoil shockwave
+        if (elapsed >= 0.85) {
+          const rTime = elapsed - 0.85;
+          camera.position.y = Math.sin(rTime * 45) * Math.exp(-rTime * 28) * 0.04;
+        }
+
+        // Trigger sound & clap callback at contact - ONCE ONLY
+        if (!hasClappedRef.current && elapsed >= 0.85) {
+          hasClappedRef.current = true;
           playClapperSound();
           if (onClap) onClap();
         }
       }
 
-      // ---------------------------------------------------------
-      // STAGE 4: CLOSED HOLD & REVEAL (4.05s - 4.5s)
-      // ---------------------------------------------------------
-      else if (elapsed >= 4.05) {
-        clapperRig.position.set(0, 0, 0);
+      // PHASE 3: THE "ACTION!" HOLD ("A LITTLE DELAY, NOT TOO MUCH") (0.96s – 1.65s)
+      else if (elapsed >= 0.96) {
         hingePivotGroup.rotation.z = 0;
+        camera.position.y = 0;
+        camera.position.z = 8.6 - (elapsed - 0.96) * 0.12; // slow cinematic push continues
 
-        // Static hold on closed slate, then fade reveal triggers
-        if (elapsed >= 4.45 && !hasCompleted) {
-          hasCompleted = true;
+        // Elegant floating motion continues while closed
+        clapperRig.position.y = Math.sin(elapsed * 2.2) * 0.025;
+        clapperRig.rotation.y = -0.12 + Math.sin(elapsed * 1.5) * 0.015;
+
+        // Triggers smooth fade out at 1.60s (~0.75s deliberate hold after clap)
+        if (elapsed >= 1.60 && !hasCompletedRef.current) {
+          hasCompletedRef.current = true;
           if (onComplete) onComplete();
         }
       }
@@ -544,60 +517,27 @@ export const CinemaClapper3D: React.FC<CinemaClapper3DProps> = ({
       animId = requestAnimationFrame(animate);
     }
 
-    // -------------------------------------------------------------
-    // 8. RESIZE & CLEANUP
-    // -------------------------------------------------------------
+    // Resize listener
     const handleResize = () => {
-      if (!container || !renderer) return;
-      const w = container.clientWidth || window.innerWidth;
-      const h = container.clientHeight || window.innerHeight;
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
-
-    const handleContainerClick = () => {
-      const now = performance.now();
-      if (!hasClapped && (now - startTime) < 3700) {
-        // Clicking fast-forwards immediately to the smash
-        startTime = now - 3700;
-      }
-    };
-    container.addEventListener("click", handleContainerClick);
-
     window.addEventListener("resize", handleResize);
 
     return () => {
       cancelAnimationFrame(animId);
-      container.removeEventListener("click", handleContainerClick);
       window.removeEventListener("resize", handleResize);
-
-      // Clean Three.js geometries and textures
-      scene.traverse((obj) => {
-        if ((obj as THREE.Mesh).isMesh) {
-          const mesh = obj as THREE.Mesh;
-          mesh.geometry?.dispose();
-          if (Array.isArray(mesh.material)) {
-            mesh.material.forEach((m) => m.dispose());
-          } else if (mesh.material) {
-            mesh.material.dispose();
-          }
-        }
-      });
-
-      zebraTex.dispose();
-      chalkboardTex.dispose();
       renderer.dispose();
     };
   }, [autoPlay, onClap, onComplete]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative w-full h-full flex items-center justify-center select-none overflow-hidden ${className}`}
-    >
-      <canvas ref={canvasRef} className="w-full h-full block pointer-events-none" />
-
+    <div ref={containerRef} className={`relative w-full h-full ${className}`}>
+      <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
 };

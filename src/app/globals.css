@@ -56,14 +56,14 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--color-surface);
-  --color-primary: #211747;
-  --color-secondary: #B9A1F7;
+  --color-primary: #141416;
+  --color-secondary: #7567EE;
   --color-accent: #D5FF3F;
-  --color-plum: #6B6478;
-  --color-deep-indigo: #211747;
-  --color-lavender: #B9A1F7;
+  --color-plum: #4A4658;
+  --color-deep-indigo: #141416;
+  --color-lavender: #7567EE;
   --color-neon-lime: #D5FF3F;
-  --color-warm-beige: #F3EBDD;
+  --color-warm-beige: #EAE3DB;
   --font-sans: 'HK Guise', sans-serif;
   --font-mono: 'HK Guise', monospace;
   --font-heading: 'CHANEY Wide', sans-serif;
@@ -72,33 +72,33 @@
 }
 
 :root {
-  --color-background: #F3EBDD;
-  --color-surface: #F3EBDD;
-  --color-primary: #211747;
-  --color-secondary: #B9A1F7;
+  --color-background: #EAE3DB;
+  --color-surface: #EAE3DB;
+  --color-primary: #141416;
+  --color-secondary: #7567EE;
   --color-accent: #D5FF3F;
-  --color-text-primary: #211747;
-  --color-text-secondary: #6B6478;
+  --color-text-primary: #141416;
+  --color-text-secondary: #4A4658;
 
-  --background: #F3EBDD;
-  --foreground: #211747;
+  --background: #EAE3DB;
+  --foreground: #141416;
 
-  /* Semantic tokens */
-  --color-surface-dark: #211747;
-  --color-surface-dark-subtle: #191138;
-  --color-surface-elevated: #ECE3D3;
+  /* Semantic tokens aligned with IVENTIONS aesthetic */
+  --color-surface-dark: #141416;
+  --color-surface-dark-subtle: #1c1d22;
+  --color-surface-elevated: #F3EBDD;
   --color-surface-lavender: #E8DEFC;
-  --color-surface-lavender-subtle: rgba(185, 161, 247, 0.12);
-  --color-border: rgba(33, 23, 71, 0.12);
-  --color-border-subtle: rgba(33, 23, 71, 0.06);
-  --color-border-dark: rgba(243, 235, 221, 0.15);
-  --color-border-lavender: rgba(185, 161, 247, 0.3);
+  --color-surface-lavender-subtle: rgba(117, 103, 238, 0.12);
+  --color-border: rgba(20, 20, 22, 0.12);
+  --color-border-subtle: rgba(20, 20, 22, 0.06);
+  --color-border-dark: rgba(20, 20, 22, 0.15);
+  --color-border-lavender: rgba(117, 103, 238, 0.3);
   --color-border-lime: rgba(213, 255, 63, 0.4);
-  --color-text-on-dark: #F3EBDD;
-  --color-text-on-dark-muted: #B9A1F7;
-  --color-text-on-dark-secondary: #A098AD;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-muted: #A098AD;
+  --color-text-on-dark-secondary: #8B8599;
   --color-focus: #D5FF3F;
-  --color-plum: #6B6478;
+  --color-plum: #4A4658;
 
   --primary-red: #D5FF3F;
   --cubic-default: cubic-bezier(0.625, 0.05, 0, 1);
@@ -446,9 +446,9 @@ a {
   text-align: center !important;
   font-size: clamp(1.75rem, 3.2vw, 2.65rem) !important;
   line-height: 1.25 !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   letter-spacing: 0.04em !important;
-  color: #B9A1F7 !important;
+  color: #141416 !important;
   text-transform: uppercase !important;
   z-index: 2 !important;
   pointer-events: none !important;
@@ -509,10 +509,11 @@ a {
 }
 
 .expertise-front {
-  border: 1px solid rgba(185, 161, 247, 0.25) !important;
-  background-color: transparent !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(117, 103, 238, 0.3) !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 20px 40px -15px rgba(20, 20, 22, 0.08), 0 0 1px rgba(0, 0, 0, 0.08) !important;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
   padding: 26px 20px 20px 20px !important;
   border-radius: 28px !important;
@@ -526,14 +527,14 @@ a {
 }
 
 .expertise-front:hover {
-  border-color: rgba(213, 255, 63, 0.6) !important;
-  box-shadow: 0 15px 35px rgba(10, 6, 26, 0.5), 0 0 20px rgba(185, 161, 247, 0.2);
+  border-color: #D5FF3F !important;
+  box-shadow: 0 24px 50px -10px rgba(117, 103, 238, 0.25), 0 0 24px rgba(213, 255, 63, 0.35) !important;
 }
 
 .expertise-front.is--1,
 .expertise-front.is--2,
 .expertise-front.is--3 {
-  background-color: transparent !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* 1. Image covers the entire card completely */
@@ -559,17 +560,17 @@ a {
   display: block !important;
 }
 
-/* Gradient scrim so illustration covers card while text stays 100% visible */
+/* Gradient scrim so illustration covers card while text stays 100% visible on light cream theme */
 .expertise-card .expertise-image-wrapper::after {
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
   background: linear-gradient(
     180deg,
-    rgba(23, 16, 51, 0.94) 0%,
-    rgba(23, 16, 51, 0.82) 32%,
-    rgba(23, 16, 51, 0.35) 62%,
-    rgba(23, 16, 51, 0.78) 100%
+    rgba(234, 227, 219, 0.96) 0%,
+    rgba(234, 227, 219, 0.82) 32%,
+    rgba(234, 227, 219, 0.15) 62%,
+    rgba(234, 227, 219, 0.72) 100%
   ) !important;
   pointer-events: none !important;
   z-index: 2 !important;
@@ -594,16 +595,16 @@ a {
   justify-content: center !important;
   padding: 4px 14px !important;
   border-radius: 9999px !important;
-  border: 1px solid rgba(185, 161, 247, 0.45) !important;
-  background-color: rgba(23, 16, 51, 0.7) !important;
-  backdrop-filter: blur(8px) !important;
+  border: none !important;
+  background-color: #D5FF3F !important;
+  box-shadow: 0 2px 10px rgba(213, 255, 63, 0.35) !important;
 }
 
 .expertise-card .eyebrow-text {
   font-size: 11px !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
   letter-spacing: 0.08em !important;
-  color: #B9A1F7 !important;
+  color: #141416 !important;
   text-transform: uppercase !important;
 }
 
@@ -612,9 +613,9 @@ a {
   font-weight: 700 !important;
   line-height: 1.25 !important;
   letter-spacing: 0.03em !important;
-  color: #F3EBDD !important;
+  color: #141416 !important;
   text-transform: uppercase !important;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7) !important;
+  text-shadow: none !important;
   white-space: normal !important;
   word-break: normal !important;
   margin: 0 !important;
@@ -623,9 +624,9 @@ a {
 .expertise-card p {
   font-size: 11.5px !important;
   line-height: 1.5 !important;
-  color: rgba(243, 235, 221, 0.9) !important;
+  color: #4A4658 !important;
   text-align: center !important;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85) !important;
+  text-shadow: none !important;
   margin: 0 !important;
   padding: 0 6px !important;
 }
@@ -639,6 +640,33 @@ a {
   justify-content: center !important;
   align-items: center !important;
   flex-shrink: 0 !important;
+}
+
+.expertise-card .button-group.is--card .btn-main {
+  background-color: #D5FF3F !important;
+  color: #141416 !important;
+  border-radius: 9999px !important;
+  font-weight: 700 !important;
+  padding: 8px 20px !important;
+  box-shadow: 0 2px 12px rgba(213, 255, 63, 0.4) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.3s ease !important;
+}
+
+.expertise-card .button-group.is--card .btn-main:hover {
+  background-color: #c4f02a !important;
+  transform: scale(1.05) !important;
+}
+
+.expertise-card .button-group.is--card .btn-main .btn-text {
+  color: #141416 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+}
+
+.expertise-card .button-group.is--card .btn-main .btn-icon svg {
+  color: #141416 !important;
+  fill: #141416 !important;
 }
 
 /* Grow Card Accordion - Exoflora Luxury Design */
@@ -753,12 +781,12 @@ a {
   transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.25, 1, 0.2, 1) !important;
 }
 
-/* Testimonials Section Rebranding */
+/* Testimonials Section */
 .section-testimonials-wrap,
 .section-testimonials-mobile {
-  background-color: #211747 !important;
-  border-top: 1px solid rgba(185, 161, 247, 0.15) !important;
-  border-bottom: 1px solid rgba(185, 161, 247, 0.15) !important;
+  background-color: #EAE3DB !important;
+  border-top: 1px solid rgba(117, 103, 238, 0.15) !important;
+  border-bottom: 1px solid rgba(117, 103, 238, 0.15) !important;
 }
 
 .section-testimonials {
@@ -766,11 +794,11 @@ a {
 }
 
 .testimonials-inner p {
-  color: #F3EBDD !important;
+  color: #141416 !important;
 }
 
 .testimonial-slider .text-gray-600 {
-  color: rgba(243, 235, 221, 0.7) !important;
+  color: #4A4658 !important;
 }
 
 /* Infinite Marquee Keyframes */

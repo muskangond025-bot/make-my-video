@@ -13,11 +13,11 @@ import { PremiumFooter } from "@/components/sections/PremiumFooter";
 
 export default function Home() {
   return (
-    <main className="bg-background text-foreground min-h-screen font-sans selection:bg-[#B9A1F7] selection:text-[#211747] relative">
+    <main className="bg-background text-foreground min-h-screen font-sans selection:bg-[#7567EE] selection:text-white relative">
       {/* Background Ornament SVGs */}
       <div className="absolute top-[20%] left-[5%] opacity-15 pointer-events-none z-0">
         <svg width="200" height="200" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="40" stroke="#211747" strokeWidth="1" fill="none" strokeDasharray="5,5" />
+          <circle cx="50" cy="50" r="40" stroke="#141416" strokeWidth="1" fill="none" strokeDasharray="5,5" />
         </svg>
       </div>
 

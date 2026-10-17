@@ -52,7 +52,17 @@ export const Header = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const heroElement = document.getElementById("home");
-      const heroThreshold = heroElement ? window.innerHeight * 0.75 : 60;
+      
+      // Calculate hero threshold:
+      // The hero section #home is 200vh tall (the full 3D camera experience).
+      // We keep the navbar strictly hidden until the user has actually scrolled down
+      // past the hero camera stage (at least ~72% of the 200vh hero, ~1.44x window.innerHeight).
+      const heroHeight =
+        heroElement && heroElement.offsetHeight > 0
+          ? heroElement.offsetHeight
+          : window.innerHeight * 2;
+      
+      const scrollDownThreshold = heroHeight * 0.72;
 
       setIsScrolled(currentScrollY > 20);
 
@@ -62,18 +72,19 @@ export const Header = () => {
         return;
       }
 
-      // If user is within the top Hero area, always keep navbar hidden
-      if (currentScrollY < heroThreshold) {
+      // STAGE 1: Top Hero / Camera Area
+      // When the user has not scrolled down past the hero, navbar MUST NEVER come down.
+      if (currentScrollY < scrollDownThreshold) {
         setIsHidden(true);
       } else {
-        // Beyond the Hero threshold (camera rotated to 3/4 LCD view as in screenshot)
-        if (currentScrollY > lastScrollY.current + 6 && currentScrollY > heroThreshold + 120) {
+        // STAGE 2: Once user has scrolled down past the hero:
+        if (currentScrollY > lastScrollY.current + 10 && currentScrollY > scrollDownThreshold + 150) {
           // Scrolling down further down the page -> hide
           setIsHidden(true);
         } else if (currentScrollY < lastScrollY.current - 4) {
           // Scrolling up -> reveal navbar
           setIsHidden(false);
-        } else if (lastScrollY.current < heroThreshold && currentScrollY >= heroThreshold) {
+        } else if (lastScrollY.current < scrollDownThreshold && currentScrollY >= scrollDownThreshold) {
           // Just crossed the threshold scrolling down -> reveal navbar!
           setIsHidden(false);
         } else {
@@ -263,18 +274,20 @@ export const Header = () => {
       {/* ========================================================= */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
-          isHidden ? "-translate-y-full" : "translate-y-0"
+          isHidden
+            ? "-translate-y-full opacity-0 pointer-events-none"
+            : "translate-y-0 opacity-100 pointer-events-auto"
         } ${
           isScrolled && !isOpen
-            ? "bg-[#0A0B0E]/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
+            ? "bg-[#EFECE6]/90 backdrop-blur-xl border-b border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
             : isOpen
             ? "bg-transparent border-b border-transparent"
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-4 sm:py-5 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-3.5 sm:py-4 flex items-center justify-between">
           
-          {/* Brand Logo - Pure White */}
+          {/* Brand Logo - Crisp Black matching IVENTIONS */}
           <a
             href="/"
             onClick={() => setIsOpen(false)}
@@ -284,86 +297,46 @@ export const Header = () => {
             <img
               src="https://storage.googleapis.com/mkv_imagesbackend/navbar_logo/677e52686d8ba_navbarlogo.png"
               alt="Make My Vid Logo"
-              className="h-7 sm:h-8 w-auto object-contain brightness-0 invert transition-all duration-300"
+              className="h-7 sm:h-8 w-auto object-contain transition-all duration-300"
             />
           </a>
 
           {/* Right Header Navigation Controls */}
-          <div className="relative z-50 flex items-center gap-2.5 sm:gap-4 md:gap-6">
+          <div className="relative z-50 flex items-center gap-2 sm:gap-3 md:gap-4">
             
-            {/* CTA Button: "Get in Touch" - Pure White */}
-            {/* CTA Button: "Get in Touch" - No Capsule Shape, Pure Text & Roll */}
+            {/* CTA Button: "GOT A PROJECT?" - Neon Lime Capsule matching 1st Screenshot */}
             <a
               href="#contact"
               onClick={(e) => {
                 e.preventDefault();
                 handleLinkClick("#contact");
               }}
-              className="hidden sm:inline-flex items-center gap-2 py-1.5 px-2 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white transition-all duration-300 group cursor-pointer relative"
+              className="hidden sm:inline-flex items-center gap-2 bg-[#D5FF3F] text-[#141416] hover:bg-[#c2ed2c] px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition-all duration-300 shadow-[0_2px_12px_rgba(213,255,63,0.35)] cursor-pointer group"
             >
-              <div className="relative h-4 sm:h-[18px] overflow-hidden flex flex-col justify-start">
-                <div className="flex flex-col transition-transform duration-350 ease-[cubic-bezier(0.65,0.01,0.05,0.99)] group-hover:-translate-y-1/2">
-                  <span className="h-4 sm:h-[18px] flex items-center leading-none text-white whitespace-nowrap">
-                    Get in Touch
-                  </span>
-                  <span className="h-4 sm:h-[18px] flex items-center leading-none text-white/70 whitespace-nowrap">
-                    Get in Touch
-                  </span>
-                </div>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-white group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" />
-              {/* Bottom Underline on hover */}
-              <span className="absolute bottom-0 left-2 right-2 h-[1.5px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              <span>GOT A PROJECT?</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#141416] group-hover:translate-x-0.5 transition-transform duration-200" />
             </a>
 
             {/* Dark / Light Theme Toggle */}
-            <ThemeToggle className="border-white/20" />
+            <ThemeToggle className="border-black/15 text-[#141416] bg-black/5" />
 
-            {/* DUAL-STATE ROLLING TEXT MENU BUTTON - No Capsule Shape, Pure White Text */}
+            {/* DUAL-STATE ROLLING TEXT MENU BUTTON - Neon Lime Capsule with Two Bars matching 1st Screenshot */}
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="relative flex items-center justify-center py-1.5 px-2 text-white transition-all duration-300 group cursor-pointer bg-transparent border-none outline-none select-none"
+              className="relative flex items-center gap-2 bg-[#D5FF3F] text-[#141416] hover:bg-[#c2ed2c] px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition-all duration-300 shadow-[0_2px_12px_rgba(213,255,63,0.35)] cursor-pointer group select-none"
               aria-expanded={isOpen}
               aria-label={isOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
             >
-              {/* Rolling Vertical Text on Hover & State */}
-              <div className="relative h-4 sm:h-[18px] overflow-hidden flex flex-col justify-start">
-                <div
-                  className={`flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.65,0.01,0.05,0.99)] ${
-                    isOpen ? "-translate-y-1/2" : "translate-y-0"
-                  }`}
-                >
-                  {/* Closed state ("Menu"): pure white text, rolls on hover */}
-                  <div className="h-4 sm:h-[18px] overflow-hidden flex flex-col justify-start">
-                    <div className="flex flex-col transition-transform duration-350 ease-[cubic-bezier(0.65,0.01,0.05,0.99)] group-hover:-translate-y-1/2">
-                      <span className="h-4 sm:h-[18px] flex items-center font-bold tracking-widest text-xs sm:text-sm uppercase leading-none text-white whitespace-nowrap">
-                        Menu
-                      </span>
-                      <span className="h-4 sm:h-[18px] flex items-center font-bold tracking-widest text-xs sm:text-sm uppercase leading-none text-white/70 whitespace-nowrap">
-                        Menu
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Opened state ("Close"): pure white text, rolls on hover */}
-                  <div className="h-4 sm:h-[18px] overflow-hidden flex flex-col justify-start">
-                    <div className="flex flex-col transition-transform duration-350 ease-[cubic-bezier(0.65,0.01,0.05,0.99)] group-hover:-translate-y-1/2">
-                      <span className="h-4 sm:h-[18px] flex items-center font-bold tracking-widest text-xs sm:text-sm uppercase leading-none text-white whitespace-nowrap">
-                        Close
-                      </span>
-                      <span className="h-4 sm:h-[18px] flex items-center font-bold tracking-widest text-xs sm:text-sm uppercase leading-none text-white/70 whitespace-nowrap">
-                        Close
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              {/* Two Horizontal Bars Menu Icon matching 1st screenshot */}
+              <div className="flex flex-col gap-1 w-3.5 justify-center">
+                <span className={`block h-[2px] bg-[#141416] transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-[3px]" : ""}`} />
+                <span className={`block h-[2px] bg-[#141416] transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-[3px]" : ""}`} />
               </div>
-
-              {/* Ignite Hover Underline Accent */}
-              <div className="absolute bottom-0 left-2 right-2 h-[1.5px] bg-white -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[cubic-bezier(0.65,0.01,0.05,0.99)]" />
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider">
+                {isOpen ? "CLOSE" : "MENU"}
+              </span>
             </button>
-
           </div>
         </div>
       </header>

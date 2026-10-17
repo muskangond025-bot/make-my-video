@@ -146,23 +146,23 @@ export const Expertise = () => {
           background: "transparent",
         }}
       >
-        {/* Centered Editorial "TRUSTED BY" Header (matching rohanjoshi.in) */}
+        {/* Centered Editorial "TRUSTED BY" Header (matching IVENTIONS editorial style) */}
         <div className="w-full flex flex-col items-center justify-center text-center px-4 mb-5 sm:mb-7">
-          <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] uppercase text-[#6B6478] dark:text-[#B9A1F7] font-semibold mb-2">
+          <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] uppercase text-[#6E6B7B] font-semibold mb-2">
             CLIENTS &amp; COMMERCIAL PARTNERS
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl tracking-[0.22em] uppercase text-[#211747] dark:text-[#F3EBDD] font-medium leading-none">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl tracking-[0.22em] uppercase text-[#141416] font-medium leading-none">
             TRUSTED BY
           </h2>
-          <div className="w-16 h-[2px] bg-[#211747]/30 dark:bg-[#B9A1F7]/60 mt-3.5 rounded-full" />
+          <div className="w-16 h-[2px] bg-[#7567EE] mt-3.5 rounded-full" />
         </div>
 
         {/* 3D 35mm Celluloid Ribbon with Client Logos */}
         <CinemaFilmStrip3D className="w-full h-[190px] sm:h-[230px] md:h-[265px]" speed={1.1} />
       </section>
 
-      {/* 2. MAIN EXPERTISE SECTION */}
-      <div className="section-expertise w-full bg-[#211747] text-[#F3EBDD] relative flex flex-col justify-start select-none overflow-visible">
+      {/* 2. MAIN EXPERTISE SECTION - IVENTIONS Warm Cream & Electric Violet Theme */}
+      <div className="section-expertise w-full bg-[#EAE3DB] text-[#141416] relative flex flex-col justify-start select-none overflow-visible">
         <div className="expertise-outer w-full">
           <div className="padding-global w-full">
             <div className="container-large w-full">
@@ -171,16 +171,27 @@ export const Expertise = () => {
 
                   {/* STICKY STAGGER LETTER TITLE WRAPPER */}
                   <section ref={stickyTitleRef} className="sticky-title-wrapper w-full relative">
+                    
+                    {/* IVENTIONS Dynamic Angular Spotlight Beam Graphic */}
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+                      <div 
+                        className="absolute -top-[15%] left-[20%] w-[58vw] h-[130%] bg-gradient-to-b from-[#A59CEC]/40 via-[#8B7AF8]/30 to-[#EAE3DB]/10 blur-[1px] transform -rotate-[16deg] origin-top"
+                        style={{
+                          clipPath: "polygon(32% 0%, 68% 0%, 100% 100%, 0% 100%)",
+                        }}
+                      />
+                    </div>
+
                     <div className="sticky-title-container w-full h-screen sticky top-0 flex items-center justify-center">
                       <div className="sticky-title-inner text-center flex flex-col items-center justify-center relative w-full">
 
-                        {/* Heading 1: EXPERTISE */}
-                        <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#F3EBDD] text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none">
+                        {/* Heading 1: SERVICES - Electric Violet matching IVENTIONS Hero Typography */}
+                        <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#7567EE] text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none drop-shadow-sm">
                           {splitWordsAndChars("SERVICES")}
                         </h2>
 
-                        {/* Heading 2: Description */}
-                        <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[2.5rem] leading-[1.2] font-semibold text-[#B9A1F7] max-w-[900px] select-none uppercase">
+                        {/* Heading 2: Description in Deep Charcoal High-Contrast Text */}
+                        <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[2.5rem] leading-[1.2] font-semibold text-[#141416] max-w-[900px] select-none uppercase">
                           {splitWordsAndChars("MULTI-CITY VIDEO PRODUCTION, REMOTE EDITING, AND CORPORATE AV SOLUTIONS")}
                         </h2>
 

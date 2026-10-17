@@ -22,8 +22,8 @@ export const SectionCrosses = ({ dark = false }: { dark?: boolean }) => {
     });
   }, []);
 
-  const strokeColor = dark ? "#B9A1F7" : "#211747";
-  const borderColor = dark ? "border-[#B9A1F7]/25" : "border-[#211747]/15";
+  const strokeColor = dark ? "#7567EE" : "#141416";
+  const borderColor = dark ? "border-[#7567EE]/25" : "border-[#141416]/15";
 
   return (
     <div ref={containerRef} className={`w-full flex justify-between items-center px-6 lg:px-12 py-3 border-t ${borderColor}`}>

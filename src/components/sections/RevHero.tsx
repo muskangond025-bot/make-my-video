@@ -11,6 +11,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export const RevHero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rotatingWords = ["FILMS", "CREATIVE DIRECTION", "SOCIAL MEDIA", "SCRIPTING"];
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -104,7 +113,7 @@ export const RevHero: React.FC = () => {
     // -------------------------------------------------------------
     // In-memory video element: never added to DOM, so no styles or layout can bleed
     const video = document.createElement("video");
-    video.src = "/videos/hero-reel.mp4";
+    video.src = "/videos/hero-rohan.mp4";
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
@@ -115,6 +124,7 @@ export const RevHero: React.FC = () => {
     videoTexture.colorSpace = THREE.SRGBColorSpace;
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.flipY = false;
 
     // -------------------------------------------------------------
     // 3. MODEL GROUP & GSAP SCROLLTRIGGER (Exact REV Coordinates)
@@ -184,6 +194,13 @@ export const RevHero: React.FC = () => {
             y: -1.75,
             ease: "none",
           }, 0);
+
+          // Hero text fade out during scroll
+          tl.to(".hero-text-overlay", {
+            opacity: 0,
+            y: -40,
+            ease: "none",
+          }, 0);
         }, container);
 
         return () => stCtx.revert();
@@ -242,6 +259,39 @@ export const RevHero: React.FC = () => {
             ref={canvasRef}
             className="w-full h-full cursor-grab active:cursor-grabbing block"
           />
+
+          {/* Authentic rohanjoshi.in Hero Overlay */}
+          <div className="hero-text-overlay absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-6 sm:p-12 lg:p-16 max-w-[1440px] mx-auto w-full transition-opacity duration-300">
+            <div className="flex justify-between items-start pt-16 sm:pt-20">
+              <div className="flex flex-col">
+                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-zinc-400">
+                  Make My Vid &bull; Creative Studio
+                </span>
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white uppercase mt-2 font-heading">
+                  Elevating Brand
+                </h1>
+                <h2 className="text-lg sm:text-2xl lg:text-3xl font-light text-zinc-300 tracking-wide mt-1 flex items-center gap-2">
+                  Through{" "}
+                  <span className="font-semibold text-[#7567EE] transition-all duration-500">
+                    {rotatingWords[wordIndex]}
+                  </span>
+                </h2>
+              </div>
+
+              <a
+                href="#contact"
+                className="pointer-events-auto inline-flex items-center gap-2 bg-[#D5FF3F] text-[#141416] hover:bg-[#c2ed2c] px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_2px_12px_rgba(213,255,63,0.35)] cursor-pointer"
+              >
+                Get Quote &rarr;
+              </a>
+            </div>
+
+            {/* Bottom info bar */}
+            <div className="pb-8 flex justify-between items-end text-zinc-500 text-xs font-mono">
+              <span>[ SONY CINEMA FX &bull; 4K WORKFLOW ]</span>
+              <span className="hidden sm:inline">&bull; DRAG TO ROTATE 3D CAMERA</span>
+            </div>
+          </div>
         </div>
 
         {/* 2. ScrollTrigger Target for 200vh Scroll Height */}

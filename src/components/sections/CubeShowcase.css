@@ -1,0 +1,213 @@
+:root {
+  --cube-size: 340px;
+  --cube-half: 170px;
+  --cube-orange: #D5FF3F;
+  --cube-ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --cube-size: 240px;
+    --cube-half: 120px;
+  }
+}
+
+.cube-section-wrapper {
+  background: #EAE3DB;
+  min-height: 85vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  border-top: 1px solid rgba(20, 20, 22, 0.08);
+  border-bottom: 1px solid rgba(20, 20, 22, 0.08);
+}
+
+.cube-scene {
+  perspective: 2000px;
+  width: var(--cube-size);
+  height: var(--cube-size);
+  transition: perspective 1s var(--cube-ease);
+  position: relative;
+  z-index: 30;
+}
+
+/* THE 3D CUBE */
+.cube-main {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1.2s var(--cube-ease);
+  animation: cubeFloatLoop 12s infinite linear;
+}
+
+/* STOP ANIMATION ON HOVER */
+.cube-main.active-focus {
+  animation: none !important;
+  transition: transform 1.2s var(--cube-ease) !important;
+}
+
+.cube-face {
+  position: absolute;
+  width: var(--cube-size);
+  height: var(--cube-size);
+  background: #141416;
+  border: 1px solid rgba(117, 103, 238, 0.25);
+  backface-visibility: hidden;
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* 3x3 GRID SYSTEM */
+.cube-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.cube-item {
+  background: #1c1d22;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.7s var(--cube-ease);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.cube-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.5);
+  opacity: 0.85;
+  transition: 0.8s var(--cube-ease);
+  display: block;
+}
+
+/* FULL IMAGE SHOW FEATURE */
+.cube-item.highlight {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 100 !important;
+  border: 2px solid #D5FF3F;
+  box-shadow: 0 0 35px rgba(213, 255, 63, 0.5);
+}
+
+.cube-item.highlight img {
+  filter: grayscale(0) !important;
+  opacity: 1 !important;
+  transform: scale(1.05) !important;
+}
+
+/* 3D POSITIONS */
+.cube-face.front  { transform: rotateY(0deg) translateZ(var(--cube-half)); }
+.cube-face.back   { transform: rotateY(180deg) translateZ(var(--cube-half)); }
+.cube-face.right  { transform: rotateY(90deg) translateZ(var(--cube-half)); }
+.cube-face.left   { transform: rotateY(-90deg) translateZ(var(--cube-half)); }
+.cube-face.top    { transform: rotateX(90deg) translateZ(var(--cube-half)); }
+.cube-face.bottom { transform: rotateX(-90deg) translateZ(var(--cube-half)); }
+
+/* ARCHIVE NAMES LIST */
+.cube-archive-list {
+  position: absolute;
+  right: 40px;
+  top: 10%;
+  bottom: 10%;
+  width: 290px;
+  overflow-y: auto;
+  z-index: 40;
+  text-align: right;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cube-archive-list::-webkit-scrollbar {
+  display: none;
+}
+
+.cube-list-item {
+  color: #4A4658;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(20, 20, 22, 0.1);
+  text-transform: uppercase;
+  font-family: var(--font-sans, 'HK Guise', sans-serif);
+}
+
+.cube-list-item:hover,
+.cube-list-item.active {
+  color: #141416;
+  font-weight: 800;
+  transform: translateX(-15px);
+  border-bottom-color: #7567EE;
+}
+
+.cube-list-item.active {
+  color: #7567EE;
+  font-weight: 800;
+}
+
+/* GIANT WATERMARK LOGO */
+.cube-fw-logo {
+  position: absolute;
+  font-size: 14vw;
+  font-weight: 900;
+  font-family: var(--font-heading, 'CHANEY Wide', sans-serif);
+  color: #141416;
+  left: 2%;
+  bottom: 2%;
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+/* FLOATING ROTATION KEYFRAMES */
+@keyframes cubeFloatLoop {
+  0%   { transform: rotateX(-10deg) rotateY(0deg); }
+  30%  { transform: rotateX(-260deg) rotateY(10deg); }
+  70%  { transform: rotateX(-140deg) rotateY(200deg); }
+  100% { transform: rotateX(-10deg) rotateY(360deg); }
+}
+
+@media (max-width: 1024px) {
+  .cube-section-wrapper {
+    flex-direction: column;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    height: auto;
+    min-height: 100vh;
+  }
+  .cube-archive-list {
+    position: relative;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    width: 90%;
+    max-width: 480px;
+    max-height: 240px;
+    text-align: center;
+    margin-top: 40px;
+  }
+  .cube-fw-logo {
+    font-size: 18vw;
+    bottom: 1%;
+  }
+}

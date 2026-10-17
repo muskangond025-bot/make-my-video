@@ -17,11 +17,12 @@ interface NavItem {
 const MENU_ITEMS: NavItem[] = [
   { num: "01", name: "Home", href: "/" },
   { num: "02", name: "Services", href: "#expertise" },
-  { num: "03", name: "Capabilities", href: "#features" },
-  { num: "04", name: "Track Record", href: "#about" },
-  { num: "05", name: "Reviews", href: "#testimonials" },
-  { num: "06", name: "FAQ", href: "#faq" },
-  { num: "07", name: "Contact", href: "#contact" },
+  { num: "03", name: "3D Vault", href: "#archive" },
+  { num: "04", name: "Brands", href: "#brands" },
+  { num: "05", name: "Track Record", href: "#about" },
+  { num: "06", name: "Reviews", href: "#testimonials" },
+  { num: "07", name: "FAQ", href: "#faq" },
+  { num: "08", name: "Contact", href: "#contact" },
 ];
 
 export const Header = () => {
@@ -29,7 +30,7 @@ export const Header = () => {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
 
   const lastScrollY = useRef(0);
   const menuWrapRef = useRef<HTMLDivElement>(null);
@@ -47,31 +48,45 @@ export const Header = () => {
     setMounted(true);
   }, []);
 
-  // Static navbar activated when herosection is scrolled 70-80%
-  // Before that threshold, keep navbar hidden. Once reached, keep navbar static & visible.
+  // Smart auto-hide with direction detection and buffer:
+  // 1. At the top (scrollY <= 80px): always visible.
+  // 2. Scrolling DOWN past 120px (delta > 10px): smoothly glides up out of view.
+  // 3. Scrolling UP (delta < -10px): smoothly glides down into view.
+  // 4. Ignores micro scroll jitters (< 10px) to completely prevent up/down glitching.
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const heroElement = document.getElementById("home");
-      
-      // The 3D camera rotates to this 3/4 perspective between 0 and 100vh scroll.
-      // Reveal the navbar as soon as the user scrolls into this exact perspective (~45-50% of 1st viewport):
-      const heroThreshold = window.innerHeight * 0.45;
+      const currentScrollY = Math.max(0, window.scrollY);
+      const delta = currentScrollY - lastScrollY.current;
 
       setIsScrolled(currentScrollY > 20);
 
       if (isOpen) {
         setIsHidden(false);
+        lastScrollY.current = currentScrollY;
         return;
       }
 
-      // 1. Before reaching this camera angle: navbar is hidden
-      // 2. Once this camera angle is reached: navbar is static & visible throughout the website
-      if (currentScrollY < heroThreshold) {
+      // At top of page, always keep navbar visible
+      if (currentScrollY <= 80) {
+        setIsHidden(false);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      // Buffer threshold: ignore micro movements (< 10px) to prevent fluttering/glitching
+      if (Math.abs(delta) < 10) {
+        return;
+      }
+
+      if (delta > 0 && currentScrollY > 120) {
+        // Scrolling DOWN -> hide navbar
         setIsHidden(true);
-      } else {
+      } else if (delta < 0) {
+        // Scrolling UP -> reveal navbar
         setIsHidden(false);
       }
+
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -251,13 +266,13 @@ export const Header = () => {
       {/* IGNITE AGENCY TOP FIXED NAVBAR                            */}
       {/* ========================================================= */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
           isHidden
             ? "-translate-y-full opacity-0 pointer-events-none"
             : "translate-y-0 opacity-100 pointer-events-auto"
         } ${
           isScrolled && !isOpen
-            ? "bg-[#EAE3DB]/90 backdrop-blur-xl border-b border-[#141416]/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
+            ? "bg-[#EAE3DB]/90 dark:bg-[#141416]/90 backdrop-blur-xl border-b border-[#141416]/10 dark:border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
             : isOpen
             ? "bg-transparent border-b border-transparent"
             : "bg-transparent"

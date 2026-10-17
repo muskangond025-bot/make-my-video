@@ -19,11 +19,11 @@ interface ReelItem {
 const REELS: ReelItem[] = [
   {
     id: "reel-1",
-    title: "Luxury Architectural Estate",
-    category: "Architecture",
-    src: "/videos/hero-reel.mp4",
-    duration: "00:14:28:12",
-    iso: "ISO 400",
+    title: "Multi City Shoot & Brand Reel",
+    category: "Corporate AV & Shoot",
+    src: "/videos/hero-rohan.mp4",
+    duration: "00:03:45:00",
+    iso: "ISO 800",
     shutter: "1/50s",
     aperture: "f/1.8",
   },
@@ -121,6 +121,7 @@ export const CameraHero3D: React.FC = () => {
     screenTexture.colorSpace = THREE.SRGBColorSpace;
     screenTexture.minFilter = THREE.LinearFilter;
     screenTexture.magFilter = THREE.LinearFilter;
+    screenTexture.flipY = false;
 
     // 2. Three.js Scene & Camera
     const scene = new THREE.Scene();

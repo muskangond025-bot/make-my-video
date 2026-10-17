@@ -81,10 +81,10 @@ export const Expertise = () => {
 
       if (!pinHeight || !container || cards.length === 0) return;
 
-      // Set initial card position (offset down off screen)
+      // Set initial card position (offset down below view)
       gsap.set(cards, {
-        yPercent: 50,
-        y: 0.5 * window.innerHeight,
+        yPercent: 120,
+        y: 0,
         rotation: 0
       });
 
@@ -97,18 +97,19 @@ export const Expertise = () => {
           trigger: pinHeight,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.4
+          scrub: 0.3
         }
       });
 
-      // Translate up smoothly with staggered reveal, keeping cards perfectly upright with no overlap
+      // As user scrolls, card 1, 2, and 3 ascend into the center frame.
+      // Once card 3 arrives at center (yPercent: 0), the pin ends and next section appears immediately on scroll.
       tl.to(cards, {
-        yPercent: -50,
-        y: -0.5 * window.innerHeight,
+        yPercent: 0,
+        y: 0,
         rotation: 0,
         duration: 1,
-        stagger: 0.12,
-        ease: "expertiseCurve"
+        stagger: 0.22,
+        ease: "power2.out"
       }, 'step');
 
     }, containerRef);
@@ -167,7 +168,7 @@ export const Expertise = () => {
           <div className="padding-global w-full">
             <div className="container-large w-full">
               <div className="expertise-inner w-full">
-                <div className="expertise-border w-full">
+                <div className="expertise-border w-full !border-0 !border-none !rounded-none">
 
                   {/* STICKY STAGGER LETTER TITLE WRAPPER */}
                   <section ref={stickyTitleRef} className="sticky-title-wrapper w-full relative">
@@ -201,7 +202,7 @@ export const Expertise = () => {
 
                   {/* DESKTOP STICKY STAGGER REVEAL CARDS */}
                   <div className="expertise-cards w-full relative" style={{ margin: "0 auto", overflow: "visible" }}>
-                    <div className="pin-height w-full relative" style={{ height: "500vh", margin: "0 auto" }}>
+                    <div className="pin-height w-full relative" style={{ height: "220vh", margin: "0 auto" }}>
                       <div
                         className="expertise-container w-full"
                         style={{
@@ -234,7 +235,7 @@ export const Expertise = () => {
                                 </p>
                               </div>
                               <div className="button-group is--card">
-                                <a href="https://rohanjoshi.in/service" className="btn-main w-inline-block">
+                                <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                   <div className="btn-frame">
                                     <div className="btn-text">VIEW</div>
                                   </div>
@@ -245,7 +246,7 @@ export const Expertise = () => {
                                       </svg>
                                     </div>
                                   </div>
-                                </a>
+                                </div>
                               </div>
                               <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
                                 <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png" loading="eager" alt="Multi City Video Production" className="h-full object-contain rounded-t-2xl" />
@@ -268,7 +269,7 @@ export const Expertise = () => {
                                 </p>
                               </div>
                               <div className="button-group is--card">
-                                <a href="https://rohanjoshi.in/service" className="btn-main w-inline-block">
+                                <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                   <div className="btn-frame">
                                     <div className="btn-text">VIEW</div>
                                   </div>
@@ -279,7 +280,7 @@ export const Expertise = () => {
                                       </svg>
                                     </div>
                                   </div>
-                                </a>
+                                </div>
                               </div>
                               <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
                                 <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png" loading="eager" alt="Remote Editing Work" className="h-full object-contain rounded-t-2xl" />
@@ -302,7 +303,7 @@ export const Expertise = () => {
                                 </p>
                               </div>
                               <div className="button-group is--card">
-                                <a href="https://rohanjoshi.in/service" className="btn-main w-inline-block">
+                                <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                   <div className="btn-frame">
                                     <div className="btn-text">VIEW</div>
                                   </div>
@@ -313,7 +314,7 @@ export const Expertise = () => {
                                       </svg>
                                     </div>
                                   </div>
-                                </a>
+                                </div>
                               </div>
                               <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
                                 <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png" loading="eager" alt="Corporate AV" className="h-full object-contain rounded-t-2xl" />
@@ -344,7 +345,7 @@ export const Expertise = () => {
                               </p>
                             </div>
                             <div className="button-group is--card">
-                              <a href="https://rohanjoshi.in/service" className="btn-main w-inline-block">
+                              <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                 <div className="btn-frame">
                                   <div className="btn-text">VIEW</div>
                                 </div>
@@ -355,7 +356,7 @@ export const Expertise = () => {
                                     </svg>
                                   </div>
                                 </div>
-                              </a>
+                              </div>
                             </div>
                             <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
                               <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png" loading="eager" alt="Multi City Video Production" className="h-full object-contain rounded-t-2xl" />
@@ -378,7 +379,7 @@ export const Expertise = () => {
                               </p>
                             </div>
                             <div className="button-group is--card">
-                              <a href="https://rohanjoshi.in/service" className="btn-main w-inline-block">
+                              <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                 <div className="btn-frame">
                                   <div className="btn-text">VIEW</div>
                                 </div>
@@ -389,7 +390,7 @@ export const Expertise = () => {
                                     </svg>
                                   </div>
                                 </div>
-                              </a>
+                              </div>
                             </div>
                             <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
                               <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png" loading="eager" alt="Remote Editing Work" className="h-full object-contain rounded-t-2xl" />
@@ -412,7 +413,7 @@ export const Expertise = () => {
                               </p>
                             </div>
                             <div className="button-group is--card">
-                              <a href="https://rohanjoshi.in/service" className="btn-main w-inline-block">
+                              <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                 <div className="btn-frame">
                                   <div className="btn-text">VIEW</div>
                                 </div>
@@ -423,7 +424,7 @@ export const Expertise = () => {
                                     </svg>
                                   </div>
                                 </div>
-                              </a>
+                              </div>
                             </div>
                             <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
                               <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png" loading="eager" alt="Corporate AV" className="h-full object-contain rounded-t-2xl" />

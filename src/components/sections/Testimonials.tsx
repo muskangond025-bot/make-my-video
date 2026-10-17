@@ -41,46 +41,11 @@ const testimonials = [
   }
 ];
 
-const TestimonialQuote = ({ text, active }: { text: string; active: boolean }) => {
-  const textRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    if (!active || !textRef.current) return;
-    const words = textRef.current.querySelectorAll('.word');
-    
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: textRef.current,
-        start: "top 85%",
-        end: "bottom 55%",
-        scrub: true,
-      }
-    });
-
-    tl.to(words, {
-      opacity: 1,
-      color: "#141416",
-      stagger: 0.05,
-      ease: "none"
-    });
-
-    return () => {
-      tl.kill();
-    };
-  }, [text, active]);
-
+const TestimonialQuote = ({ text }: { text: string; active?: boolean }) => {
   return (
-    <div className="slider-text-large leading-[1.1]">
-      <p ref={textRef} className="m-0 font-heading text-2xl sm:text-3xl lg:text-4xl text-[#141416] dark:text-[#EAE3DB] uppercase tracking-tight">
-        {text.split(' ').map((word, idx) => (
-          <span 
-            key={idx} 
-            className="word inline-block mr-[0.25em]"
-            style={{ opacity: 0.35, color: '#141416', transition: 'color 0.3s, opacity 0.3s' }}
-          >
-            {word}
-          </span>
-        ))}
+    <div className="slider-text-large leading-[1.15]">
+      <p className="m-0 font-heading text-2xl sm:text-3xl lg:text-4xl text-[#141416] dark:text-[#EAE3DB] uppercase tracking-tight font-bold">
+        "{text}"
       </p>
     </div>
   );
@@ -304,8 +269,6 @@ export const Testimonials = () => {
                     <div className="expertise-left">
                       <div 
                         className="left-wrapper is--testimonial"
-                        onMouseMove={handlePhotoMouseMove}
-                        onMouseLeave={handlePhotoMouseLeave}
                       >
                         
                         <div className="swiper is-photos w-dyn-list">

@@ -77,10 +77,9 @@ export const Experience = () => {
             return (
               <div
                 key={card.id}
-                className={`grow-card group ${isHovered ? 'is-hovered' : ''}`}
+                className={`grow-card group ${isHovered ? 'is-hovered' : ''} cursor-default`}
                 onMouseEnter={() => setHoveredIndex(idx)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                onClick={() => window.location.href = card.link}
               >
                 {/* Luxury Card Inner Structure */}
                 <div className="w-full h-full flex flex-col justify-between text-[#EAE3DB] select-none">
@@ -117,7 +116,7 @@ export const Experience = () => {
                       <span className="font-bold text-[#141416] bg-[#D5FF3F] text-[12px] tracking-wide px-3 py-1 rounded-full shadow-[0_2px_8px_rgba(213,255,63,0.3)]">
                         {card.price}
                       </span>
-                      <span className="font-bold text-[#7567EE] group-hover:text-[#D5FF3F] flex items-center gap-1 text-[11px] uppercase tracking-wider transition-colors drop-shadow-sm">
+                      <span className="font-bold text-[#7567EE]/80 flex items-center gap-1 text-[11px] uppercase tracking-wider pointer-events-none select-none cursor-default drop-shadow-sm">
                         View &rarr;
                       </span>
                     </div>
@@ -138,13 +137,13 @@ export const Experience = () => {
           </p>
         </div>
         <div>
-          <a
-            href="https://rohanjoshi.in/all-projects"
-            className="group inline-flex items-center gap-2 border border-[#141416]/20 dark:border-white/20 hover:border-[#141416] text-[#141416] dark:text-[#EAE3DB] hover:bg-[#141416] dark:hover:bg-white hover:text-[#D5FF3F] dark:hover:text-[#141416] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 bg-[#EAE3DB] dark:bg-[#141416] backdrop-blur-md shadow-sm cursor-pointer"
+          <button
+            type="button"
+            className="group inline-flex items-center gap-2 border border-[#141416]/20 dark:border-white/20 text-[#141416] dark:text-[#EAE3DB] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest bg-[#EAE3DB] dark:bg-[#141416] backdrop-blur-md shadow-sm pointer-events-none select-none cursor-default"
           >
             Explore All Projects
             <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
-          </a>
+          </button>
         </div>
       </div>
     </section>

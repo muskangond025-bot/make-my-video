@@ -5,7 +5,8 @@ import { Expertise } from "@/components/sections/Expertise";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Faq } from "@/components/sections/Faq";
 import { SectionCrosses } from "@/components/sections/SectionCrosses";
-import { CardSwing } from "@/components/sections/CardSwing";
+import { CubeShowcase } from "@/components/sections/CubeShowcase";
+import { TrustedBrands } from "@/components/sections/TrustedBrands";
 import { Experience } from "@/components/sections/Experience";
 import { PremiumFooter } from "@/components/sections/PremiumFooter";
 
@@ -23,21 +24,22 @@ export default function Home() {
       <Header />
 
       <div className="flex flex-col relative w-full z-10">
+        {/* Chapter 1: Hero & Vision */}
         <Hero />
+
+        {/* Chapter 2: Services & Capabilities */}
         <Expertise />
 
-        <SectionCrosses dark={false} />
-        <CardSwing />
+        {/* Chapter 3: Interactive 3D Archive */}
+        <CubeShowcase />
 
-        <SectionCrosses dark={false} />
+        {/* Chapter 4: Client Portfolio & Social Proof */}
+        <TrustedBrands />
         <Experience />
-
-        <SectionCrosses dark={true} />
         <Testimonials />
 
-        <SectionCrosses dark={false} />
+        {/* Chapter 5: FAQ & Premium Footer */}
         <Faq />
-
         <PremiumFooter />
       </div>
     </main>

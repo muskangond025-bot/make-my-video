@@ -62,29 +62,29 @@ export const CardSwing = () => {
         const calcDistance = () => {
           const scrollWidth = cardsContainer.scrollWidth;
           const viewportWidth = window.innerWidth;
-          return Math.max(0, scrollWidth - viewportWidth + 80);
+          return Math.max(0, scrollWidth - viewportWidth + 120);
         };
 
-        // 1. Horizontal scroll tween pinned to pinHeight - locks section in place during scroll
+        // 1. Horizontal scroll tween pinned directly for exact scroll distance
         const scrollTween = gsap.to(cardsContainer, {
           x: () => -calcDistance(),
           ease: 'none',
           scrollTrigger: {
-            trigger: pinHeight,
-            pin: pinEl,
+            trigger: pinEl,
+            pin: true,
             start: 'top top',
-            end: 'bottom bottom',
-            scrub: 0.4,
+            end: () => `+=${calcDistance()}`,
+            scrub: 0.6,
             invalidateOnRefresh: true,
           }
         });
 
         // 2. The Signature 3D Card Swing Animation (playful rotation, float, and tilt)
         cards.forEach((card, index) => {
-          const randX = ((index % 3) + 1) * 18;
-          const randY = ((index % 2) + 1) * 12;
-          const randRot = ((index % 4) - 2) * 9;
-          const rotationVal = randRot === 0 ? 9 : randRot;
+          const randX = ((index % 3) + 1) * 20;
+          const randY = ((index % 2) + 1) * 14;
+          const randRot = ((index % 4) - 2) * 10;
+          const rotationVal = randRot === 0 ? 10 : randRot;
 
           gsap.fromTo(
             card,
@@ -118,28 +118,28 @@ export const CardSwing = () => {
 
   return (
     <section id="features" ref={containerRef} className="section-expertise-two w-full bg-[#EAE3DB] dark:bg-[#141416] bg-dots-pattern relative select-none overflow-hidden">
-      {/* Centered Tagline & Header wrapper */}
-      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12">
-        <div className="title-top-wrap w-full flex flex-col items-center pt-10 pb-4 text-center gap-4">
-          <div className="top-tagline flex items-center justify-center gap-4 text-xs font-sans tracking-widest font-semibold uppercase">
-            <span className="text-[#141416] dark:text-[#EAE3DB] font-bold">MAKE MY VID</span>
-            <div className="plus-icon text-[#7567EE] w-6 h-6 flex items-center justify-center">
-              <svg width="100%" height="100%" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18.5083 11.7651V0.197266H12.8586V9.46042L9.01862 12.8732H0.5V18.369H11.9317L18.5083 11.7651Z" fill="currentColor" />
-                <path d="M14.4917 20.6294L14.4917 32.1973L20.1414 32.1973L20.1414 22.9341L23.9814 19.5214L32.5 19.5214L32.5 14.0255L21.0683 14.0255L14.4917 20.6294Z" fill="currentColor" />
-              </svg>
-            </div>
-            <span className="text-[#7567EE] font-semibold">PRODUCTION CAPABILITIES</span>
-          </div>
-          <p className="text-[#4A4658] dark:text-[#EAE3DB]/75 font-sans text-base md:text-lg max-w-[800px] leading-relaxed">
-            Discover our comprehensive video production capabilities designed to elevate brands, empower creators, and captivate audiences worldwide.
-          </p>
-        </div>
-      </div>
-
       {/* FULL-WIDTH STICKY PIN CONTAINER - Spans 100vw, NO clipping margins! */}
       <div ref={pinHeightRef} className="card-pin-height w-full relative">
-        <div ref={pinRef} className="card-container w-full">
+        <div ref={pinRef} className="card-container w-full flex flex-col justify-between py-6">
+
+          {/* Centered Tagline & Header wrapper - Pinned together with cards */}
+          <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 z-20">
+            <div className="title-top-wrap w-full flex flex-col items-center pt-2 pb-2 text-center gap-3">
+              <div className="top-tagline flex items-center justify-center gap-4 text-xs font-sans tracking-widest font-semibold uppercase">
+                <span className="text-[#141416] dark:text-[#EAE3DB] font-bold">MAKE MY VID</span>
+                <div className="plus-icon text-[#7567EE] w-6 h-6 flex items-center justify-center">
+                  <svg width="100%" height="100%" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.5083 11.7651V0.197266H12.8586V9.46042L9.01862 12.8732H0.5V18.369H11.9317L18.5083 11.7651Z" fill="currentColor" />
+                    <path d="M14.4917 20.6294L14.4917 32.1973L20.1414 32.1973L20.1414 22.9341L23.9814 19.5214L32.5 19.5214L32.5 14.0255L21.0683 14.0255L14.4917 20.6294Z" fill="currentColor" />
+                  </svg>
+                </div>
+                <span className="text-[#7567EE] font-semibold">PRODUCTION CAPABILITIES</span>
+              </div>
+              <p className="text-[#4A4658] dark:text-[#EAE3DB]/75 font-sans text-sm md:text-base max-w-[700px] leading-relaxed">
+                Discover our comprehensive video production capabilities designed to elevate brands, empower creators, and captivate audiences worldwide.
+              </p>
+            </div>
+          </div>
 
           {/* Background Ornaments (Circles and Dots) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -162,7 +162,7 @@ export const CardSwing = () => {
           {/* Horizontal slider cards track - Total Width */}
           <div
             ref={cardsContainerRef}
-            className="cards"
+            className="cards my-auto"
           >
             {cardsData.map((data, i) => (
               <div key={i} className="scroll-card flex-shrink-0">

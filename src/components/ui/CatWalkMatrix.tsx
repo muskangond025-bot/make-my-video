@@ -19,8 +19,11 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [mode, setMode] = useState<"matrix" | "halftone" | "glow">("matrix");
+  const modeRef = useRef<"matrix" | "halftone" | "glow">("matrix");
+  modeRef.current = mode;
+
   const [framesLoaded, setFramesLoaded] = useState(false);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number; active: boolean }>({
+  const mousePosRef = useRef<{ x: number; y: number; active: boolean }>({
     x: -999,
     y: -999,
     active: false,
@@ -93,8 +96,8 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       const displayWidth = Math.max(rect.width, 320);
-      // Keep exact aspect ratio matching the reference
-      const displayHeight = Math.min(Math.max(displayWidth * 0.38, 200), 380);
+      // Keep elegant height on all screens
+      const displayHeight = Math.min(Math.max(displayWidth * 0.28, 240), 380);
 
       canvas.width = displayWidth * dpr;
       canvas.height = displayHeight * dpr;
@@ -114,12 +117,12 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
         const fontSize = Math.floor(displayHeight * 0.52);
 
         textCtx.font = `900 ${fontSize}px "Inter", "Outfit", "Arial Black", system-ui, -apple-system, sans-serif`;
-        textCtx.textAlign = "left";
+        textCtx.textAlign = "center";
         textCtx.textBaseline = "alphabetic";
         textCtx.fillStyle = "#FFFFFF";
 
-        // Position: "mowl" spans across the screen starting at ~14%
-        const textX = displayWidth * 0.14;
+        // Center typography gracefully across full width
+        const textX = displayWidth * 0.45;
         textCtx.fillText(brandText, textX, baselineY - 2);
       }
     };
@@ -133,13 +136,9 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
 
       const rect = containerRef.current?.getBoundingClientRect();
       const width = rect?.width || 800;
-      const height = Math.min(Math.max(width * 0.38, 200), 380);
+      const height = Math.min(Math.max(width * 0.28, 240), 380);
 
       ctx.clearRect(0, 0, width, height);
-
-      // Deep dark background
-      ctx.fillStyle = "#08080C";
-      ctx.fillRect(0, 0, width, height);
 
       // Grid settings: tightly spaced dots for authentic retro-halftone resolution
       const spacing = width > 768 ? 7.5 : 6;
@@ -150,16 +149,27 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
       const baselineY = height * 0.76;
       const baselineRow = Math.floor(baselineY / spacing);
 
-      // Halftone Moon (upper-right behind 'w' and 'l')
-      const moonCenterX = width * 0.77;
+      // Halftone Moon (positioned behind typography)
+      const moonCenterX = width * 0.58;
       const moonCenterY = baselineY - height * 0.38;
       const moonRadius = height * 0.44;
 
-      // Cat position: Left side over the 'm'
+      // Cat movement across baseline:
       // Cat width and height proportional to actual 360x206 aspect ratio (1.75 : 1)
       const catWidth = height * 0.58;
       const catHeight = catWidth * (206 / 360);
-      const catCenterX = width * 0.28;
+
+      // Total travel distance: from offscreen left (-catWidth * 0.6) to offscreen right (width + catWidth * 0.6)
+      const startX = -catWidth * 0.5;
+      const endX = width + catWidth * 0.5;
+      const travelDistance = endX - startX;
+
+      // Realistic walking speed across the entire canvas width
+      // Takes ~10 seconds to walk from start of baseline to end of baseline across screen, then loops
+      const walkDuration = Math.max(8, width / 95); // smooth consistent walking speed
+      const walkProgress = (elapsed % walkDuration) / walkDuration;
+      const catCenterX = startX + walkProgress * travelDistance;
+
       const catLeft = catCenterX - catWidth * 0.5;
       const catRight = catCenterX + catWidth * 0.5;
       const catBottom = baselineY;
@@ -249,14 +259,15 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
           }
 
           // 4. Mouse Interactive Distance
-          if (mousePos.active) {
-            mouseDist = Math.hypot(x - mousePos.x, y - mousePos.y);
+          if (mousePosRef.current.active) {
+            mouseDist = Math.hypot(x - mousePosRef.current.x, y - mousePosRef.current.y);
           }
 
           // Determine dot style
+          const currentMode = modeRef.current;
           if (isCatForeground) {
             // Authentic Pure White Dot Matrix Cat
-            dotColor = mode === "glow" ? "#C7D2FE" : "#FFFFFF";
+            dotColor = currentMode === "glow" ? "#C7D2FE" : "#FFFFFF";
             dotRadius = baseRadius * 1.15;
             dotAlpha = 1.0;
           } else if (isCatBackgroundLeg) {
@@ -267,7 +278,7 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
           } else if (isText) {
             // "mowl" Brand Typography: Crosshatch Periwinkle
             const isTextChecker = (c + r) % 2 === 0;
-            if (isTextChecker || mode !== "matrix") {
+            if (isTextChecker || currentMode !== "matrix") {
               dotColor = "#7888DB"; // Lavender periwinkle
               dotRadius = baseRadius * 1.05;
               dotAlpha = 0.95;
@@ -326,19 +337,19 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resize);
     };
-  }, [brandText, mode, mousePos, framesLoaded]);
+  }, [brandText, framesLoaded]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
+    mousePosRef.current = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
       active: true,
-    });
+    };
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    setMousePos((prev) => ({ ...prev, active: false }));
+    mousePosRef.current.active = false;
   }, []);
 
   return (
@@ -348,16 +359,15 @@ export const CatWalkMatrix: React.FC<CatWalkMatrixProps> = ({
       onMouseLeave={handleMouseLeave}
       className={`relative w-full flex flex-col items-center justify-center select-none overflow-hidden ${className}`}
     >
-      {/* Main Halftone Matrix Canvas */}
-      <div className="relative w-full max-w-[960px] mx-auto flex items-center justify-center">
+      {/* Main Halftone Matrix Canvas - Full Width Viewport */}
+      <div className="relative w-full flex items-center justify-center">
         <canvas
           ref={canvasRef}
           className="block w-full h-auto cursor-crosshair transition-opacity duration-300"
           style={{ imageRendering: "pixelated" }}
         />
 
-        {/* Ambient subtle vignette */}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#08080C] via-transparent to-[#08080C]/40" />
+        {/* Canvas without color-mismatch overlay */}
       </div>
 
       {/* Optional Mode Controls */}

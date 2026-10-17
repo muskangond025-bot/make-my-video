@@ -59,7 +59,7 @@ const TestimonialQuote = ({ text, active }: { text: string; active: boolean }) =
 
     tl.to(words, {
       opacity: 1,
-      color: "#F3EBDD",
+      color: "#141416",
       stagger: 0.05,
       ease: "none"
     });
@@ -71,12 +71,12 @@ const TestimonialQuote = ({ text, active }: { text: string; active: boolean }) =
 
   return (
     <div className="slider-text-large leading-[1.1]">
-      <p ref={textRef} className="m-0">
+      <p ref={textRef} className="m-0 font-heading text-2xl sm:text-3xl lg:text-4xl text-[#141416] dark:text-[#EAE3DB] uppercase tracking-tight">
         {text.split(' ').map((word, idx) => (
           <span 
             key={idx} 
             className="word inline-block mr-[0.25em]"
-            style={{ opacity: 0.25, color: 'rgba(243, 235, 221, 0.25)', transition: 'color 0.3s' }}
+            style={{ opacity: 0.35, color: '#141416', transition: 'color 0.3s, opacity 0.3s' }}
           >
             {word}
           </span>
@@ -277,27 +277,27 @@ export const Testimonials = () => {
 
   // Desktop Slider Split layout
   return (
-    <div ref={testimonialsRef} id="testimonials" className="section-testimonials-wrap w-full relative">
-      <section className="section-testimonials w-full relative">
+    <div ref={testimonialsRef} id="testimonials" className="section-testimonials-wrap w-full relative py-12 md:py-20 overflow-visible">
+      <section className="section-testimonials w-full relative overflow-visible">
         <div className="padding-global align-center">
           <div className="container-large align-center">
-            <div data-reveal-group="" className="testimonials-inner">
+            <div data-reveal-group="" className="testimonials-inner !h-auto !min-h-[560px] !overflow-visible !py-4">
               
-              {/* Top Tagline */}
-              <div className="top-tagline">
-                <div className="text-size-regular text-[#B9A1F7] text-weight-medium">WHAT OTHERS</div>
-                <div className="plus-icon w-embed text-[#B9A1F7]">
-                  <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Top Tagline with High Contrast */}
+              <div className="top-tagline flex items-center justify-center gap-3">
+                <div className="text-size-regular text-[#7567EE] text-weight-bold">WHAT OTHERS</div>
+                <div className="plus-icon w-embed text-[#7567EE]">
+                  <svg width="24" height="24" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.5083 11.7651V0.197266H12.8586V9.46042L9.01862 12.8732H0.5V18.369H11.9317L18.5083 11.7651Z" fill="currentColor"/>
                     <path d="M14.4917 20.6294L14.4917 32.1973L20.1414 32.1973L20.1414 22.9341L23.9814 19.5214L32.5 19.5214L32.5 14.0255L21.0683 14.0255L14.4917 20.6294Z" fill="currentColor"/>
                   </svg>
                 </div>
-                <div className="text-size-regular text-[#F3EBDD] text-weight-medium">SAY ABOUT MAKE MY VID</div>
+                <div className="text-size-regular text-[#141416] dark:text-[#EAE3DB] text-weight-bold">SAY ABOUT MAKE MY VID</div>
               </div>
 
               {/* Main Testimonials Slider Frame */}
-              <div className="testimonial-slider">
-                <div className="slider_wrap">
+              <div className="testimonial-slider overflow-visible">
+                <div className="slider_wrap overflow-visible">
                   
                   {/* Left Stacked photos */}
                   <div className="slider_left">
@@ -352,7 +352,7 @@ export const Testimonials = () => {
                                     position: 'absolute',
                                     inset: '0%',
                                     borderRadius: '32px',
-                                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
                                     backgroundColor: '#ffffff'
                                   }}
                                 >
@@ -383,7 +383,7 @@ export const Testimonials = () => {
                   </div>
 
                   {/* Right Content Quote & Info */}
-                  <div className="slider_right">
+                  <div className="slider_right relative !overflow-visible !min-h-[460px] !pb-24">
                     <div className="swiper is-content w-dyn-list">
                       <div className="swiper-wrapper is-content w-dyn-items">
                         {testimonials.map((t, idx) => (
@@ -406,28 +406,28 @@ export const Testimonials = () => {
                             </div>
 
                             {/* Sub Quote description text */}
-                            <div className="slider-info-middle">
-                              <p className="text-size-regular text-[#F3EBDD]/75 leading-relaxed">
+                            <div className="slider-info-middle mt-4">
+                              <p className="text-size-regular text-[#4A4658] dark:text-[#EAE3DB]/80 leading-relaxed font-sans text-sm md:text-base">
                                 "{t.subQuote}"
                               </p>
                             </div>
 
                             {/* Author info & avatar */}
-                            <div className="testimonial-author-wrapper">
+                            <div className="testimonial-author-wrapper mt-6">
                               <div 
-                                className="testimonial-author-image border border-[#B9A1F7]/30"
+                                className="testimonial-author-image border border-[#7567EE]/30"
                                 style={{ backgroundImage: `url(${t.avatar})` }}
                               />
                               <div className="blog-author-text">
-                                <div className="text-size-small text-[#F3EBDD] font-bold text-style-allcaps">
+                                <div className="text-size-small text-[#141416] dark:text-[#EAE3DB] font-bold text-style-allcaps">
                                   {t.name}
                                 </div>
                                 <div className="blog-date-wrapper flex items-center gap-2 mt-1">
-                                  <div className="text-size-tiny text-[#B9A1F7] font-semibold text-style-allcaps">
+                                  <div className="text-size-tiny text-[#7567EE] font-bold text-style-allcaps">
                                     {t.role}
                                   </div>
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#D5FF3F]" />
-                                  <div className="text-size-tiny text-[#F3EBDD]/70 text-style-allcaps">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-[#7567EE]" />
+                                  <div className="text-size-tiny text-[#4A4658] dark:text-[#EAE3DB]/70 font-medium text-style-allcaps">
                                     {t.company}
                                   </div>
                                 </div>
@@ -435,7 +435,7 @@ export const Testimonials = () => {
                             </div>
 
                             {/* Big Quote symbol indicator */}
-                            <div className="quote-vector w-embed text-[#B9A1F7]/25">
+                            <div className="quote-vector w-embed text-[#7567EE]/20">
                               <svg width="69" height="65" viewBox="0 0 69 65" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M37.6364 37.8443V0.197266H69V37.8443L62.1 64.1973H46.1045L52.6909 37.8443H37.6364ZM0 37.8443V0.197266H31.3636V37.8443L24.4636 64.1973H8.46818L15.0545 37.8443H0Z" fill="currentColor"/>
                               </svg>
@@ -446,14 +446,15 @@ export const Testimonials = () => {
                       </div>
                     </div>
 
-                    {/* Navigation control arrows */}
-                    <div className="arrows">
+                    {/* Navigation control arrows - Positioned safely above bottom border */}
+                    <div className="arrows !absolute !bottom-2 !right-2 !z-50 !flex !items-center !gap-3 !p-1.5 !rounded-full !bg-[#E3DCDB] dark:!bg-[#1E1E24] !border !border-[#141416]/10 dark:!border-white/10 !shadow-md">
                       <a 
                         href="#" 
                         onClick={handlePrev} 
                         onMouseEnter={handleArrowMouseEnter}
                         onMouseLeave={handleArrowMouseLeave}
                         className="arrow is-left w-inline-block"
+                        aria-label="Previous testimonial"
                       >
                         <div data-wf--button-arrow--direction="previous" className="arrow-btn">
                           <div className="arrow-icon w-variant-7134e1bf-4f83-3817-89f3-2de83b852b90 w-embed">
@@ -469,6 +470,7 @@ export const Testimonials = () => {
                         onMouseEnter={handleArrowMouseEnter}
                         onMouseLeave={handleArrowMouseLeave}
                         className="arrow is-right w-inline-block"
+                        aria-label="Next testimonial"
                       >
                         <div data-wf--button-arrow--direction="next" className="arrow-btn">
                           <div className="arrow-icon w-embed">

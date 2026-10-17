@@ -16,11 +16,11 @@ interface NavItem {
 
 const MENU_ITEMS: NavItem[] = [
   { num: "01", name: "Home", href: "/" },
-  { num: "02", name: "About", href: "#about" },
-  { num: "03", name: "Projects", href: "#projects" },
-  { num: "04", name: "Services", href: "#expertise" },
-  { num: "05", name: "Blogs", href: "https://rohanjoshi.in/all-blogs", isExternal: true },
-  { num: "06", name: "Join Us", href: "https://rohanjoshi.in/join-us", isExternal: true },
+  { num: "02", name: "Services", href: "#expertise" },
+  { num: "03", name: "Capabilities", href: "#features" },
+  { num: "04", name: "Track Record", href: "#about" },
+  { num: "05", name: "Reviews", href: "#testimonials" },
+  { num: "06", name: "FAQ", href: "#faq" },
   { num: "07", name: "Contact", href: "#contact" },
 ];
 
@@ -47,56 +47,34 @@ export const Header = () => {
     setMounted(true);
   }, []);
 
-  // Directional scroll hide/reveal with Hero 3D camera stage delay
+  // Static navbar activated when herosection is scrolled 70-80%
+  // Before that threshold, keep navbar hidden. Once reached, keep navbar static & visible.
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const heroElement = document.getElementById("home");
       
-      // Calculate hero threshold:
-      // The hero section #home is 200vh tall (the full 3D camera experience).
-      // We keep the navbar strictly hidden until the user has actually scrolled down
-      // past the hero camera stage (at least ~72% of the 200vh hero, ~1.44x window.innerHeight).
-      const heroHeight =
-        heroElement && heroElement.offsetHeight > 0
-          ? heroElement.offsetHeight
-          : window.innerHeight * 2;
-      
-      const scrollDownThreshold = heroHeight * 0.72;
+      // The 3D camera rotates to this 3/4 perspective between 0 and 100vh scroll.
+      // Reveal the navbar as soon as the user scrolls into this exact perspective (~45-50% of 1st viewport):
+      const heroThreshold = window.innerHeight * 0.45;
 
       setIsScrolled(currentScrollY > 20);
 
       if (isOpen) {
         setIsHidden(false);
-        lastScrollY.current = currentScrollY;
         return;
       }
 
-      // STAGE 1: Top Hero / Camera Area
-      // When the user has not scrolled down past the hero, navbar MUST NEVER come down.
-      if (currentScrollY < scrollDownThreshold) {
+      // 1. Before reaching this camera angle: navbar is hidden
+      // 2. Once this camera angle is reached: navbar is static & visible throughout the website
+      if (currentScrollY < heroThreshold) {
         setIsHidden(true);
       } else {
-        // STAGE 2: Once user has scrolled down past the hero:
-        if (currentScrollY > lastScrollY.current + 10 && currentScrollY > scrollDownThreshold + 150) {
-          // Scrolling down further down the page -> hide
-          setIsHidden(true);
-        } else if (currentScrollY < lastScrollY.current - 4) {
-          // Scrolling up -> reveal navbar
-          setIsHidden(false);
-        } else if (lastScrollY.current < scrollDownThreshold && currentScrollY >= scrollDownThreshold) {
-          // Just crossed the threshold scrolling down -> reveal navbar!
-          setIsHidden(false);
-        } else {
-          setIsHidden(false);
-        }
+        setIsHidden(false);
       }
-
-      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Evaluate initial position immediately
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isOpen]);
@@ -279,7 +257,7 @@ export const Header = () => {
             : "translate-y-0 opacity-100 pointer-events-auto"
         } ${
           isScrolled && !isOpen
-            ? "bg-[#EFECE6]/90 backdrop-blur-xl border-b border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
+            ? "bg-[#EAE3DB]/90 backdrop-blur-xl border-b border-[#141416]/10 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
             : isOpen
             ? "bg-transparent border-b border-transparent"
             : "bg-transparent"
@@ -287,7 +265,7 @@ export const Header = () => {
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-3.5 sm:py-4 flex items-center justify-between">
           
-          {/* Brand Logo - Crisp Black matching IVENTIONS */}
+          {/* Brand Logo - Crisp Black matching website primary */}
           <a
             href="/"
             onClick={() => setIsOpen(false)}
@@ -304,7 +282,7 @@ export const Header = () => {
           {/* Right Header Navigation Controls */}
           <div className="relative z-50 flex items-center gap-2 sm:gap-3 md:gap-4">
             
-            {/* CTA Button: "GOT A PROJECT?" - Neon Lime Capsule matching 1st Screenshot */}
+            {/* CTA Button: "GOT A PROJECT?" - Signature Neon Lime Capsule */}
             <a
               href="#contact"
               onClick={(e) => {
@@ -318,9 +296,9 @@ export const Header = () => {
             </a>
 
             {/* Dark / Light Theme Toggle */}
-            <ThemeToggle className="border-black/15 text-[#141416] bg-black/5" />
+            <ThemeToggle className="border-[#141416]/15 text-[#141416] bg-[#141416]/5" />
 
-            {/* DUAL-STATE ROLLING TEXT MENU BUTTON - Neon Lime Capsule with Two Bars matching 1st Screenshot */}
+            {/* DUAL-STATE ROLLING TEXT MENU BUTTON */}
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
@@ -328,7 +306,6 @@ export const Header = () => {
               aria-expanded={isOpen}
               aria-label={isOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
             >
-              {/* Two Horizontal Bars Menu Icon matching 1st screenshot */}
               <div className="flex flex-col gap-1 w-3.5 justify-center">
                 <span className={`block h-[2px] bg-[#141416] transition-transform duration-300 ${isOpen ? "rotate-45 translate-y-[3px]" : ""}`} />
                 <span className={`block h-[2px] bg-[#141416] transition-transform duration-300 ${isOpen ? "-rotate-45 -translate-y-[3px]" : ""}`} />
@@ -342,7 +319,7 @@ export const Header = () => {
       </header>
 
       {/* ========================================================= */}
-      {/* IGNITE AGENCY FULL-SCREEN DRAWER MENU                     */}
+      {/* DRAWER MENU - THEME HARMONIZED WITH WEBSITE SYSTEM        */}
       {/* ========================================================= */}
       <div
         ref={menuWrapRef}
@@ -350,26 +327,26 @@ export const Header = () => {
         style={{ visibility: "hidden" }}
       >
         {/* 3 Cascading Layered Panels */}
-        {/* Panel 1: Vibrant Cinema Purple Brand Accent */}
+        {/* Panel 1: Electric Violet / Lavender Accent */}
         <div
           ref={panel1Ref}
-          className="absolute inset-0 z-0 bg-gradient-to-br from-[#8B5CF6] via-[#6D28D9] to-[#211747]"
+          className="absolute inset-0 z-0 bg-gradient-to-br from-[#7567EE] via-[#5A4DDE] to-[#141416]"
         />
 
-        {/* Panel 2: Rich Contrast Secondary Slate */}
+        {/* Panel 2: Deep Charcoal Secondary Surface */}
         <div
           ref={panel2Ref}
-          className="absolute inset-0 z-0 bg-[#161722]"
+          className="absolute inset-0 z-0 bg-[#18181D]"
         />
 
-        {/* Panel 3: Obsidian Film Base */}
+        {/* Panel 3: Obsidian Dark Base */}
         <div
           ref={panel3Ref}
-          className="absolute inset-0 z-0 bg-[#0A0B0E]"
+          className="absolute inset-0 z-0 bg-[#141416]"
         />
 
         {/* Subtle Ambient Film Grain Vignette */}
-        <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(185,161,247,0.08)_0%,transparent_70%)]" />
+        <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,rgba(117,103,238,0.1)_0%,transparent_70%)]" />
 
         {/* Menu Inner Content */}
         <div className="relative z-10 w-full h-full flex flex-col justify-between px-6 sm:px-12 md:px-16 lg:px-24 pt-24 sm:pt-28 pb-8 text-white overflow-y-auto">
@@ -397,11 +374,11 @@ export const Header = () => {
                     className="flex items-center group cursor-pointer text-decoration-none select-none w-fit"
                   >
                     {/* Eyebrow Number */}
-                    <span className="font-mono text-xs sm:text-sm font-bold tracking-widest text-[#B9A1F7] dark:text-[#D5FF3F] mr-3 sm:mr-5 opacity-70 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0">
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-widest text-[#7567EE] dark:text-[#D5FF3F] mr-3 sm:mr-5 opacity-80 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0">
                       {item.num}
                     </span>
 
-                    {/* Dual-Layered Rolling Text (Ignite Hover Stagger - Proportional Height, No Clipping) */}
+                    {/* Dual-Layered Rolling Text */}
                     <div className="relative h-[1.3em] overflow-hidden flex flex-col justify-start text-xl sm:text-2xl md:text-3xl lg:text-[34px] font-bold tracking-tight">
                       <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.65,0.01,0.05,0.99)] group-hover:-translate-y-1/2">
                         {/* Default Layer */}
@@ -409,28 +386,28 @@ export const Header = () => {
                           {item.name}
                         </span>
                         {/* Rolled In Accent Layer */}
-                        <span className="h-[1.3em] flex items-center text-[#B9A1F7] dark:text-[#D5FF3F] uppercase leading-none whitespace-nowrap">
+                        <span className="h-[1.3em] flex items-center text-[#7567EE] dark:text-[#D5FF3F] uppercase leading-none whitespace-nowrap">
                           {item.name}
                         </span>
                       </div>
                     </div>
 
                     {item.isExternal && (
-                      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2.5 text-white/40 group-hover:text-[#B9A1F7] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
+                      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2.5 text-white/40 group-hover:text-[#7567EE] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
                     )}
                   </a>
                 </div>
               ))}
             </nav>
 
-            {/* Center Visual Feature Emblem (Ignite Bolt counterpart: Cinema Clapper & Film Emblem) */}
+            {/* Center Visual Feature Emblem */}
             <div
               ref={emblemRef}
               className="hidden lg:flex lg:col-span-3 items-center justify-center pointer-events-none select-none relative"
             >
-              <div className="relative w-48 h-48 rounded-full border border-white/10 flex items-center justify-center bg-gradient-to-b from-white/5 to-transparent backdrop-blur-md shadow-[0_0_50px_rgba(185,161,247,0.15)] group">
-                <div className="absolute inset-0 rounded-full border border-dashed border-[#B9A1F7]/30 animate-[spin_24s_linear_infinite]" />
-                <div className="relative flex flex-col items-center justify-center gap-2 text-[#B9A1F7] dark:text-[#D5FF3F]">
+              <div className="relative w-48 h-48 rounded-full border border-white/10 flex items-center justify-center bg-gradient-to-b from-white/5 to-transparent backdrop-blur-md shadow-[0_0_50px_rgba(117,103,238,0.2)] group">
+                <div className="absolute inset-0 rounded-full border border-dashed border-[#7567EE]/40 animate-[spin_24s_linear_infinite]" />
+                <div className="relative flex flex-col items-center justify-center gap-2 text-[#7567EE] dark:text-[#D5FF3F]">
                   <Film className="w-14 h-14 stroke-[1.5] animate-pulse" />
                   <span className="font-mono text-[10px] tracking-[0.25em] text-white/70 uppercase">
                     PROD // 4K CINEMA
@@ -446,7 +423,7 @@ export const Header = () => {
             >
               {/* Direct Inquiries Column */}
               <div className="flex flex-col gap-2.5">
-                <p className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#B9A1F7] dark:text-[#D5FF3F] uppercase">
+                <p className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#7567EE] dark:text-[#D5FF3F] uppercase">
                   Direct Line
                 </p>
 
@@ -460,7 +437,7 @@ export const Header = () => {
                       <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap">
                         hello@makemyvid.com
                       </span>
-                      <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap text-[#B9A1F7] dark:text-[#D5FF3F]">
+                      <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap text-[#7567EE] dark:text-[#D5FF3F]">
                         hello@makemyvid.com
                       </span>
                     </div>
@@ -477,7 +454,7 @@ export const Header = () => {
                       <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap">
                         +91 (0) 98765 43210
                       </span>
-                      <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap text-[#B9A1F7] dark:text-[#D5FF3F]">
+                      <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap text-[#7567EE] dark:text-[#D5FF3F]">
                         +91 (0) 98765 43210
                       </span>
                     </div>
@@ -487,7 +464,7 @@ export const Header = () => {
 
               {/* Social Channels Column */}
               <div className="flex flex-col gap-2.5">
-                <p className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#B9A1F7] dark:text-[#D5FF3F] uppercase">
+                <p className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#7567EE] dark:text-[#D5FF3F] uppercase">
                   Network & Archives
                 </p>
                 <div className="flex flex-col gap-2">
@@ -509,12 +486,12 @@ export const Header = () => {
                           <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap">
                             {item.label}
                           </span>
-                          <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap text-[#B9A1F7] dark:text-[#D5FF3F]">
+                          <span className="h-[1.3em] flex items-center leading-none whitespace-nowrap text-[#7567EE] dark:text-[#D5FF3F]">
                             {item.label}
                           </span>
                         </div>
                       </div>
-                      <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#B9A1F7] dark:text-[#D5FF3F] transition-all duration-300" />
+                      <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#7567EE] dark:text-[#D5FF3F] transition-all duration-300" />
                     </a>
                   ))}
                 </div>
@@ -524,7 +501,7 @@ export const Header = () => {
 
           </div>
 
-          {/* Bottom Bar: Ethos and Copyright (Mumbai text removed) */}
+          {/* Bottom Bar: Ethos and Copyright */}
           <div
             ref={bottomBarRef}
             className="border-t border-white/10 pt-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-mono text-white/60"
@@ -539,41 +516,6 @@ export const Header = () => {
           </div>
 
         </div>
-      </div>
-
-      {/* Awwwards Vertical Ribbon (Desktop) - z-30 so it sits under the open menu */}
-      <div
-        className="awwwards-ribbon hidden lg:block"
-        style={{
-          position: "fixed",
-          zIndex: 30,
-          transform: "translateY(-50%)",
-          top: "50%",
-          right: 0,
-        }}
-      >
-        <a
-          href="https://rohanjoshi.in"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block hover:translate-x-[-4px] transition-transform duration-300"
-        >
-          <svg width="53.08" height="171.358" className="shadow-2xl">
-            <path
-              className="js-color-bg"
-              fill="#F3EBDD"
-              stroke="rgba(33,23,71,0.15)"
-              strokeWidth="1"
-              d="M0 0h53.08v171.358H0z"
-            />
-            <g className="js-color-text" fill="#211747">
-              <path
-                d="M20.047 153.665v-1.9h3.888v-4.093h-3.888v-1.9h10.231v1.9h-4.59v4.093h4.59v1.9zM29.898 142.236c-.331.565-.784.997-1.359 1.294s-1.222.446-1.944.446c-.721 0-1.369-.149-1.943-.446a3.316 3.316 0 0 1-1.36-1.294c-.331-.564-.497-1.232-.497-2.002s.166-1.438.497-2.002a3.316 3.316 0 0 1 1.36-1.294c.574-.297 1.223-.445 1.943-.445.723 0 1.369.148 1.944.445a3.307 3.307 0 0 1 1.359 1.294c.331.564.497 1.232.497 2.002s-.166 1.438-.497 2.002m-1.703-3.347c-.435-.33-.967-.496-1.601-.496-.633 0-1.166.166-1.601.496-.433.332-.649.78-.649 1.346 0 .564.217 1.013.649 1.345.435.331.968.497 1.601.497.634 0 1.166-.166 1.601-.497.435-.332.649-.78.649-1.345.001-.566-.214-1.014-.649-1.346M22.911 134.852v-1.813h1.186a3.335 3.335 0 0 1-.951-1.009 2.423 2.423 0 0 1-.352-1.271c0-.682.19-1.229.57-1.645.381-.413.932-.621 1.652-.621h5.262v1.812h-4.721c-.419 0-.727.096-.921.285-.195.19-.292.447-.292.769 0 .302.115.58.35.833.234.254.577.458 1.03.613.454.156.993.234 1.616.234h2.938v1.813h-7.367zM29.898 125.136a3.314 3.314 0 0 1-1.359 1.294c-.575.297-1.222.445-1.944.445-.721 0-1.369-.148-1.943-.446a3.322 3.322 0 0 1-1.36-1.294c-.331-.565-.497-1.232-.497-2.002 0-.771.166-1.438.497-2.003a3.313 3.313 0 0 1 1.36-1.293c.574-.297 1.223-.446 1.943-.446.723 0 1.369.149 1.944.446s1.028.728 1.359 1.293.497 1.232.497 2.003c.001.759-.194 1.396-.583 1.907M35.481 17.006l-4.782 14.969h-3.266l-2.584-9.682-2.584 9.682h-3.268l-4.782-14.969h3.713l2.673 10.276 2.525-10.276h3.445l2.524 10.276 2.674-10.276zM37.978 27.163c1.426 0 2.496 1.068 2.496 2.495 0 1.425-1.07 2.495-2.496 2.495-1.425 0-2.494-1.07-2.494-2.495-.001-1.427 1.069-2.495 2.494-2.495"
-                fill="#211747"
-              />
-            </g>
-          </svg>
-        </a>
       </div>
     </>
   );

@@ -2,11 +2,9 @@ import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/sections/Hero";
 import { Expertise } from "@/components/sections/Expertise";
-import { Projects } from "@/components/sections/Projects";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Faq } from "@/components/sections/Faq";
 import { SectionCrosses } from "@/components/sections/SectionCrosses";
-import { FeaturedSection } from "@/components/sections/FeaturedSection";
 import { CardSwing } from "@/components/sections/CardSwing";
 import { Experience } from "@/components/sections/Experience";
 import { PremiumFooter } from "@/components/sections/PremiumFooter";
@@ -33,9 +31,6 @@ export default function Home() {
 
         <SectionCrosses dark={false} />
         <Experience />
-
-        <FeaturedSection title="Projects" />
-        <Projects />
 
         <SectionCrosses dark={true} />
         <Testimonials />

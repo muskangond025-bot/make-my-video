@@ -306,54 +306,87 @@ a {
   transition: background-color 0.4s ease;
 }
 
+.card-pin-height {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 280vh !important;
+  position: relative !important;
+  margin: 0 !important;
+}
+
 .card-container {
+  width: 100vw !important;
+  max-width: 100vw !important;
   border: none !important;
+  border-radius: 0 !important;
+  height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  position: relative;
+  top: 0;
+}
+
+.cards {
+  width: auto !important;
+  max-width: none !important;
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  align-items: center !important;
+  padding-left: clamp(24px, 5vw, 64px) !important;
+  padding-right: clamp(48px, 10vw, 120px) !important;
+  gap: 28px !important;
+  white-space: nowrap !important;
+  will-change: transform;
 }
 
 .scroll-card {
   width: 340px !important;
-  height: 420px !important;
-  border: 1px solid rgba(185, 161, 247, 0.25) !important;
-  background-color: #211747 !important; /* Deep Indigo luxury card background */
+  height: 440px !important;
+  flex-shrink: 0 !important;
+  border: 1px solid rgba(117, 103, 238, 0.25) !important;
+  background-color: #141416 !important; /* Deep Obsidian luxury card matching web theme */
   border-radius: 24px !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 20px !important;
+  padding: 22px !important;
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
-  box-shadow: 0 20px 45px rgba(33, 23, 71, 0.3) !important;
+  box-shadow: 0 20px 45px rgba(20, 20, 22, 0.25) !important;
   transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
 .scroll-card:hover {
-  border-color: rgba(213, 255, 63, 0.6) !important; /* Neon lime hover accent */
-  background-color: #261b52 !important;
-  box-shadow: 0 30px 60px rgba(33, 23, 71, 0.5), 0 0 25px rgba(185, 161, 247, 0.15) !important;
+  border-color: rgba(213, 255, 63, 0.75) !important; /* Neon lime hover accent */
+  background-color: #19191E !important;
+  box-shadow: 0 30px 60px rgba(20, 20, 22, 0.45), 0 0 25px rgba(213, 255, 63, 0.2) !important;
 }
 
 .scroll-card-image-wrapper {
   width: 100% !important;
-  height: 180px !important;
+  height: 190px !important;
   border-radius: 16px !important;
   overflow: hidden !important;
-  background-color: #191138 !important;
-  margin: 0 0 20px 0 !important;
+  background-color: #1C1C21 !important;
+  margin: 0 0 16px 0 !important;
   padding: 0 !important;
-  border: 1px solid rgba(185, 161, 247, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 .scroll-card-image {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
-  padding: 12px !important;
+  object-fit: cover !important;
+  padding: 0 !important;
   transition: transform 0.5s ease;
 }
 
 .scroll-card:hover .scroll-card-image {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .scroll-card-inner-wrapper {
@@ -365,9 +398,10 @@ a {
 }
 
 .scroll-card p.text-size-tiny {
-  color: rgba(243, 235, 221, 0.75) !important;
-  font-size: 11px !important;
-  line-height: 1.55 !important;
+  color: rgba(234, 227, 219, 0.85) !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+  white-space: normal !important;
   text-transform: none !important;
   margin: 0 0 10px 0 !important;
   text-align: left !important;
@@ -392,12 +426,17 @@ a {
 }
 
 .scroll-card .icon-embed-medium {
-  color: #B9A1F7 !important;
+  color: #7567EE !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   width: 24px !important;
   height: 24px !important;
+  transition: color 0.3s ease;
+}
+
+.scroll-card:hover .icon-embed-medium {
+  color: #D5FF3F !important;
 }
 
 /* ==========================================================================
@@ -689,10 +728,10 @@ a {
   height: 475px !important;
   min-height: 475px !important;
   max-height: 475px !important;
-  background: rgba(33, 23, 71, 0.78) !important;
+  background: #141416 !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  border: 1px solid rgba(185, 161, 247, 0.28) !important;
+  border: 1px solid rgba(117, 103, 238, 0.25) !important;
   border-radius: 24px;
   padding: 18px 18px 16px 18px;
   display: flex;
@@ -702,26 +741,26 @@ a {
   cursor: pointer;
   flex: 1;
   overflow: hidden;
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.16), 0 16px 40px rgba(33, 23, 71, 0.25) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.1), 0 16px 40px rgba(20, 20, 22, 0.2) !important;
 }
 
 .grow-card:hover {
-  background: rgba(33, 23, 71, 0.88) !important;
-  border-color: rgba(213, 255, 63, 0.75) !important;
-  box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.25), 0 24px 50px rgba(33, 23, 71, 0.45), 0 0 30px rgba(213, 255, 63, 0.2) !important;
+  background: #19191E !important;
+  border-color: rgba(213, 255, 63, 0.8) !important;
+  box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.18), 0 24px 50px rgba(20, 20, 22, 0.35), 0 0 30px rgba(213, 255, 63, 0.2) !important;
   transform: translateY(-2px);
 }
 
 .dark .grow-card {
-  background: rgba(25, 17, 56, 0.75) !important;
-  border-color: rgba(185, 161, 247, 0.25) !important;
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12), 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+  background: #18181D !important;
+  border-color: rgba(117, 103, 238, 0.25) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.45) !important;
 }
 
 .dark .grow-card:hover {
-  background: rgba(25, 17, 56, 0.9) !important;
-  border-color: rgba(213, 255, 63, 0.75) !important;
-  box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.2), 0 24px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(213, 255, 63, 0.25) !important;
+  background: #1D1D24 !important;
+  border-color: rgba(213, 255, 63, 0.8) !important;
+  box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.15), 0 24px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(213, 255, 63, 0.25) !important;
 }
 
 @media (min-width: 768px) {
@@ -736,8 +775,8 @@ a {
   border-radius: 18px;
   overflow: hidden;
   margin-bottom: 12px;
-  background: rgba(25, 17, 56, 0.6) !important;
-  border: 1px solid rgba(185, 161, 247, 0.22);
+  background: #1D1D22 !important;
+  border: 1px solid rgba(117, 103, 238, 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   position: relative;
@@ -781,20 +820,103 @@ a {
   transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.25, 1, 0.2, 1) !important;
 }
 
-/* Testimonials Section */
+/* Testimonials Section Fixes */
 .section-testimonials-wrap,
 .section-testimonials-mobile {
   background-color: #EAE3DB !important;
   border-top: 1px solid rgba(117, 103, 238, 0.15) !important;
   border-bottom: 1px solid rgba(117, 103, 238, 0.15) !important;
+  padding-top: 3.5rem !important;
+  padding-bottom: 5.5rem !important;
+  overflow: visible !important;
 }
 
 .section-testimonials {
   background-color: transparent !important;
+  overflow: visible !important;
+}
+
+.testimonials-inner {
+  height: auto !important;
+  min-height: 520px !important;
+  overflow: visible !important;
+  padding-bottom: 2rem !important;
 }
 
 .testimonials-inner p {
   color: #141416 !important;
+}
+
+.testimonial-slider {
+  overflow: visible !important;
+}
+
+.slider_wrap {
+  overflow: visible !important;
+}
+
+.slider_right {
+  overflow: visible !important;
+  position: relative !important;
+  min-height: 440px !important;
+  padding-bottom: 84px !important; /* Dedicated clearance so arrows never get cut off */
+}
+
+.arrows {
+  position: absolute !important;
+  bottom: 0px !important;
+  right: 0px !important;
+  z-index: 50 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 6px 12px !important;
+  background-color: rgba(234, 227, 219, 0.95) !important;
+  border: 1px solid rgba(20, 20, 22, 0.12) !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 16px rgba(20, 20, 22, 0.08) !important;
+  overflow: visible !important;
+}
+
+.arrow-btn {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  cursor: pointer !important;
+}
+
+.arrow.is-left .arrow-btn {
+  background-color: #7567EE !important;
+  border: 1.5px solid #7567EE !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(117, 103, 238, 0.3) !important;
+}
+
+.arrow.is-left .arrow-btn:hover {
+  background-color: #D5FF3F !important;
+  border-color: #D5FF3F !important;
+  color: #141416 !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 6px 16px rgba(213, 255, 63, 0.4) !important;
+}
+
+.arrow.is-right .arrow-btn {
+  background-color: #141416 !important;
+  border: 1.5px solid #141416 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(20, 20, 22, 0.25) !important;
+}
+
+.arrow.is-right .arrow-btn:hover {
+  background-color: #D5FF3F !important;
+  border-color: #D5FF3F !important;
+  color: #141416 !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 6px 16px rgba(213, 255, 63, 0.4) !important;
 }
 
 .testimonial-slider .text-gray-600 {

@@ -277,13 +277,6 @@ export const RevHero: React.FC = () => {
                   </span>
                 </h2>
               </div>
-
-              <a
-                href="#contact"
-                className="pointer-events-auto inline-flex items-center gap-2 bg-[#D5FF3F] text-[#141416] hover:bg-[#c2ed2c] px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_2px_12px_rgba(213,255,63,0.35)] cursor-pointer"
-              >
-                Get Quote &rarr;
-              </a>
             </div>
 
             {/* Bottom info bar */}

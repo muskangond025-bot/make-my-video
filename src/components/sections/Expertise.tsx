@@ -12,10 +12,40 @@ export const Expertise = () => {
   const title2Ref = useRef<HTMLHeadingElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
 
-  // Single Unified 3-Scroll Master Timeline:
-  // 1st scroll: SERVICES reveals
-  // 2nd scroll: Description reveals
-  // 3rd scroll: Three Cards glide up smoothly and settle centered
+  // 3D Card Hover Perspective Effect via GSAP (avoids CSS transition conflict)
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    const rotateX = -(y / rect.height) * 8;
+    const rotateY = (x / rect.width) * 8;
+    gsap.to(e.currentTarget, {
+      rotateX,
+      rotateY,
+      scale: 1.02,
+      duration: 0.25,
+      ease: "power1.out",
+      overwrite: "auto",
+    });
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    gsap.to(e.currentTarget, {
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      duration: 0.35,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  };
+
+  // Re-engineered Effortless Master Timeline:
+  // Reduced from 240vh down to 145vh (40% less scroll effort)
+  // Step 1: "SERVICES" character-by-character reveal
+  // Step 2: "SERVICES" dissolves, Description reveals in crisp typography
+  // Step 3: Description floats up, 3 Cards smoothly glide up from depth with CustomEase
+  // Step 4: Generous holding zone so cards stay centered for comfortable viewing
   useEffect(() => {
     if (typeof window === "undefined" || !containerRef.current) return;
 
@@ -32,13 +62,13 @@ export const Expertise = () => {
       gsap.set(title1Ref.current, { opacity: 1, visibility: 'visible' });
       gsap.set(title2Ref.current, { opacity: 1, y: 0, visibility: 'visible' });
 
-      // Cards start physical depth below the viewport, ready for a pure smooth slide up
+      // All cards start 100% OFFSCREEN below the viewport with ZERO opacity (no peaking beforehand!)
       gsap.set(cards, {
         yPercent: 0,
-        y: () => window.innerHeight * 0.88,
-        scale: 0.96,
-        opacity: 0.35,
-        rotation: (i: number) => (i === 0 ? -1.2 : i === 2 ? 1.2 : 0),
+        y: () => window.innerHeight * 1.15,
+        scale: 0.92,
+        opacity: 0,
+        rotation: (i: number) => (i === 0 ? -2 : i === 2 ? 2 : 0),
         transformOrigin: "center center",
         willChange: "transform, opacity"
       });
@@ -51,42 +81,40 @@ export const Expertise = () => {
           trigger: pinWrapperRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1, // Smooth damping for buttery fluid scroll response
+          scrub: 0.7, // Silky, responsive damping
         }
       });
 
       // ----------------------------------------------------
-      // STEP 1 (1st Scroll): "SERVICES" reveals letter-by-letter
+      // STEP 1 (0 -> 28% Scroll): "SERVICES" reveals letter-by-letter
       // ----------------------------------------------------
       masterTl.to(chars1, {
         opacity: 1,
-        stagger: { amount: 0.75, from: "start" },
-        duration: 0.75,
+        stagger: { amount: 0.65, from: "start" },
+        duration: 0.65,
         ease: "power2.out"
       });
-      // Brief pause to admire "SERVICES"
-      masterTl.to({}, { duration: 0.25 });
+      masterTl.to({}, { duration: 0.2 });
 
       // ----------------------------------------------------
-      // STEP 2 (2nd Scroll): "SERVICES" fades out, Description reveals
+      // STEP 2 (28% -> 55% Scroll): "SERVICES" dissolves, Description reveals
       // ----------------------------------------------------
       masterTl.to(chars1, {
         opacity: 0,
-        stagger: { amount: 0.35, from: "end" },
+        stagger: { amount: 0.3, from: "end" },
         duration: 0.35,
         ease: "power2.in"
       });
       masterTl.to(chars2, {
         opacity: 1,
-        stagger: { amount: 0.85, from: "start" },
-        duration: 0.85,
+        stagger: { amount: 0.75, from: "start" },
+        duration: 0.75,
         ease: "power2.out"
       }, "-=0.15");
-      // Dedicated comfortable hold for reading description
-      masterTl.to({}, { duration: 0.45 });
+      masterTl.to({}, { duration: 0.3 });
 
       // ----------------------------------------------------
-      // STEP 3 (3rd Scroll): Description softly floats up, 3 Cards smoothly slide up & settle
+      // STEP 3 (55% -> 88% Scroll): Description floats up, 3 Cards glide up ONE BY ONE
       // ----------------------------------------------------
       masterTl.to(title2Ref.current, {
         opacity: 0,
@@ -95,18 +123,40 @@ export const Expertise = () => {
         ease: "power2.inOut"
       });
 
-      masterTl.to(cards, {
+      // Card 1 glides up first
+      masterTl.to(cards[0], {
         y: 0,
-        yPercent: 0,
-        scale: 1,
         opacity: 1,
+        scale: 1,
         rotation: 0,
-        duration: 1.4,
-        stagger: 0.08,
+        duration: 1.15,
         ease: "smoothSlideUp"
-      }, "<0.05"); // Starts gliding up smoothly as description begins to exit
+      }, "<0.05");
 
-      // Generous center lock: cards stay firmly centered for user to inspect
+      // Card 2 glides up second
+      masterTl.to(cards[1], {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1.15,
+        ease: "smoothSlideUp"
+      }, "<0.25");
+
+      // Card 3 glides up third
+      masterTl.to(cards[2], {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1.15,
+        ease: "smoothSlideUp"
+      }, "<0.25");
+
+      // ----------------------------------------------------
+      // STEP 4 (88% -> 100% Scroll): Solid center lock
+      // Cards stay firmly centered so user can comfortably inspect & click
+      // ----------------------------------------------------
       masterTl.to({}, { duration: 0.75 });
 
     }, containerRef);
@@ -144,7 +194,7 @@ export const Expertise = () => {
           background: "transparent",
         }}
       >
-        {/* Centered Editorial "TRUSTED BY" Header (matching IVENTIONS editorial style) */}
+        {/* Centered Editorial "TRUSTED BY" Header */}
         <div className="w-full flex flex-col items-center justify-center text-center px-4 mb-5 sm:mb-7">
           <span className="text-[11px] sm:text-xs font-mono tracking-[0.35em] uppercase text-[#6E6B7B] font-semibold mb-2">
             CLIENTS &amp; COMMERCIAL PARTNERS
@@ -159,7 +209,7 @@ export const Expertise = () => {
         <CinemaFilmStrip3D className="w-full h-[190px] sm:h-[230px] md:h-[265px]" speed={1.1} />
       </section>
 
-      {/* 2. MAIN EXPERTISE SECTION - UNIFIED 3-SCROLL CINEMATIC STAGE */}
+      {/* 2. MAIN EXPERTISE SECTION - EFFORTLESS 3-STAGE CINEMATIC STAGE */}
       <div className="section-expertise w-full bg-[#EAE3DB] text-[#141416] relative flex flex-col justify-start select-none overflow-visible">
         <div className="expertise-outer w-full">
           <div className="padding-global w-full">
@@ -167,8 +217,8 @@ export const Expertise = () => {
               <div className="expertise-inner w-full">
                 <div className="expertise-border w-full !border-0 !border-none !rounded-none">
 
-                  {/* UNIFIED PIN WRAPPER (240vh: exactly 3 smooth scrolls) */}
-                  <div ref={pinWrapperRef} className="pin-height w-full relative" style={{ height: "240vh" }}>
+                  {/* BALANCED PIN WRAPPER (200vh: effortless 1-screen scroll distance with complete cinematic fidelity) */}
+                  <div ref={pinWrapperRef} className="pin-height w-full relative" style={{ height: "200vh" }}>
 
                     {/* STICKY STAGE (pinned at top: 0, 100vh) */}
                     <div className="w-full h-screen sticky top-0 overflow-hidden flex items-center justify-center relative">
@@ -182,20 +232,20 @@ export const Expertise = () => {
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 px-4">
                         <div className="relative w-full max-w-[1100px] flex items-center justify-center text-center">
 
-                          {/* Heading 1: SERVICES (1st Scroll) */}
-                          <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#7567EE] text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none drop-shadow-sm absolute">
-                            {splitWordsAndChars("SERVICES")}
+                          {/* Heading 1: HOW MAGIC HAPPENS.. (1st Scroll Stage) */}
+                          <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#7567EE] text-[7.5vw] sm:text-[8.8vw] md:text-[9.8vw] uppercase leading-[0.85] tracking-wide font-bold select-none drop-shadow-sm absolute whitespace-nowrap text-center">
+                            {splitWordsAndChars("HOW MAGIC HAPPENS..")}
                           </h2>
 
-                          {/* Heading 2: Description (2nd Scroll) */}
-                          <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[1.85rem] sm:text-[2.25rem] md:text-[2.65rem] leading-[1.25] font-semibold text-[#141416] max-w-[960px] select-none uppercase px-4 absolute">
-                            {splitWordsAndChars("MULTI-CITY VIDEO PRODUCTION, REMOTE EDITING, AND CORPORATE AV SOLUTIONS")}
+                          {/* Heading 2: Process Subheading (2nd Scroll Stage) */}
+                          <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[1.85rem] sm:text-[2.25rem] md:text-[2.65rem] leading-[1.28] font-semibold text-[#141416] max-w-[960px] select-none uppercase px-4 absolute">
+                            {splitWordsAndChars("FROM STRATEGIC VISION TO HIGH-IMPACT CINEMA")}
                           </h2>
 
                         </div>
                       </div>
 
-                      {/* LAYER 2: 3 CARDS (3rd Scroll) */}
+                      {/* LAYER 2: 3 CARDS (3rd Scroll Stage) */}
                       <div
                         ref={cardsContainerRef}
                         className="expertise-container w-full relative z-20"
@@ -212,23 +262,24 @@ export const Expertise = () => {
                         }}
                       >
 
-                        {/* CARD 1: MULTI CITY PRODUCTION */}
-                        <div className="expertise-card">
+                        {/* CARD 1: DISCOVER & STRATEGIZE */}
+                        <div
+                          className="expertise-card cursor-pointer"
+                          onMouseMove={handleCardMouseMove}
+                          onMouseLeave={handleCardMouseLeave}
+                        >
                           <div className="media">
                             <div className="expertise-front is--1">
-                              <div className="card-inner-top">
-                                <div className="eyebrow-main">
-                                  <div className="eyebrow-text">PAN-INDIA SHOOTS</div>
-                                </div>
-                                <div className="text-size-large text-weight-medium is--title">MULTI CITY PRODUCTION</div>
+                              <div className="card-inner-top pt-2">
+                                <div className="text-size-large text-weight-medium is--title">DISCOVER &amp; STRATEGIZE</div>
                                 <p className="text-size-tiny text-color-secondary text-align-center">
-                                  Comprehensive video shoots across 8+ major Indian cities including Mumbai, Delhi & Bangalore with cinema-grade 4K equipment and full crews.
+                                  We analyze your brand ethos, audience psychology, and campaign goals to engineer a winning creative roadmap, treatments, and cinema-grade scripts.
                                 </p>
                               </div>
                               <div className="button-group is--card">
                                 <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                   <div className="btn-frame">
-                                    <div className="btn-text">VIEW</div>
+                                    <div className="btn-text">DISCOVER</div>
                                   </div>
                                   <div className="btn-icon-wrap">
                                     <div className="btn-icon">
@@ -240,29 +291,30 @@ export const Expertise = () => {
                                 </div>
                               </div>
                               <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
-                                <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png" loading="eager" alt="Multi City Video Production" className="h-full object-contain rounded-t-2xl" />
+                                <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png" loading="eager" alt="Discover &amp; Strategize" className="h-full object-contain rounded-t-2xl" />
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        {/* CARD 2: REMOTE EDITING */}
-                        <div className="expertise-card">
+                        {/* CARD 2: CREATE & PRODUCE */}
+                        <div
+                          className="expertise-card cursor-pointer"
+                          onMouseMove={handleCardMouseMove}
+                          onMouseLeave={handleCardMouseLeave}
+                        >
                           <div className="media">
                             <div className="expertise-front is--2">
-                              <div className="card-inner-top">
-                                <div className="eyebrow-main">
-                                  <div className="eyebrow-text">GLOBAL POST-PRODUCTION</div>
-                                </div>
-                                <div className="text-size-large text-weight-medium is--title">REMOTE EDITING WORK</div>
+                              <div className="card-inner-top pt-2">
+                                <div className="text-size-large text-weight-medium is--title">CREATE &amp; PRODUCE</div>
                                 <p className="text-size-tiny text-color-secondary text-align-center">
-                                  Outsource your video editing to our expert team. High-quality editing, motion graphics, audio cleanup, and rapid turnaround for global clients.
+                                  Multi-city on-location filming equipped with RED/ARRI 4K cinema cameras, master lighting setups, elite directors, and seasoned crews across India.
                                 </p>
                               </div>
                               <div className="button-group is--card">
                                 <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                   <div className="btn-frame">
-                                    <div className="btn-text">VIEW</div>
+                                    <div className="btn-text">PRODUCE</div>
                                   </div>
                                   <div className="btn-icon-wrap">
                                     <div className="btn-icon">
@@ -274,29 +326,30 @@ export const Expertise = () => {
                                 </div>
                               </div>
                               <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
-                                <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png" loading="eager" alt="Remote Editing Work" className="h-full object-contain rounded-t-2xl" />
+                                <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png" loading="eager" alt="Create &amp; Produce" className="h-full object-contain rounded-t-2xl" />
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        {/* CARD 3: CORPORATE AV */}
-                        <div className="expertise-card">
+                        {/* CARD 3: DELIVER & GROW */}
+                        <div
+                          className="expertise-card cursor-pointer"
+                          onMouseMove={handleCardMouseMove}
+                          onMouseLeave={handleCardMouseLeave}
+                        >
                           <div className="media">
                             <div className="expertise-front is--3">
-                              <div className="card-inner-top">
-                                <div className="eyebrow-main">
-                                  <div className="eyebrow-text">BRAND STORYTELLING</div>
-                                </div>
-                                <div className="text-size-large text-weight-medium is--title">CORPORATE AV & ADS</div>
+                              <div className="card-inner-top pt-2">
+                                <div className="text-size-large text-weight-medium is--title">DELIVER &amp; GROW</div>
                                 <p className="text-size-tiny text-color-secondary text-align-center">
-                                  Showcase your brand's vision, leadership, and products through stunning visuals, documentary storytelling, and Shark Tank pitch films.
+                                  Hollywood-grade color grading, immersive spatial audio, high-impact motion VFX, and format-optimized deliverables to maximize your ROI.
                                 </p>
                               </div>
                               <div className="button-group is--card">
                                 <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                   <div className="btn-frame">
-                                    <div className="btn-text">VIEW</div>
+                                    <div className="btn-text">DELIVER</div>
                                   </div>
                                   <div className="btn-icon-wrap">
                                     <div className="btn-icon">
@@ -308,7 +361,7 @@ export const Expertise = () => {
                                 </div>
                               </div>
                               <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
-                                <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png" loading="eager" alt="Corporate AV" className="h-full object-contain rounded-t-2xl" />
+                                <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png" loading="eager" alt="Deliver &amp; Grow" className="h-full object-contain rounded-t-2xl" />
                               </div>
                             </div>
                           </div>
@@ -322,23 +375,20 @@ export const Expertise = () => {
                   <div className="expertise-cards-mobile">
                     <div className="expertise-container-mobile">
 
-                      {/* CARD 1: MULTI CITY PRODUCTION */}
+                      {/* CARD 1: DISCOVER & STRATEGIZE */}
                       <div className="expertise-card">
                         <div className="media">
                           <div className="expertise-front is--1">
-                            <div className="card-inner-top">
-                              <div className="eyebrow-main">
-                                <div className="eyebrow-text">PAN-INDIA SHOOTS</div>
-                              </div>
-                              <div className="text-size-large text-weight-medium is--title">MULTI CITY PRODUCTION</div>
+                            <div className="card-inner-top pt-2">
+                              <div className="text-size-large text-weight-medium is--title">DISCOVER &amp; STRATEGIZE</div>
                               <p className="text-size-tiny text-color-secondary text-align-center">
-                                Comprehensive video shoots across 8+ major Indian cities including Mumbai, Delhi & Bangalore with cinema-grade 4K equipment and full crews.
+                                We analyze your brand ethos, audience psychology, and campaign goals to engineer a winning creative roadmap, treatments, and cinema-grade scripts.
                               </p>
                             </div>
                             <div className="button-group is--card">
                               <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                 <div className="btn-frame">
-                                  <div className="btn-text">VIEW</div>
+                                  <div className="btn-text">DISCOVER</div>
                                 </div>
                                 <div className="btn-icon-wrap">
                                   <div className="btn-icon">
@@ -350,29 +400,26 @@ export const Expertise = () => {
                               </div>
                             </div>
                             <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
-                              <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png" loading="eager" alt="Multi City Video Production" className="h-full object-contain rounded-t-2xl" />
+                              <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png" loading="eager" alt="Discover &amp; Strategize" className="h-full object-contain rounded-t-2xl" />
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* CARD 2: REMOTE EDITING */}
+                      {/* CARD 2: CREATE & PRODUCE */}
                       <div className="expertise-card">
                         <div className="media">
                           <div className="expertise-front is--2">
-                            <div className="card-inner-top">
-                              <div className="eyebrow-main">
-                                <div className="eyebrow-text">GLOBAL POST-PRODUCTION</div>
-                              </div>
-                              <div className="text-size-large text-weight-medium is--title">REMOTE EDITING WORK</div>
+                            <div className="card-inner-top pt-2">
+                              <div className="text-size-large text-weight-medium is--title">CREATE &amp; PRODUCE</div>
                               <p className="text-size-tiny text-color-secondary text-align-center">
-                                Outsource your video editing to our expert team. High-quality editing, motion graphics, audio cleanup, and rapid turnaround for global clients.
+                                Multi-city on-location filming equipped with RED/ARRI 4K cinema cameras, master lighting setups, elite directors, and seasoned crews across India.
                               </p>
                             </div>
                             <div className="button-group is--card">
                               <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                 <div className="btn-frame">
-                                  <div className="btn-text">VIEW</div>
+                                  <div className="btn-text">PRODUCE</div>
                                 </div>
                                 <div className="btn-icon-wrap">
                                   <div className="btn-icon">
@@ -384,29 +431,26 @@ export const Expertise = () => {
                               </div>
                             </div>
                             <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
-                              <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png" loading="eager" alt="Remote Editing Work" className="h-full object-contain rounded-t-2xl" />
+                              <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png" loading="eager" alt="Create &amp; Produce" className="h-full object-contain rounded-t-2xl" />
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* CARD 3: CORPORATE AV */}
+                      {/* CARD 3: DELIVER & GROW */}
                       <div className="expertise-card">
                         <div className="media">
                           <div className="expertise-front is--3">
-                            <div className="card-inner-top">
-                              <div className="eyebrow-main">
-                                <div className="eyebrow-text">BRAND STORYTELLING</div>
-                              </div>
-                              <div className="text-size-large text-weight-medium is--title">CORPORATE AV & ADS</div>
+                            <div className="card-inner-top pt-2">
+                              <div className="text-size-large text-weight-medium is--title">DELIVER &amp; GROW</div>
                               <p className="text-size-tiny text-color-secondary text-align-center">
-                                Showcase your brand's vision, leadership, and products through stunning visuals, documentary storytelling, and Shark Tank pitch films.
+                                Hollywood-grade color grading, immersive spatial audio, high-impact motion VFX, and format-optimized deliverables to maximize your ROI.
                               </p>
                             </div>
                             <div className="button-group is--card">
                               <div className="btn-main w-inline-block pointer-events-none select-none cursor-default">
                                 <div className="btn-frame">
-                                  <div className="btn-text">VIEW</div>
+                                  <div className="btn-text">DELIVER</div>
                                 </div>
                                 <div className="btn-icon-wrap">
                                   <div className="btn-icon">
@@ -418,7 +462,7 @@ export const Expertise = () => {
                               </div>
                             </div>
                             <div className="expertise-image-wrapper !flex !justify-center !items-end w-full h-[55%] relative overflow-hidden mt-auto">
-                              <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png" loading="eager" alt="Corporate AV" className="h-full object-contain rounded-t-2xl" />
+                              <img src="https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png" loading="eager" alt="Deliver &amp; Grow" className="h-full object-contain rounded-t-2xl" />
                             </div>
                           </div>
                         </div>

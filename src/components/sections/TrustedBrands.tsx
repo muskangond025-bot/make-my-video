@@ -3,111 +3,95 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
-interface Brand {
+interface ServiceItem {
   id: string;
   name: string;
-  tag: string;
+  category: string;
   desc: string;
-  logo: string;
+  tags: string[];
   bgImage: string;
 }
 
-const BRANDS_DATA: Brand[] = [
+const SERVICES_DATA: ServiceItem[] = [
   {
-    id: "aditya-birla",
-    name: "Aditya Birla Capital",
-    tag: "Corporate · Financial Services",
-    desc: "From leadership interviews to employee engagement and high-stakes fraud awareness campaigns, we partner with Aditya Birla Capital to enhance their national corporate communications.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e78c0bc623_logo2.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png",
-  },
-  {
-    id: "cipla",
-    name: "Cipla",
-    tag: "Healthcare · Pharmaceuticals",
-    desc: "Precision multi-city shoots across Mumbai and Goa delivering employee branding, onboarding films, and corporate culture documentaries showcasing their societal healthcare impact.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e8656edbeb_logo9.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png",
-  },
-  {
-    id: "bpcl",
-    name: "Bharat Petroleum (BPCL)",
-    tag: "Energy & Infrastructure",
-    desc: "Comprehensive event coverage, 4K timelapses, giant LED screen broadcasts, and international delegate interviews at premier global energy expos including India Energy Week.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e89a63b9fc_logo20.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959797_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(3)%20(1).png",
-  },
-  {
-    id: "wol3d",
-    name: "Wol3D",
-    tag: "3D Tech · Shark Tank India",
-    desc: "Crafted high-converting pitch videos, commercial films, and product explainer campaigns that helped Wol3D pitch and close investment deals on Shark Tank India.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675ed87fd05ca_logo55.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960123_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(4)%20(1).png",
-  },
-  {
-    id: "nisau",
-    name: "NISAU UK",
-    tag: "Global Tours · Education",
-    desc: "Documenting phenomenal tours across 8 cities in India and high-profile delegations in the UK with multi-camera cinematography, photography, and real-time social edits.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675ed813bd21e_logo50.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959858_12.png",
-  },
-  {
-    id: "mangalam",
-    name: "Mangalam & Campure",
-    tag: "E-Commerce & Retail",
-    desc: "Produced high-converting Amazon product explainer and commercial video suites that continue driving retail performance, clicks, and brand trust 4+ years later.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e8afca1dfc_logo29.jpg",
+    id: "remote-editing",
+    name: "Remote Editing Work",
+    category: "POST-PRODUCTION // 24-48H RAPID",
+    desc: "High-precision global video editing for tech brands, agencies, and creators. Includes cinematic color grading, dynamic motion graphics, sound design, and rapid iterative turnarounds.",
+    tags: ["DaVinci Color", "Motion VFX", "Spatial Audio", "Multi-Ratio Cuts"],
     bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960176_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(5).png",
   },
   {
-    id: "baybot",
-    name: "Baybot",
-    tag: "Smart Home & IoT",
-    desc: "Dynamic product explainer videos, unboxings, and consumer installation walkthroughs optimized for Amazon listings and high-conversion digital performance ad campaigns.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e7b3e41b51_logo4.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1735391835_CH%2035%20(1).jpg",
-  },
-  {
-    id: "zee-media",
-    name: "Zee Media",
-    tag: "Broadcast & News Media",
-    desc: "Fast-paced broadcast video production, corporate AV showcases, and digital snippets engineered for maximum viewer retention and national broadcast reach.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675ed8ad93b67_logo57.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959841_11.png",
-  },
-  {
-    id: "motilal-oswal",
-    name: "Motilal Oswal",
-    tag: "Wealth Management & Finance",
-    desc: "Creating polished executive corporate films, client case studies, and investor communications tailored with pristine motion graphics and cinematic grading.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e8bce56518_logo34.jpg",
+    id: "corporate-av",
+    name: "Corporate AV",
+    category: "ENTERPRISE // BRAND NARRATIVE",
+    desc: "High-impact corporate brand films, investor showcases, and founder documentaries that articulate your enterprise mission, technological moat, and market leadership with cinematic gravity.",
+    tags: ["Leadership Keynotes", "Investor Pitches", "Office & Plant Tours", "CSR Modules"],
     bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png",
   },
   {
-    id: "pipal-tree",
-    name: "Pipal Tree",
-    tag: "Sustainable Development",
-    desc: "Directing sensitive documentary short films focused on sustainable rural development and community transformation, showcased to global audiences and delegates worldwide.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e8c40d1cbb_logo36.jpg",
-    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959876_13.png",
+    id: "trade-shows",
+    name: "Trade Shows & Exhibition Videos",
+    category: "EXPOS & SUMMITS // VISUAL SPECTACLE",
+    desc: "Attention-commanding booth loops, giant anamorphic LED video walls, product demos, and showstopper teasers engineered to halt foot traffic at international trade shows and expos.",
+    tags: ["High-Res LED Wall Loops", "3D Product Demos", "Booth Teasers", "Same-Day Recaps"],
+    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959797_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(3)%20(1).png",
   },
   {
-    id: "crompton",
-    name: "Crompton",
-    tag: "Consumer Electricals",
-    desc: "Showcasing high-impact commercial product launches, dealer meets, and internal team engagement films with cinema-grade camera work and dynamic sound design.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675e868785e02_logo10.jpg",
+    id: "corporate-events",
+    name: "Corporate Events",
+    category: "ON-SITE COVERAGE // PAN-INDIA",
+    desc: "Full-scale cinematic event documentation across India's top metros. Multi-camera 4K coverage capturing keynote speeches, award galas, and VIP delegate networking with same-day highlight reels.",
+    tags: ["Multi-City Crews", "Same-Day Teasers", "Gala & Awards Filming", "Executive Sound"],
     bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958320_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(2)%20(1).png",
   },
   {
-    id: "welspun",
-    name: "Welspun India",
-    tag: "Global Conglomerate & Textiles",
-    desc: "Crafting comprehensive corporate facility documentaries, safety awareness modules, and sustainability initiative videos for industrial facilities.",
-    logo: "https://storage.googleapis.com/mkv_imagesbackend/logos/675ed86853fe8_logo54.jpg",
+    id: "live-telecast",
+    name: "Live Telecast of Events",
+    category: "BROADCAST // ULTRA-LOW LATENCY",
+    desc: "Studio-grade multi-cam live streaming and satellite-grade webcasting to YouTube, LinkedIn, and private enterprise networks with seamless graphic overlays, lower-thirds, and instant clipping.",
+    tags: ["Multi-Cam Live Switchers", "Redundant RTMP Feeds", "Live Lower-Thirds", "Global CDN"],
     bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737960123_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(4)%20(1).png",
+  },
+  {
+    id: "conferences",
+    name: "Conference & Panel Discussion",
+    category: "THOUGHT LEADERSHIP // 4K ARCHIVE",
+    desc: "Pristine audio recording, synchronized multi-angle coverage, and dynamic post-event micro-content generation from executive roundtables, global summits, and symposiums.",
+    tags: ["Lavalier Arrays", "Multi-Angle Iso-Record", "Bite-Sized Social Clips", "Master Archival"],
+    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959858_12.png",
+  },
+  {
+    id: "social-initiatives",
+    name: "Social Initiatives & Documentation",
+    category: "CSR & NGO // IMPACT STORYTELLING",
+    desc: "Soul-stirring, empathetic on-the-ground documentary films capturing non-profit milestones, rural empowerment, and sustainable community impact initiatives that inspire donor action.",
+    tags: ["Field Documentaries", "Impact Metrics Visuals", "Beneficiary Voices", "Donor Cuts"],
+    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959876_13.png",
+  },
+  {
+    id: "brand-campaign",
+    name: "Brand Campaign",
+    category: "COMMERCIAL // HIGH CONVERSION",
+    desc: "End-to-end commercial filmmaking from conceptual treatments to cinematic direction, multi-location sets, high-end styling, and performance-driven digital ad campaign suites.",
+    tags: ["Digital Commercials", "Shark Tank Pitch Films", "Product Hero Commercials", "Ad Creatives"],
+    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737959841_11.png",
+  },
+  {
+    id: "scripting-voiceover",
+    name: "Scripting & Voiceover Services",
+    category: "NARRATIVE // COPYWRITING & AUDIO",
+    desc: "Compelling script architectures, storyboard treatments, and a curated global roster of native voiceover artists in multiple languages, recorded with professional acoustic mastering.",
+    tags: ["Commercial Scriptwriting", "Multi-Language VO", "Acoustic Mastering", "Storyboards"],
+    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1735391835_CH%2035%20(1).jpg",
+  },
+  {
+    id: "creative-direction",
+    name: "Creative Direction",
+    category: "ART DIRECTION // CONCEPT TO DELIVERY",
+    desc: "Visionary creative oversight ensuring unified visual language, bespoke cinematic lighting, frame-by-frame color mood boards, and aesthetic precision across every deliverable.",
+    tags: ["Visual Moodboards", "Lighting Treatment", "Directorial Vision", "Brand Compliance"],
+    bgImage: "https://storage.googleapis.com/mkv_imagesbackend/service_images/1737958403_Copy%20of%20MMV%20Website%20service%20page%20(1330%20x%201780%20px)%20(1)%20(1).png",
   },
 ];
 
@@ -119,7 +103,7 @@ export const TrustedBrands: React.FC = () => {
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
-  const [activeIndex, setActiveIndex] = useState(6); // Default to Wellvia (index 6) as in screenshot
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   // Resize listener
@@ -132,12 +116,12 @@ export const TrustedBrands: React.FC = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Update visible brand content
+  // Update visible service content
   const handleIndexChange = useCallback((index: number) => {
     setActiveIndex(index);
   }, []);
 
-  // Set up ScrollTrigger on desktop using CSS sticky track (eliminates buggy pin-spacer)
+  // Set up ScrollTrigger on desktop using CSS sticky track
   useEffect(() => {
     if (isMobile) return;
 
@@ -170,23 +154,18 @@ export const TrustedBrands: React.FC = () => {
         gsap.set(item, { opacity });
       });
 
-      const closestIndex = Math.round(virtualIndex);
-      const distanceFromCenter = Math.abs(virtualIndex - closestIndex);
-
-      if (distanceFromCenter < 0.18) {
-        handleIndexChange(closestIndex);
-      }
+      const closestIndex = Math.max(0, Math.min(items.length - 1, Math.round(virtualIndex)));
+      handleIndexChange(closestIndex);
     };
 
     // Initialize list position
-    renderList(6 / (items.length - 1));
+    renderList(0);
 
     const trigger = ScrollTrigger.create({
       trigger: track,
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.1,
-      snap: 1 / (items.length - 1),
+      scrub: 0.05,
       onUpdate: (self) => {
         renderList(self.progress);
       },
@@ -194,7 +173,6 @@ export const TrustedBrands: React.FC = () => {
 
     scrollTriggerRef.current = trigger;
 
-    // Refresh ScrollTrigger to calculate exact pixel offsets without layout mismatch
     const refreshTimer = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 150);
@@ -205,11 +183,29 @@ export const TrustedBrands: React.FC = () => {
     };
   }, [isMobile, handleIndexChange]);
 
-  // Click on a brand in list to center on it
-  const selectBrand = (index: number) => {
+  // Click or hover on a service in list to center on it smoothly
+  const selectService = (index: number) => {
     setActiveIndex(index);
-    if (scrollTriggerRef.current) {
-      const targetProgress = index / (BRANDS_DATA.length - 1);
+    if (!isMobile && listRef.current && wrapRef.current) {
+      const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
+      if (items.length > 0) {
+        const itemHeight = items[0].offsetHeight || 72;
+        const wrapCenter = wrapRef.current.offsetHeight / 2;
+        const y = wrapCenter - (index * itemHeight + itemHeight / 2);
+        gsap.to(listRef.current, { y, duration: 0.35, ease: "power2.out" });
+
+        items.forEach((item, i) => {
+          const distance = Math.abs(i - index);
+          let opacity = 0.25;
+          if (distance === 0) opacity = 1;
+          else if (distance === 1) opacity = 0.85;
+          else if (distance === 2) opacity = 0.60;
+          gsap.to(item, { opacity, duration: 0.35 });
+        });
+      }
+    }
+    if (scrollTriggerRef.current && !isMobile) {
+      const targetProgress = index / (SERVICES_DATA.length - 1);
       const scrollPos =
         scrollTriggerRef.current.start +
         targetProgress * (scrollTriggerRef.current.end - scrollTriggerRef.current.start);
@@ -217,136 +213,147 @@ export const TrustedBrands: React.FC = () => {
     }
   };
 
-  const currentBrand = BRANDS_DATA[activeIndex] || BRANDS_DATA[6];
+  // Direct mouse wheel on list wrapper for ultra-fast, snappy cycling
+  const handleWheel = (e: React.WheelEvent) => {
+    if (Math.abs(e.deltaY) > 20) {
+      if (e.deltaY > 0 && activeIndex < SERVICES_DATA.length - 1) {
+        selectService(activeIndex + 1);
+      } else if (e.deltaY < 0 && activeIndex > 0) {
+        selectService(activeIndex - 1);
+      }
+    }
+  };
+
+  const currentService = SERVICES_DATA[activeIndex] || SERVICES_DATA[0];
 
   return (
     <div
       ref={trackRef}
       id="brands-track"
       className="relative w-full"
-      style={{ height: isMobile ? "auto" : `${(BRANDS_DATA.length - 1) * 95 + 1000}px` }}
+      style={{ height: isMobile ? "auto" : `${(SERVICES_DATA.length - 1) * 95 + 650}px` }}
     >
       <section
         ref={sectionRef}
         id="brands"
         className="w-full h-screen min-h-[680px] max-h-[1080px] bg-[#EAE3DB] overflow-hidden select-none flex items-center sticky top-0 z-10"
       >
-      {/* 1. Full-Bleed Dynamic Background Product Photos with soft lightness */}
-      {BRANDS_DATA.map((brand, idx) => (
-        <div
-          key={brand.id}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-out pointer-events-none ${
-            idx === activeIndex ? "opacity-35 z-0" : "opacity-0 z-[-1]"
-          }`}
-        >
-          <img
-            src={brand.bgImage}
-            alt={brand.name}
-            className="w-full h-full object-cover object-right md:object-center transform scale-105 transition-transform duration-1000 ease-out filter saturate-120"
-          />
-        </div>
-      ))}
-
-      {/* 2. Warm Sand Editorial Vignette & Readability Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#EAE3DB]/95 via-[#EAE3DB]/90 to-[#EAE3DB]/80 pointer-events-none z-10" />
-      <div className="absolute inset-0 bg-[#EAE3DB]/40 backdrop-blur-[1px] pointer-events-none z-10" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#EAE3DB]/95 via-transparent to-[#EAE3DB]/80 pointer-events-none z-10" />
-
-      {/* 3. Main Content Container */}
-      <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-20 h-full flex flex-col justify-between py-12 lg:py-20">
-        
-        {/* Top Header Badge */}
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#7567EE] animate-pulse shadow-[0_0_8px_rgba(117,103,238,0.8)]"></span>
-            <span className="text-xs uppercase font-mono tracking-widest text-[#7567EE] font-bold drop-shadow-sm">
-              Client Portfolio Spotlight
-            </span>
+        {/* 1. Full-Bleed Dynamic Background Visuals with Soft Editorial Lightness */}
+        {SERVICES_DATA.map((service, idx) => (
+          <div
+            key={service.id}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-out pointer-events-none ${
+              idx === activeIndex ? "opacity-35 z-0" : "opacity-0 z-[-1]"
+            }`}
+          >
+            <img
+              src={service.bgImage}
+              alt={service.name}
+              className="w-full h-full object-cover object-right md:object-center transform scale-105 transition-transform duration-1000 ease-out filter saturate-120"
+            />
           </div>
-          <span className="text-xs font-mono text-[#141416]/70 font-semibold tracking-wider">
-            {String(activeIndex + 1).padStart(2, "0")} / {String(BRANDS_DATA.length).padStart(2, "0")}
-          </span>
-        </div>
+        ))}
 
-        {/* Center Grid: Left Brand Roller & Right Brand Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto">
+        {/* 2. Warm Sand Editorial Vignette & Readability Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#EAE3DB]/95 via-[#EAE3DB]/90 to-[#EAE3DB]/80 pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-[#EAE3DB]/40 backdrop-blur-[1px] pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#EAE3DB]/95 via-transparent to-[#EAE3DB]/80 pointer-events-none z-10" />
+
+        {/* 3. Main Content Container */}
+        <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-20 h-full flex flex-col justify-between py-10 lg:py-16">
           
-          {/* Left Column: Brand Names List (Roulette Roller) */}
-          <div className="lg:col-span-7 relative">
-            <div
-              ref={wrapRef}
-              className="brands-list-wrap relative h-[400px] sm:h-[480px] md:h-[540px] overflow-hidden flex flex-col items-start justify-start"
-            >
+          {/* Main Section Header: Clean Our Creative Universe */}
+          <div className="w-full mb-2 lg:mb-4">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#141416] font-medium tracking-tight leading-none">
+              Our Creative Universe<span className="text-[#7567EE]">.</span>
+            </h2>
+          </div>
+
+          {/* Center Grid: Left Service Roller & Right Service Card */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto">
+            
+            {/* Left Column: Service Names List (Roulette Roller with Hover, Click & Wheel) */}
+            <div className="lg:col-span-7 relative flex flex-col">
               <div
-                ref={listRef}
-                className="brands-list flex flex-col w-full will-change-transform"
+                ref={wrapRef}
+                onWheel={handleWheel}
+                className="brands-list-wrap relative h-[380px] sm:h-[440px] md:h-[500px] overflow-hidden flex flex-col items-start justify-start"
               >
-                {BRANDS_DATA.map((brand, i) => {
-                  const isActive = i === activeIndex;
-                  return (
-                    <div
-                      key={brand.id}
-                      ref={(el) => {
-                        itemRefs.current[i] = el;
-                      }}
-                      onClick={() => selectBrand(i)}
-                      className={`brand-item py-3 sm:py-4 cursor-pointer transition-all duration-300 text-left ${
-                        isActive
-                          ? "text-[#141416] opacity-100 translate-x-4 drop-shadow-sm"
-                          : "text-[#4A4658]/70 hover:text-[#141416]"
-                      }`}
-                    >
-                      <span className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight transition-all duration-200 inline-block py-1 leading-[1.2] ${
-                        isActive ? "font-bold text-[#141416]" : "font-medium text-[#4A4658]"
-                      }`}>
-                        {brand.name}
-                      </span>
-                    </div>
-                  );
-                })}
+                <div
+                  ref={listRef}
+                  className="brands-list flex flex-col w-full will-change-transform"
+                >
+                  {SERVICES_DATA.map((service, i) => {
+                    const isActive = i === activeIndex;
+                    return (
+                      <div
+                        key={service.id}
+                        ref={(el) => {
+                          itemRefs.current[i] = el;
+                        }}
+                        onClick={() => selectService(i)}
+                        onMouseEnter={() => selectService(i)}
+                        className={`brand-item py-3 sm:py-3.5 cursor-pointer transition-all duration-300 text-left ${
+                          isActive
+                            ? "text-[#141416] opacity-100 translate-x-4 drop-shadow-sm"
+                            : "text-[#4A4658]/70 hover:text-[#141416]"
+                        }`}
+                      >
+                        <span className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-tight transition-all duration-200 inline-block py-1 leading-[1.2] ${
+                          isActive ? "font-bold text-[#141416]" : "font-medium text-[#4A4658]"
+                        }`}>
+                          {service.name}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Column: Title + Active Brand Card */}
-          <div className="lg:col-span-5 flex flex-col justify-center text-left lg:pl-8">
-            <div className="bg-white/85 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-[#7567EE]/20 shadow-[0_12px_40px_rgba(20,20,22,0.08)] transition-all duration-500">
-              <h2 className="text-xl sm:text-2xl md:text-3xl text-[#141416] font-bold tracking-tight mb-6">
-                Trusted by over 100+ companies
-              </h2>
-
-              {/* Dynamic Brand Card */}
-              <div className="transition-all duration-500 transform">
-                <div className="flex items-center gap-4 mb-4 flex-wrap">
-                  {currentBrand.logo && (
-                    <div className="h-10 px-3 py-1.5 rounded-lg bg-[#EAE3DB]/80 border border-[#141416]/10 flex items-center justify-center shadow-sm">
-                      <img
-                        src={currentBrand.logo}
-                        alt={currentBrand.name}
-                        className="h-7 max-w-[120px] object-contain"
-                      />
-                    </div>
-                  )}
-                  <span className="inline-block text-xs uppercase tracking-wider text-[#141416] font-mono font-bold py-1.5 px-3.5 rounded-full bg-[#D5FF3F] border border-[#D5FF3F] shadow-[0_2px_8px_rgba(213,255,63,0.35)]">
-                    {currentBrand.tag}
-                  </span>
+            {/* Right Column: Clean Ultra-Premium Service Card with Pure Cinematic Image */}
+            <div className="lg:col-span-5 flex flex-col justify-center text-left lg:pl-6">
+              <div className="bg-white/95 backdrop-blur-2xl p-6 sm:p-7 rounded-3xl border border-[#141416]/10 shadow-[0_20px_50px_rgba(20,20,22,0.12)] transition-all duration-500 flex flex-col gap-4">
+                
+                {/* Visual Image Showcase on Card (Clean, No Overlay Pills) */}
+                <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-[#141416] shadow-md group">
+                  <img
+                    key={currentService.id}
+                    src={currentService.bgImage}
+                    alt={currentService.name}
+                    className="w-full h-full object-cover object-center transform transition-all duration-700 ease-out group-hover:scale-105 filter saturate-115"
+                  />
+                  {/* Subtle Filmic Ambient Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 </div>
 
-                <p className="text-sm sm:text-base text-[#141416]/90 leading-relaxed font-normal">
-                  {currentBrand.desc}
+                {/* Service Title */}
+                <h3 className="text-xl sm:text-2xl font-serif text-[#141416] font-bold tracking-tight leading-snug">
+                  {currentService.name}
+                </h3>
+
+                {/* Service Description */}
+                <p className="text-sm text-[#141416]/80 leading-relaxed font-normal">
+                  {currentService.desc}
                 </p>
+
+                {/* Direct Action Link with Bright Lime BG and Black Text */}
+                <a
+                  href="#contact"
+                  className="inline-flex items-center justify-center gap-2.5 w-full py-3.5 px-6 rounded-xl bg-[#D5FF3F] hover:bg-[#c6f028] text-black border border-black/10 transition-all duration-300 font-bold text-sm tracking-wide shadow-[0_4px_16px_rgba(213,255,63,0.45)] hover:shadow-[0_6px_22px_rgba(213,255,63,0.65)] hover:-translate-y-0.5 mt-2"
+                >
+                  <span className="text-black font-extrabold uppercase tracking-wider text-xs sm:text-sm">Inquire For This Service</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </a>
+
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom Scroll Indicator / Instruction */}
-        <div className="flex items-center justify-between text-xs text-[#141416]/60 font-mono tracking-wider pt-4 border-t border-[#141416]/10">
-          <span>Scroll to cycle partners</span>
-          <span>Click any brand to inspect</span>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
   );
 };

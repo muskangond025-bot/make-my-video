@@ -203,10 +203,12 @@ export const Testimonials = () => {
                           "{t.subQuote}"
                         </p>
                         <div className="flex items-center gap-4 mt-2">
-                          <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover border border-[#B9A1F7]/30" />
+                          <div className="w-12 h-12 rounded-full overflow-hidden bg-white border border-black/20 p-1 flex-shrink-0">
+                            <img src={t.avatar} alt={t.company} className="w-full h-full object-contain rounded-full" />
+                          </div>
                           <div className="flex flex-col">
-                            <span className="text-[#F3EBDD] text-sm font-semibold uppercase">{t.name}</span>
-                            <span className="text-[#B9A1F7] text-xs uppercase">{t.role} • {t.company}</span>
+                            <span className="text-black font-extrabold text-sm uppercase">{t.name}</span>
+                            <span className="text-black/80 text-xs font-bold uppercase">{t.role} • {t.company}</span>
                           </div>
                         </div>
                       </div>
@@ -319,6 +321,18 @@ export const Testimonials = () => {
                                     backgroundColor: '#ffffff'
                                   }}
                                 >
+                                  {/* Prominent Client Brand Logo Badge on Card */}
+                                  <div className="absolute top-6 left-6 z-20 flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full border border-black/10 shadow-md">
+                                    <img 
+                                      src={t.avatar} 
+                                      alt={t.company} 
+                                      className="w-7 h-7 object-contain rounded-full border border-black/10 bg-white" 
+                                    />
+                                    <span className="text-xs font-bold text-black uppercase tracking-wider">
+                                      {t.company}
+                                    </span>
+                                  </div>
+
                                   <img 
                                     src={t.photo} 
                                     alt={t.name} 
@@ -375,22 +389,25 @@ export const Testimonials = () => {
                               </p>
                             </div>
 
-                            {/* Author info & avatar */}
-                            <div className="testimonial-author-wrapper mt-6">
-                              <div 
-                                className="testimonial-author-image border border-[#7567EE]/30"
-                                style={{ backgroundImage: `url(${t.avatar})` }}
-                              />
-                              <div className="blog-author-text">
-                                <div className="text-size-small text-[#141416] dark:text-[#EAE3DB] font-bold text-style-allcaps">
+                            {/* Author info & Brand Logo - 100% visible and black text */}
+                            <div className="testimonial-author-wrapper mt-6 flex items-center gap-4">
+                              <div className="w-14 h-14 min-w-[56px] min-h-[56px] rounded-full overflow-hidden bg-white border-2 border-[#141416]/20 shadow-md flex items-center justify-center p-1.5 flex-shrink-0">
+                                <img 
+                                  src={t.avatar} 
+                                  alt={`${t.company} logo`}
+                                  className="w-full h-full object-contain rounded-full"
+                                />
+                              </div>
+                              <div className="blog-author-text flex flex-col justify-center">
+                                <div className="text-black font-extrabold text-base md:text-lg uppercase tracking-wide">
                                   {t.name}
                                 </div>
                                 <div className="blog-date-wrapper flex items-center gap-2 mt-1">
-                                  <div className="text-size-tiny text-[#7567EE] font-bold text-style-allcaps">
+                                  <div className="text-black/80 font-bold text-xs uppercase tracking-wider">
                                     {t.role}
                                   </div>
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#7567EE]" />
-                                  <div className="text-size-tiny text-[#4A4658] dark:text-[#EAE3DB]/70 font-medium text-style-allcaps">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-black/40" />
+                                  <div className="text-black font-extrabold text-xs uppercase tracking-wider">
                                     {t.company}
                                   </div>
                                 </div>

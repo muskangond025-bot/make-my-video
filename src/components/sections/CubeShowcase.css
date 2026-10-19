@@ -104,6 +104,8 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: rubiksCubeFloat 20s infinite ease-in-out;
 }
 
@@ -250,6 +252,8 @@
 .cube-marquee-track {
   display: flex;
   width: max-content;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: cubeMarqueeScroll 30s linear infinite;
 }
 

@@ -104,6 +104,7 @@ export const TrustedBrands: React.FC = () => {
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
   const [isMobile, setIsMobile] = useState(false);
 
   // Resize listener
@@ -116,9 +117,12 @@ export const TrustedBrands: React.FC = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Update visible service content
+  // Update visible service content only when index changes to avoid re-renders during scrolling
   const handleIndexChange = useCallback((index: number) => {
-    setActiveIndex(index);
+    if (activeIndexRef.current !== index) {
+      activeIndexRef.current = index;
+      setActiveIndex(index);
+    }
   }, []);
 
   // Set up ScrollTrigger on desktop using CSS sticky track
@@ -262,10 +266,17 @@ export const TrustedBrands: React.FC = () => {
         {/* 3. Main Content Container */}
         <div className="relative z-20 w-full max-w-[1440px] mx-auto px-6 sm:px-12 lg:px-20 h-full flex flex-col justify-between py-10 lg:py-16">
           
-          {/* Main Section Header: Clean Our Creative Universe */}
-          <div className="w-full mb-2 lg:mb-4">
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#141416] font-medium tracking-tight leading-none">
-              Our Creative Universe<span className="text-[#7567EE]">.</span>
+          {/* Main Section Header: Matches First Image Heading (Humane Font in #7567EE) */}
+          <div className="w-full mb-1 lg:mb-2">
+            <h2
+              className="font-humane text-[#7567EE] uppercase leading-[0.82] font-medium select-none drop-shadow-xs whitespace-nowrap"
+              style={{
+                fontSize: "clamp(54px, 7.6vw, 124px)",
+                letterSpacing: "0.04em",
+                wordSpacing: "0.28em",
+              }}
+            >
+              OUR CREATIVE UNIVERSE..
             </h2>
           </div>
 

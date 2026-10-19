@@ -194,7 +194,7 @@ export const CubeShowcase: React.FC = () => {
                 muted
                 loop
                 playsInline
-                preload="auto"
+                preload="none"
               />
 
               {/* Minimal Dark Scrim on Bottom to Keep Subtle UI Clear */}
@@ -249,6 +249,7 @@ export const CubeShowcase: React.FC = () => {
                       alt={`Rubik Tile ${idx + 1}`}
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 ))}

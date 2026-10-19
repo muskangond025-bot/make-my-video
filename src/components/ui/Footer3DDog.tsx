@@ -13,9 +13,6 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [dogStatus, setDogStatus] = useState<"idling" | "running">("idling");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -56,8 +53,8 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     const keyLight = new THREE.DirectionalLight(0xfff3e2, 2.7);
     keyLight.position.set(4.5, 7.5, 5);
     keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 2048;
-    keyLight.shadow.mapSize.height = 2048;
+    keyLight.shadow.mapSize.width = 1024;
+    keyLight.shadow.mapSize.height = 1024;
     keyLight.shadow.bias = -0.0003;
     scene.add(keyLight);
 
@@ -114,15 +111,15 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     });
     const textMesh = new THREE.Mesh(textGeo, textMat);
     textMesh.rotation.x = -Math.PI / 2;
-    textMesh.position.set(0, -1.183, 0.55);
+    textMesh.position.set(0, -1.183, 0.72);
     scene.add(textMesh);
 
-    // Dynamically calculate text size so EVERY alphabet (M-A-K-E  M-Y  V-I-D) is fully visible
+    // Dynamically calculate text size so "MAKE MY VID" spans full width as marked by user (~95% viewport width)
     const updateTextPlaneSize = (w: number, h: number) => {
-      const vHeight = 2 * (camera.position.z - 0.55) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      const vHeight = 2 * (camera.position.z - 0.72) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
       const vWidth = vHeight * (w / h);
-      // Spans ~80% of screen width, leaving breathing margin on left & right
-      const targetWidth = Math.min(vWidth * 0.82, 9.6);
+      // Spans full width marked in user's image (~95% of viewport width)
+      const targetWidth = vWidth * 0.95;
       const targetHeight = targetWidth / TEXT_ASPECT;
       textMesh.scale.set(targetWidth, targetHeight, 1);
     };
@@ -261,16 +258,19 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       locomotionWeight: 0,
     };
 
+    let lastMouseMoveTime = performance.now();
+    let isUserControlling = false;
+
     const handlePointerMove = (e: PointerEvent) => {
       const rect = container.getBoundingClientRect();
-      const clientX = e.clientX;
-      const clientY = e.clientY;
-
-      // Track cursor whenever footer is visible in the viewport
-      const inView = rect.bottom > 30 && rect.top < window.innerHeight;
+      const inView = rect.bottom > 20 && rect.top < window.innerHeight;
       if (!inView) return;
 
-      setIsHovered(true);
+      lastMouseMoveTime = performance.now();
+      isUserControlling = true;
+
+      const clientX = e.clientX;
+      const clientY = e.clientY;
 
       const normX = Math.max(-1, Math.min(1, ((clientX - rect.left) / rect.width) * 2 - 1));
       const normY = -Math.max(-1, Math.min(1, ((clientY - rect.top) / rect.height) * 2 - 1));
@@ -278,26 +278,17 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       currentPos.normX = normX;
       currentPos.normY = normY;
 
-      // Mathematical perspective floor raycasting: maps cursor directly to 3D stage floor
-      const mouseNDC = new THREE.Vector2(normX, THREE.MathUtils.clamp(normY, -1, 1));
-      raycaster.setFromCamera(mouseNDC, camera);
-
-      if (raycaster.ray.intersectPlane(floorPlane, floorIntersect)) {
-        // Reaches full width of footer (from far-left to far-right under directory links)
-        targetPos.x = THREE.MathUtils.clamp(floorIntersect.x, -7.0, 7.0);
-        targetPos.z = THREE.MathUtils.clamp(floorIntersect.z, -1.4, 2.0);
-      } else {
-        targetPos.x = normX * 6.5;
-        targetPos.z = 0.2 - THREE.MathUtils.clamp(normY, -1, 1) * 1.4;
-      }
+      // Responsive 3D stage position across full width & depth (left, right, forward, backward)
+      targetPos.x = THREE.MathUtils.clamp(normX * 5.8, -5.8, 5.8);
+      targetPos.z = THREE.MathUtils.clamp(0.35 - (normY * 1.05), -0.85, 1.35);
       targetPos.y = -1.18;
     };
 
     const handlePointerLeave = () => {
-      setIsHovered(false);
+      isUserControlling = false;
       targetPos.x = 0;
+      targetPos.z = 0.35;
       targetPos.y = -1.18;
-      targetPos.z = 0.3;
       currentPos.normX = 0;
       currentPos.normY = 0;
     };
@@ -348,136 +339,144 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     const animate = (currentTime: number) => {
       animId = requestAnimationFrame(animate);
 
-      const dt = Math.min((currentTime - lastTime) / 1000, 0.08);
+      const dt = Math.min((currentTime - lastTime) / 1000, 0.05);
       lastTime = currentTime;
+
+      // Check if user actively moved cursor recently
+      if (isUserControlling && currentTime - lastMouseMoveTime > 3000) {
+        isUserControlling = false;
+      }
+
+      // If user is idle, dog naturally roams and paces in all directions across the stage!
+      if (!isUserControlling) {
+        const roamTime = currentTime * 0.0008;
+        targetPos.x = Math.sin(roamTime) * 3.8;
+        targetPos.z = 0.35 + Math.cos(roamTime * 1.7) * 0.65;
+        currentPos.normX = targetPos.x / 5.8;
+      }
 
       const dx = targetPos.x - currentPos.x;
       const dz = targetPos.z - currentPos.z;
       const dist = Math.hypot(dx, dz);
 
-      // 1. Responsive & Silky Position Following (No lagging behind cursor, organic acceleration)
+      // Dynamic follow rate: brisk and lively when running towards target in all directions
+      const followRate = THREE.MathUtils.lerp(5.5, 8.5, Math.min(dist / 1.5, 1.0));
       const prevX = currentPos.x;
       const prevZ = currentPos.z;
-      const followRate = THREE.MathUtils.lerp(12.0, 18.0, Math.min(dist / 2.0, 1.0));
-      const moveEase = 1.0 - Math.exp(-followRate * dt);
-      currentPos.x += dx * moveEase;
-      currentPos.z += dz * moveEase;
+      currentPos.x = THREE.MathUtils.damp(currentPos.x, targetPos.x, followRate, dt);
+      currentPos.z = THREE.MathUtils.damp(currentPos.z, targetPos.z, followRate, dt);
       currentPos.y = -1.18;
 
-      // 2. Real Physical Ground Speed Calculation (Zero mismatch, zero slipping)
+      // Real 3D physical ground velocity
       const frameDist = Math.hypot(currentPos.x - prevX, currentPos.z - prevZ);
-      const instantSpeed = dt > 0 ? frameDist / dt : 0;
-      currentPos.speed = THREE.MathUtils.damp(currentPos.speed, instantSpeed, 10.0, dt);
+      const instantVelocity = frameDist / (dt > 0 ? dt : 0.016);
+      currentPos.speed = THREE.MathUtils.damp(currentPos.speed, instantVelocity, 9.0, dt);
 
-      // Smooth continuous locomotion weight: transitions gracefully without abrupt on/off jerking
-      const targetWeight = THREE.MathUtils.clamp(
-        Math.max(currentPos.speed / 1.1, (dist - 0.12) / 0.35),
-        0.0,
-        1.0
-      );
+      // Locomotion weight (blends from 0 at idle to 1 at trot)
+      const targetWeight = THREE.MathUtils.clamp(currentPos.speed / 1.0, 0.0, 1.0);
       currentPos.locomotionWeight = THREE.MathUtils.damp(
         currentPos.locomotionWeight,
         targetWeight,
-        10.0,
+        8.0,
         dt
       );
       const lw = currentPos.locomotionWeight;
 
-      // 3. Smooth Non-Snapping Heading & Turning
-      let angleDiff = 0;
-      if (dist > 0.20 && currentPos.speed > 0.12) {
-        // While moving: orient body toward movement vector
-        const targetAngle = Math.atan2(dx, dz);
-        angleDiff = targetAngle - currentPos.rotationY;
-        while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-        while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-
-        // Smooth clamped turning to prevent instantaneous rotation snaps
-        const maxTurnStep = 8.0 * dt;
-        const turnStep = THREE.MathUtils.clamp(angleDiff * 8.0 * dt, -maxTurnStep, maxTurnStep);
-        currentPos.rotationY += turnStep;
-
-        // Athletic banking roll as dog leans smoothly into turns
-        const targetBank = -Math.max(-0.16, Math.min(0.16, angleDiff * 0.25));
-        currentPos.rotationZ = THREE.MathUtils.damp(currentPos.rotationZ, targetBank * lw, 10.0, dt);
+      // Smooth 3D Heading & Body Turning in direction of motion (All sides without snapping):
+      let targetHeading = currentPos.rotationY;
+      if (dist > 0.28 && currentPos.speed > 0.12) {
+        const moveAngle = Math.atan2(dx, dz);
+        let diff = moveAngle - currentPos.rotationY;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        targetHeading = currentPos.rotationY + diff;
       } else {
-        // When idling or arriving at destination: gently face forward toward user, slightly angled toward cursor
-        const idleTargetAngle = THREE.MathUtils.clamp(currentPos.normX * 0.40, -0.50, 0.50);
-        let idleDiff = idleTargetAngle - currentPos.rotationY;
-        while (idleDiff > Math.PI) idleDiff -= Math.PI * 2;
-        while (idleDiff < -Math.PI) idleDiff += Math.PI * 2;
-        currentPos.rotationY += idleDiff * Math.min(dt * 3.5, 1.0);
-        currentPos.rotationZ = THREE.MathUtils.damp(currentPos.rotationZ, 0, 10.0, dt);
+        const idleAngle = THREE.MathUtils.clamp(currentPos.normX * 0.35, -0.42, 0.42);
+        let diff = idleAngle - currentPos.rotationY;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        targetHeading = currentPos.rotationY + diff;
       }
-      currentPos.turnYaw = THREE.MathUtils.damp(
-        currentPos.turnYaw,
-        THREE.MathUtils.clamp(angleDiff, -0.45, 0.45),
-        8.0,
+
+      currentPos.rotationY = THREE.MathUtils.damp(
+        currentPos.rotationY,
+        targetHeading,
+        5.5,
         dt
       );
 
-      // --- 1. VELOCITY-MATCHED STRIDE (Zero Foot Sliding) ---
-      // Physical stride length calibrated to model world scale
-      const STRIDE_LENGTH = 0.95;
-      const phaseDelta = (currentPos.speed / STRIDE_LENGTH) * dt;
-      currentPos.trotPhase += phaseDelta;
-      currentPos.wagPhase += dt * 3.5;
-      currentPos.breathPhase += dt * 2.4;
+      // Subtle banking roll into turns
+      const moveSign = dx > 0 ? 1 : -1;
+      const targetBank = -moveSign * 0.07 * lw;
+      currentPos.rotationZ = THREE.MathUtils.damp(currentPos.rotationZ, targetBank, 6.0, dt);
+      currentPos.turnYaw = THREE.MathUtils.damp(
+        currentPos.turnYaw,
+        (targetHeading - currentPos.rotationY) * 0.3,
+        6.0,
+        dt
+      );
+
+      // --- 1. VELOCITY-MATCHED STRIDE ---
+      if (currentPos.speed > 0.12) {
+        currentPos.trotPhase += Math.max(currentPos.speed, 1.4) * 4.4 * dt;
+      }
+      currentPos.wagPhase += dt * 5.0;
+      currentPos.breathPhase += dt * 2.5;
 
       const p = currentPos.trotPhase;
-      // Stride leg swing angle: natural range between 0.48 (walk) and 0.82 (athletic trot)
-      const strideAngle = THREE.MathUtils.lerp(0.48, 0.82, Math.min(currentPos.speed / 7.5, 1.0));
-      const kneeAngle = THREE.MathUtils.lerp(0.60, 1.00, Math.min(currentPos.speed / 7.5, 1.0));
+      const legSwing = 0.52 * lw;
+      const kneeBend = 0.65 * lw;
+      const ankleBend = 0.28 * lw;
 
       // --- REAL QUADRUPED DIAGONAL TROT LOCOMOTION ---
       // 1. Diagonal A: Front-Left & Rear-Right
-      rotateBoneAxis("Dog_l_FrontLeg_HipSHJnt", AXIS_X, Math.sin(p) * strideAngle * lw);
+      rotateBoneAxis("Dog_l_FrontLeg_HipSHJnt", AXIS_X, Math.sin(p) * legSwing);
       rotateBoneAxis(
         "Dog_l_FrontLeg_KneeSHJnt",
         AXIS_INV_X,
-        Math.max(0, Math.cos(p)) * kneeAngle * lw
+        Math.max(0, Math.cos(p)) * kneeBend
       );
       rotateBoneAxis(
         "Dog_l_FrontLeg_AnkleSHJnt",
         AXIS_INV_X,
-        Math.max(0, Math.cos(p)) * 0.32 * lw
+        Math.max(0, Math.cos(p)) * ankleBend
       );
 
-      rotateBoneAxis("Dog_r_HindLeg_HipSHJnt", AXIS_Z, Math.sin(p) * strideAngle * lw);
+      rotateBoneAxis("Dog_r_HindLeg_HipSHJnt", AXIS_Z, Math.sin(p) * legSwing);
       rotateBoneAxis(
         "Dog_r_HindLeg_Knee1SHJnt",
         AXIS_INV_X,
-        Math.max(0, Math.cos(p)) * kneeAngle * lw
+        Math.max(0, Math.cos(p)) * kneeBend
       );
       rotateBoneAxis(
         "Dog_r_HindLeg_AnkleSHJnt",
         AXIS_INV_X,
-        Math.max(0, -Math.sin(p)) * 0.40 * lw
+        Math.max(0, -Math.sin(p)) * 0.32 * lw
       );
 
       // 2. Diagonal B: Front-Right & Rear-Left (180° out of phase)
-      rotateBoneAxis("Dog_r_FrontLeg_HipSHJnt", AXIS_X, Math.sin(p + Math.PI) * strideAngle * lw);
+      rotateBoneAxis("Dog_r_FrontLeg_HipSHJnt", AXIS_X, Math.sin(p + Math.PI) * legSwing);
       rotateBoneAxis(
         "Dog_r_FrontLeg_KneeSHJnt",
         AXIS_INV_X,
-        Math.max(0, Math.cos(p + Math.PI)) * kneeAngle * lw
+        Math.max(0, Math.cos(p + Math.PI)) * kneeBend
       );
       rotateBoneAxis(
         "Dog_r_FrontLeg_AnkleSHJnt",
         AXIS_INV_X,
-        Math.max(0, Math.cos(p + Math.PI)) * 0.32 * lw
+        Math.max(0, Math.cos(p + Math.PI)) * ankleBend
       );
 
-      rotateBoneAxis("Dog_l_HindLeg_HipSHJnt", AXIS_Z, Math.sin(p + Math.PI) * strideAngle * lw);
+      rotateBoneAxis("Dog_l_HindLeg_HipSHJnt", AXIS_Z, Math.sin(p + Math.PI) * legSwing);
       rotateBoneAxis(
         "Dog_l_HindLeg_Knee1SHJnt",
         AXIS_INV_X,
-        Math.max(0, Math.cos(p + Math.PI)) * kneeAngle * lw
+        Math.max(0, Math.cos(p + Math.PI)) * kneeBend
       );
       rotateBoneAxis(
         "Wolf_l_HindLeg_AnkleSHJnt",
         AXIS_INV_X,
-        Math.max(0, -Math.sin(p + Math.PI)) * 0.40 * lw
+        Math.max(0, -Math.sin(p + Math.PI)) * 0.32 * lw
       );
 
       // --- 2. SMOOTH HARMONIC SUSPENSION BOUNCE (Zero Discontinuities / Zero Jerks) ---
@@ -535,40 +534,35 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
 
       // Attentive Head & Face Gaze Tracking:
       // The dog's face turns smoothly toward the cursor on whichever side it goes!
-      const cursorDistX = targetPos.x - currentPos.x;
+      const cursorOffset = currentPos.normX - (currentPos.x / 6.5);
       const targetLookYaw = THREE.MathUtils.clamp(
-        (currentPos.normX * 0.80) + (cursorDistX * 0.12) - (currentPos.rotationY * 0.80),
-        -0.95,
-        0.95
+        cursorOffset * 0.45 - (currentPos.rotationY * 0.35),
+        -0.45,
+        0.45
       );
       const targetLookPitch = THREE.MathUtils.clamp(
-        -currentPos.normY * 0.42,
-        -0.42,
-        0.35
+        -currentPos.normY * 0.16,
+        -0.14,
+        0.12
       );
 
       // Butter-smooth damping so head & face movements are ultra-fluid and natural
-      currentPos.lookYaw = THREE.MathUtils.damp(currentPos.lookYaw, targetLookYaw, 8.0, dt);
-      currentPos.lookPitch = THREE.MathUtils.damp(currentPos.lookPitch, targetLookPitch, 8.0, dt);
+      currentPos.lookYaw = THREE.MathUtils.damp(currentPos.lookYaw, targetLookYaw, 6.0, dt);
+      currentPos.lookPitch = THREE.MathUtils.damp(currentPos.lookPitch, targetLookPitch, 6.0, dt);
 
-      const headBob = Math.cos(p * 2) * 0.04 * lw;
+      const headBob = Math.cos(p * 2) * 0.03 * lw;
 
-      // Distribute rotation naturally across base neck, mid neck, and head
+      // Natural neck & head rotation: gentle base pivot + head orientation
       rotateBoneEuler(
         "Dog_Neck_01SHJnt",
-        currentPos.lookPitch * 0.32 + headBob,
-        currentPos.lookYaw * 0.32
-      );
-      rotateBoneEuler(
-        "Dog_Neck_02SHJnt",
-        currentPos.lookPitch * 0.30,
-        currentPos.lookYaw * 0.30
+        currentPos.lookPitch * 0.40 + headBob,
+        currentPos.lookYaw * 0.40
       );
       rotateBoneEuler(
         "Dog_Neck_TopSHJnt",
-        currentPos.lookPitch * 0.38,
-        currentPos.lookYaw * 0.38,
-        currentPos.lookYaw * 0.08 // natural cute canine head tilt
+        currentPos.lookPitch * 0.60,
+        currentPos.lookYaw * 0.60,
+        currentPos.lookYaw * 0.05 // subtle natural canine head tilt
       );
 
       // Apply transformations to master group
@@ -579,7 +573,34 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       renderer.render(scene, camera);
     };
 
-    animId = requestAnimationFrame(animate);
+    let isVisible = false;
+    const startRenderLoop = () => {
+      if (!isVisible && !isDisposed) {
+        isVisible = true;
+        lastTime = performance.now();
+        animId = requestAnimationFrame(animate);
+      }
+    };
+
+    const stopRenderLoop = () => {
+      isVisible = false;
+      cancelAnimationFrame(animId);
+    };
+
+    // IntersectionObserver with 300px rootMargin:
+    // Only renders WebGL when footer is near or inside viewport, eliminating offscreen GPU/CPU lag
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          startRenderLoop();
+        } else {
+          stopRenderLoop();
+        }
+      },
+      { rootMargin: "300px 0px" }
+    );
+    intersectionObserver.observe(container);
 
     // 7. Responsive Resize Observer
     const handleResize = () => {
@@ -590,6 +611,9 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       camera.updateProjectionMatrix();
       renderer.setSize(newW, newH);
       updateTextPlaneSize(newW, newH);
+      if (isVisible) {
+        renderer.render(scene, camera);
+      }
     };
 
     const resizeObserver = new ResizeObserver(handleResize);
@@ -597,7 +621,8 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
 
     return () => {
       isDisposed = true;
-      cancelAnimationFrame(animId);
+      stopRenderLoop();
+      intersectionObserver.disconnect();
       resizeObserver.disconnect();
       window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("mouseleave", handlePointerLeave);
@@ -705,7 +730,7 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
         {/* Column 2: Projects, Services, Support */}
         <div className="flex flex-col gap-3 sm:gap-3.5">
           <a
-            href="/projects"
+            href="#projects"
             className="text-sm sm:text-base font-bold text-black hover:text-blue-600 transition-colors duration-200"
             style={{ color: "#000000" }}
           >

@@ -158,7 +158,7 @@ export const CtaSection: React.FC = () => {
           </svg>
         </span>
 
-        <a href="/#about" className="hover:text-white transition-colors duration-200">
+        <a href="#about" className="hover:text-white transition-colors duration-200">
           ABOUT
         </a>
 
@@ -169,7 +169,7 @@ export const CtaSection: React.FC = () => {
           </svg>
         </span>
 
-        <a href="/projects" className="hover:text-white transition-colors duration-200">
+        <a href="#projects" className="hover:text-white transition-colors duration-200">
           PROJECTS
         </a>
 

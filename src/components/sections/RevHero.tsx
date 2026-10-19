@@ -211,14 +211,42 @@ export const RevHero: React.FC = () => {
       }
     );
 
-    // Render loop
+    // Render loop with IntersectionObserver
+    let isVisible = false;
+
     const render = () => {
-      if (isDisposed) return;
+      if (isDisposed || !isVisible) return;
       controls.update();
       renderer.render(scene, camera);
       animationFrameId = requestAnimationFrame(render);
     };
-    render();
+
+    const startRenderLoop = () => {
+      if (!isVisible && !isDisposed) {
+        isVisible = true;
+        video.play().catch(() => {});
+        render();
+      }
+    };
+
+    const stopRenderLoop = () => {
+      isVisible = false;
+      cancelAnimationFrame(animationFrameId);
+      video.pause();
+    };
+
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          startRenderLoop();
+        } else {
+          stopRenderLoop();
+        }
+      },
+      { rootMargin: "250px 0px" }
+    );
+    intersectionObserver.observe(container);
 
     // Resize listener
     const handleResize = () => {
@@ -228,12 +256,16 @@ export const RevHero: React.FC = () => {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      if (isVisible) {
+        renderer.render(scene, camera);
+      }
     };
     window.addEventListener("resize", handleResize);
 
     return () => {
       isDisposed = true;
-      cancelAnimationFrame(animationFrameId);
+      stopRenderLoop();
+      intersectionObserver.disconnect();
       window.removeEventListener("resize", handleResize);
       video.pause();
       video.src = "";

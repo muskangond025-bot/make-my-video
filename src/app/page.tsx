@@ -25,12 +25,14 @@ export default function Home() {
 
       <div className="flex flex-col relative w-full z-10">
         {/* Chapter 1: Hero & Vision */}
+        <div id="about" className="relative -top-24 pointer-events-none" />
         <Hero />
 
         {/* Chapter 2: Services & Capabilities */}
         <Expertise />
 
         {/* Chapter 3: Interactive 3D Archive */}
+        <div id="projects" className="relative -top-24 pointer-events-none" />
         <CubeShowcase />
 
         {/* Chapter 4: Client Portfolio & Social Proof */}

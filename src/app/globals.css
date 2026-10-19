@@ -1150,3 +1150,28 @@ a {
   border: none !important;
   border-radius: 0 !important;
 }
+
+/* ==========================================================================
+   HOMEPAGE PERFORMANCE & SILKY SMOOTH SCROLLING OPTIMIZATIONS
+   ========================================================================== */
+canvas {
+  touch-action: pan-y;
+}
+
+/* Hardware-accelerated GPU layer promotion to prevent paint thrashing during Lenis scroll */
+.cube-section-wrapper,
+#archive,
+#brands,
+#cta,
+#faq {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Prevent layout thrashing on marquees and animated elements */
+.section-check-marquee,
+.ticker-main,
+.ticker-component,
+.cube-marquee-track {
+  will-change: transform;
+}

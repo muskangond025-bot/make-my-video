@@ -304,11 +304,14 @@ export const CinemaFilmStrip3D: React.FC<CinemaFilmStrip3DProps> = ({
     scene.add(shadowMesh);
 
     // -------------------------------------------------------------
-    // 5. STRAIGHT MARQUEE ANIMATION LOOP (Continuous, no rotation)
+    // 5. STRAIGHT MARQUEE ANIMATION LOOP (Paused when off-screen)
     // -------------------------------------------------------------
     let animId = 0;
+    let isVisible = false;
+    let isDisposed = false;
 
     const animate = () => {
+      if (!isVisible || isDisposed) return;
       animId = requestAnimationFrame(animate);
 
       // Continuous Straight Marquee Scrolling Movement
@@ -316,7 +319,31 @@ export const CinemaFilmStrip3D: React.FC<CinemaFilmStrip3DProps> = ({
 
       renderer.render(scene, camera);
     };
-    animId = requestAnimationFrame(animate);
+
+    const startMarquee = () => {
+      if (!isVisible && !isDisposed) {
+        isVisible = true;
+        animId = requestAnimationFrame(animate);
+      }
+    };
+
+    const stopMarquee = () => {
+      isVisible = false;
+      cancelAnimationFrame(animId);
+    };
+
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          startMarquee();
+        } else {
+          stopMarquee();
+        }
+      },
+      { rootMargin: "250px 0px" }
+    );
+    intersectionObserver.observe(container);
 
     // Resize listener
     const handleResize = () => {
@@ -326,11 +353,16 @@ export const CinemaFilmStrip3D: React.FC<CinemaFilmStrip3DProps> = ({
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      if (isVisible) {
+        renderer.render(scene, camera);
+      }
     };
     window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(animId);
+      isDisposed = true;
+      stopMarquee();
+      intersectionObserver.disconnect();
       window.removeEventListener("resize", handleResize);
       texture.dispose();
       filmMaterial.dispose();

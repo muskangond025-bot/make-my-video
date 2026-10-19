@@ -14,12 +14,12 @@ interface NavItem {
 
 const MENU_ITEMS: NavItem[] = [
   { num: "01", name: "Home", href: "/" },
-  { num: "02", name: "About", href: "/about" },
-  { num: "03", name: "Projects", href: "/projects" },
+  { num: "02", name: "About", href: "/#about" },
+  { num: "03", name: "Projects", href: "/#projects" },
   { num: "04", name: "Services", href: "/#expertise" },
-  { num: "05", name: "Join Us", href: "/#careers" },
+  { num: "05", name: "Join Us", href: "/#contact" },
   { num: "06", name: "Blog", href: "/#archive" },
-  { num: "07", name: "Contact", href: "/#cta-connect" },
+  { num: "07", name: "Contact", href: "/#contact" },
 ];
 
 export const Header = () => {
@@ -28,6 +28,8 @@ export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
 
+  const isScrolledRef = useRef(false);
+  const isHiddenRef = useRef(false);
   const lastScrollY = useRef(0);
   const menuWrapRef = useRef<HTMLDivElement>(null);
   const panel1Ref = useRef<HTMLDivElement>(null);
@@ -43,49 +45,57 @@ export const Header = () => {
     setMounted(true);
   }, []);
 
-  // Smart auto-hide with direction detection and buffer:
+  // Smart auto-hide with direction detection, rAF batching & buffer:
   // 1. At the top (scrollY <= 80px): always visible.
   // 2. Scrolling DOWN past 120px (delta > 10px): smoothly glides up out of view.
   // 3. Scrolling UP (delta < -10px): smoothly glides down into view.
   // 4. Ignores micro scroll jitters (< 10px) to completely prevent up/down glitching.
+  // 5. Throttled via requestAnimationFrame and state transition guards to prevent frame drops.
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateScroll = () => {
+      ticking = false;
       const currentScrollY = Math.max(0, window.scrollY);
       const delta = currentScrollY - lastScrollY.current;
 
-      setIsScrolled(currentScrollY > 20);
+      const nextScrolled = currentScrollY > 20;
+      if (nextScrolled !== isScrolledRef.current) {
+        isScrolledRef.current = nextScrolled;
+        setIsScrolled(nextScrolled);
+      }
+
+      let nextHidden = isHiddenRef.current;
 
       if (isOpen) {
-        setIsHidden(false);
-        lastScrollY.current = currentScrollY;
-        return;
+        nextHidden = false;
+      } else if (currentScrollY <= 80) {
+        nextHidden = false;
+      } else if (Math.abs(delta) >= 10) {
+        if (delta > 0 && currentScrollY > 120) {
+          nextHidden = true;
+        } else if (delta < 0) {
+          nextHidden = false;
+        }
       }
 
-      // At top of page, always keep navbar visible
-      if (currentScrollY <= 80) {
-        setIsHidden(false);
-        lastScrollY.current = currentScrollY;
-        return;
-      }
-
-      // Buffer threshold: ignore micro movements (< 10px) to prevent fluttering/glitching
-      if (Math.abs(delta) < 10) {
-        return;
-      }
-
-      if (delta > 0 && currentScrollY > 120) {
-        // Scrolling DOWN -> hide navbar
-        setIsHidden(true);
-      } else if (delta < 0) {
-        // Scrolling UP -> reveal navbar
-        setIsHidden(false);
+      if (nextHidden !== isHiddenRef.current) {
+        isHiddenRef.current = nextHidden;
+        setIsHidden(nextHidden);
       }
 
       lastScrollY.current = currentScrollY;
     };
 
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    updateScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isOpen]);
 

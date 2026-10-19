@@ -1,116 +1,113 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { gsap, ScrollTrigger, CustomEase } from '@/lib/gsap';
 import { CinemaFilmStrip3D } from '@/components/ui/CinemaFilmStrip3D';
 
 export const Expertise = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Sticky Title refs
-  const stickyTitleRef = useRef<HTMLElement>(null);
+  // Unified Section Refs
+  const pinWrapperRef = useRef<HTMLDivElement>(null);
   const title1Ref = useRef<HTMLHeadingElement>(null);
   const title2Ref = useRef<HTMLHeadingElement>(null);
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
 
-  // 1. Sticky Title Scroll Animation (GSAP Context)
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-
-      const chars1 = title1Ref.current?.querySelectorAll('.char-span');
-      const chars2 = title2Ref.current?.querySelectorAll('.char-span');
-
-      if (chars1 && chars2 && stickyTitleRef.current) {
-        // Reset visibility for stacked headings
-        gsap.set(title2Ref.current, { visibility: 'visible' });
-
-        const masterTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: stickyTitleRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-          }
-        });
-
-        const revealDuration = 0.7;
-        const fadeOutDuration = 0.7;
-        const overlapOffset = 0.15;
-
-        // Heading 1 reveal & fade-out timeline
-        const h1Tl = gsap.timeline();
-        h1Tl.to(chars1, {
-          opacity: 1,
-          stagger: { amount: revealDuration, from: "start" },
-          duration: revealDuration
-        });
-        h1Tl.to(chars1, {
-          opacity: 0,
-          stagger: { amount: fadeOutDuration, from: "end" },
-          duration: fadeOutDuration
-        });
-
-        // Heading 2 reveal timeline
-        const h2Tl = gsap.timeline();
-        h2Tl.to(chars2, {
-          opacity: 1,
-          stagger: { amount: revealDuration, from: "start" },
-          duration: revealDuration
-        });
-        // Hold the description fully visible and readable as user continues scrolling
-        h2Tl.to({}, { duration: 0.8 });
-
-        masterTl.add(h1Tl);
-        masterTl.add(h2Tl, `-=${overlapOffset}`);
-      }
-
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // 2. Expertise Cards Scroll Reveal Animation
+  // Single Unified 3-Scroll Master Timeline:
+  // 1st scroll: SERVICES reveals
+  // 2nd scroll: Description reveals
+  // 3rd scroll: Three Cards glide up smoothly and settle centered
   useEffect(() => {
     if (typeof window === "undefined" || !containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      const root = containerRef.current?.querySelector('.expertise-cards');
-      if (!root) return;
+      const chars1 = title1Ref.current?.querySelectorAll('.char-span');
+      const chars2 = title2Ref.current?.querySelectorAll('.char-span');
+      const cards = cardsContainerRef.current?.querySelectorAll('.expertise-card');
 
-      const pinHeight = root.querySelector('.pin-height');
-      const container = root.querySelector('.expertise-container');
-      const cards = root.querySelectorAll('.expertise-card');
+      if (!pinWrapperRef.current || !chars1 || !chars2 || !cards || cards.length === 0) return;
 
-      if (!pinHeight || !container || cards.length === 0) return;
+      // 1. Initial State Setup
+      gsap.set(chars1, { opacity: 0 });
+      gsap.set(chars2, { opacity: 0 });
+      gsap.set(title1Ref.current, { opacity: 1, visibility: 'visible' });
+      gsap.set(title2Ref.current, { opacity: 1, y: 0, visibility: 'visible' });
 
-      // Set initial card position (offset down below view)
+      // Cards start physical depth below the viewport, ready for a pure smooth slide up
       gsap.set(cards, {
-        yPercent: 120,
-        y: 0,
-        rotation: 0
+        yPercent: 0,
+        y: () => window.innerHeight * 0.88,
+        scale: 0.96,
+        opacity: 0.35,
+        rotation: (i: number) => (i === 0 ? -1.2 : i === 2 ? 1.2 : 0),
+        transformOrigin: "center center",
+        willChange: "transform, opacity"
       });
 
-      // Re-create the Webflow exact custom ease curve for the cards reveal
-      CustomEase.create("expertiseCurve", "M0,0 C0,0 0.098,0.613 0.5,0.5 0.899,0.386 1,1 1,1");
+      // Silky progressive deceleration curve: smooth, continuous slide-up that gently glides to a rest
+      CustomEase.create("smoothSlideUp", "M0,0 C0.25,0.7 0.35,0.98 1,1");
 
-      // Animate cards staggered reveal timeline
-      const tl = gsap.timeline({
+      const masterTl = gsap.timeline({
         scrollTrigger: {
-          trigger: pinHeight,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.3
+          trigger: pinWrapperRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1, // Smooth damping for buttery fluid scroll response
         }
       });
 
-      // As user scrolls, card 1, 2, and 3 ascend into the center frame.
-      // Once card 3 arrives at center (yPercent: 0), the pin ends and next section appears immediately on scroll.
-      tl.to(cards, {
-        yPercent: 0,
-        y: 0,
-        rotation: 0,
-        duration: 1,
-        stagger: 0.22,
+      // ----------------------------------------------------
+      // STEP 1 (1st Scroll): "SERVICES" reveals letter-by-letter
+      // ----------------------------------------------------
+      masterTl.to(chars1, {
+        opacity: 1,
+        stagger: { amount: 0.75, from: "start" },
+        duration: 0.75,
         ease: "power2.out"
-      }, 'step');
+      });
+      // Brief pause to admire "SERVICES"
+      masterTl.to({}, { duration: 0.25 });
+
+      // ----------------------------------------------------
+      // STEP 2 (2nd Scroll): "SERVICES" fades out, Description reveals
+      // ----------------------------------------------------
+      masterTl.to(chars1, {
+        opacity: 0,
+        stagger: { amount: 0.35, from: "end" },
+        duration: 0.35,
+        ease: "power2.in"
+      });
+      masterTl.to(chars2, {
+        opacity: 1,
+        stagger: { amount: 0.85, from: "start" },
+        duration: 0.85,
+        ease: "power2.out"
+      }, "-=0.15");
+      // Dedicated comfortable hold for reading description
+      masterTl.to({}, { duration: 0.45 });
+
+      // ----------------------------------------------------
+      // STEP 3 (3rd Scroll): Description softly floats up, 3 Cards smoothly slide up & settle
+      // ----------------------------------------------------
+      masterTl.to(title2Ref.current, {
+        opacity: 0,
+        y: -35,
+        duration: 0.45,
+        ease: "power2.inOut"
+      });
+
+      masterTl.to(cards, {
+        y: 0,
+        yPercent: 0,
+        scale: 1,
+        opacity: 1,
+        rotation: 0,
+        duration: 1.4,
+        stagger: 0.08,
+        ease: "smoothSlideUp"
+      }, "<0.05"); // Starts gliding up smoothly as description begins to exit
+
+      // Generous center lock: cards stay firmly centered for user to inspect
+      masterTl.to({}, { duration: 0.75 });
 
     }, containerRef);
 
@@ -162,7 +159,7 @@ export const Expertise = () => {
         <CinemaFilmStrip3D className="w-full h-[190px] sm:h-[230px] md:h-[265px]" speed={1.1} />
       </section>
 
-      {/* 2. MAIN EXPERTISE SECTION - IVENTIONS Warm Cream & Electric Violet Theme */}
+      {/* 2. MAIN EXPERTISE SECTION - UNIFIED 3-SCROLL CINEMATIC STAGE */}
       <div className="section-expertise w-full bg-[#EAE3DB] text-[#141416] relative flex flex-col justify-start select-none overflow-visible">
         <div className="expertise-outer w-full">
           <div className="padding-global w-full">
@@ -170,45 +167,40 @@ export const Expertise = () => {
               <div className="expertise-inner w-full">
                 <div className="expertise-border w-full !border-0 !border-none !rounded-none">
 
-                  {/* STICKY STAGGER LETTER TITLE WRAPPER */}
-                  <section ref={stickyTitleRef} className="sticky-title-wrapper w-full relative">
-                    
-                    {/* IVENTIONS Dynamic Angular Spotlight Beam Graphic */}
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-                      <div 
-                        className="absolute -top-[15%] left-[20%] w-[58vw] h-[130%] bg-gradient-to-b from-[#A59CEC]/40 via-[#8B7AF8]/30 to-[#EAE3DB]/10 blur-[1px] transform -rotate-[16deg] origin-top"
-                        style={{
-                          clipPath: "polygon(32% 0%, 68% 0%, 100% 100%, 0% 100%)",
-                        }}
-                      />
-                    </div>
+                  {/* UNIFIED PIN WRAPPER (240vh: exactly 3 smooth scrolls) */}
+                  <div ref={pinWrapperRef} className="pin-height w-full relative" style={{ height: "240vh" }}>
 
-                    <div className="sticky-title-container w-full h-screen sticky top-0 flex items-center justify-center">
-                      <div className="sticky-title-inner text-center flex flex-col items-center justify-center relative w-full">
+                    {/* STICKY STAGE (pinned at top: 0, 100vh) */}
+                    <div className="w-full h-screen sticky top-0 overflow-hidden flex items-center justify-center relative">
 
-                        {/* Heading 1: SERVICES - Electric Violet matching IVENTIONS Hero Typography */}
-                        <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#7567EE] text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none drop-shadow-sm">
-                          {splitWordsAndChars("SERVICES")}
-                        </h2>
-
-                        {/* Heading 2: Description in Deep Charcoal High-Contrast Text */}
-                        <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[2.5rem] leading-[1.2] font-semibold text-[#141416] max-w-[900px] select-none uppercase">
-                          {splitWordsAndChars("MULTI-CITY VIDEO PRODUCTION, REMOTE EDITING, AND CORPORATE AV SOLUTIONS")}
-                        </h2>
-
+                      {/* Soft Ambient Spotlight Glow */}
+                      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
+                        <div className="w-[60vw] h-[60vw] max-w-[700px] bg-gradient-to-b from-[#7567EE]/12 via-[#8B7AF8]/8 to-transparent rounded-full blur-3xl pointer-events-none" />
                       </div>
-                    </div>
-                  </section>
 
-                  {/* DESKTOP STICKY STAGGER REVEAL CARDS */}
-                  <div className="expertise-cards w-full relative" style={{ margin: "0 auto", overflow: "visible" }}>
-                    <div className="pin-height w-full relative" style={{ height: "220vh", margin: "0 auto" }}>
+                      {/* LAYER 1: TEXT HEADINGS (SERVICES & DESCRIPTION) */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 px-4">
+                        <div className="relative w-full max-w-[1100px] flex items-center justify-center text-center">
+
+                          {/* Heading 1: SERVICES (1st Scroll) */}
+                          <h2 ref={title1Ref} className="sticky-title-el is--title font-humane text-[#7567EE] text-[14vw] uppercase leading-[0.8] tracking-widest font-bold select-none drop-shadow-sm absolute">
+                            {splitWordsAndChars("SERVICES")}
+                          </h2>
+
+                          {/* Heading 2: Description (2nd Scroll) */}
+                          <h2 ref={title2Ref} className="sticky-title-el is--stacked font-sans text-center text-[1.85rem] sm:text-[2.25rem] md:text-[2.65rem] leading-[1.25] font-semibold text-[#141416] max-w-[960px] select-none uppercase px-4 absolute">
+                            {splitWordsAndChars("MULTI-CITY VIDEO PRODUCTION, REMOTE EDITING, AND CORPORATE AV SOLUTIONS")}
+                          </h2>
+
+                        </div>
+                      </div>
+
+                      {/* LAYER 2: 3 CARDS (3rd Scroll) */}
                       <div
-                        className="expertise-container w-full"
+                        ref={cardsContainerRef}
+                        className="expertise-container w-full relative z-20"
                         style={{
-                          position: "sticky",
-                          top: 0,
-                          height: "100vh",
+                          position: "relative",
                           display: "flex",
                           flexFlow: "row nowrap",
                           justifyContent: "center",
@@ -217,7 +209,6 @@ export const Expertise = () => {
                           margin: "0 auto",
                           padding: 0,
                           boxSizing: "border-box",
-                          zIndex: 5,
                         }}
                       >
 

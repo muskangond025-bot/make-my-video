@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CatWalkMatrix } from "@/components/ui/CatWalkMatrix";
+import { Footer3DDog } from "@/components/ui/Footer3DDog";
 
 export const PremiumFooter = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,9 +14,6 @@ export const PremiumFooter = () => {
     privacy: false,
   });
 
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
-
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -25,142 +22,13 @@ export const PremiumFooter = () => {
   return (
     <footer
       id="contact"
-      className="w-full min-w-full relative bg-[#141416] text-[#F3EBDD] overflow-hidden select-none font-sans pt-6 sm:pt-8 pb-8 sm:pb-10 border-t border-white/10"
+      className="w-full min-w-full relative bg-[#EAE3DB] bg-dots-pattern text-zinc-900 overflow-hidden select-none font-sans pt-0 pb-0 border-t border-black/10"
     >
-      <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 flex flex-col items-center">
-        
-        {/* 1. The Walking Cat Loop Dot-Matrix Centerpiece - Full Viewport Width */}
+      <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
+        {/* Real 3D Golden Retriever Centerpiece with Integrated Top-Left Logo and Right Directory */}
         <div className="w-screen relative left-1/2 -translate-x-1/2 flex justify-center items-center overflow-hidden">
-          <CatWalkMatrix brandText="mowl" className="w-full" />
+          <Footer3DDog onJoinUs={() => setIsModalOpen(true)} />
         </div>
-
-        {/* 2. Compact Premium Content: Left Info + Newsletter | Right Spaced Directory */}
-        <div className="w-full max-w-[1360px] mx-auto pt-10 sm:pt-12 pb-4 flex flex-col md:flex-row items-start justify-between gap-10 md:gap-16">
-          
-          {/* Left Block: Logo, Tagline & Newsletter */}
-          <div className="flex flex-col items-start max-w-md w-full">
-            <a
-              href="/"
-              className="flex items-center transition-opacity hover:opacity-85"
-              aria-label="Make My Vid Home"
-            >
-              <img
-                src="https://storage.googleapis.com/mkv_imagesbackend/navbar_logo/677e52686d8ba_navbarlogo.png"
-                alt="MAKE MY VID"
-                className="h-7 sm:h-8 w-auto object-contain"
-              />
-            </a>
-
-            <p className="text-zinc-200 text-xs sm:text-sm font-medium tracking-wide mt-3 leading-relaxed">
-              ELEVATING/ EMPOWERING/ EVOLVING Brands through videos.
-            </p>
-
-            <div className="mt-7 sm:mt-8 w-full">
-              <h3 className="text-white text-base sm:text-lg font-serif font-bold italic tracking-tight mb-3">
-                Subscribe to Newsletter
-              </h3>
-
-              {newsletterSubscribed ? (
-                <p className="text-xs text-[#D5FF3F] font-mono tracking-wide py-2">
-                  ✓ Thank you for subscribing to Make My Vid!
-                </p>
-              ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (newsletterEmail) setNewsletterSubscribed(true);
-                  }}
-                  className="flex items-center gap-3 w-full max-w-[360px]"
-                >
-                  <input
-                    type="email"
-                    required
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="Enter your Email"
-                    className="flex-1 bg-transparent border border-white/40 focus:border-white rounded-full px-5 py-2.5 sm:py-3 text-xs sm:text-sm text-white placeholder-zinc-500 outline-none transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    aria-label="Subscribe to Newsletter"
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-black flex items-center justify-center shrink-0 hover:bg-[#D5FF3F] hover:scale-105 active:scale-95 transition-all shadow-md cursor-pointer"
-                  >
-                    <svg
-                      className="w-4 h-4 stroke-[2.5]"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                      />
-                    </svg>
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-
-          {/* Right Block: Two Columns with Wide Breathing Room (Not Centered) */}
-          <div className="flex items-start gap-16 sm:gap-24 lg:gap-32 self-start md:self-auto pt-1">
-            
-            {/* Column 1: Home, About, Join Us, Blogs */}
-            <div className="flex flex-col gap-4 sm:gap-5">
-              <a
-                href="/"
-                className="text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200"
-              >
-                Home
-              </a>
-              <a
-                href="#about"
-                className="text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200"
-              >
-                About
-              </a>
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="text-left text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200 cursor-pointer"
-              >
-                Join Us
-              </button>
-              <a
-                href="#archive"
-                className="text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200"
-              >
-                Blogs
-              </a>
-            </div>
-
-            {/* Column 2: Projects, Services, Support */}
-            <div className="flex flex-col gap-4 sm:gap-5">
-              <a
-                href="#archive"
-                className="text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200"
-              >
-                Projects
-              </a>
-              <a
-                href="#expertise"
-                className="text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200"
-              >
-                Services
-              </a>
-              <a
-                href="#faq"
-                className="text-sm sm:text-base font-normal text-zinc-200 hover:text-white transition-colors duration-200"
-              >
-                Support
-              </a>
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
 
       {/* 5. Contact / Booking Modal Form */}

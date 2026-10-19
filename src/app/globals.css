@@ -506,14 +506,12 @@ a {
 
 .pin-height {
   width: 100% !important;
-  height: 500vh !important;
+  height: 240vh !important;
   margin: 0 auto !important;
   position: relative !important;
 }
 
 .expertise-container {
-  position: sticky !important;
-  top: 0 !important;
   height: 100vh !important;
   display: flex !important;
   flex-flow: row nowrap !important;

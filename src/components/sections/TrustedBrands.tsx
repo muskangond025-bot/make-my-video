@@ -112,6 +112,7 @@ const BRANDS_DATA: Brand[] = [
 ];
 
 export const TrustedBrands: React.FC = () => {
+  const trackRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -136,14 +137,14 @@ export const TrustedBrands: React.FC = () => {
     setActiveIndex(index);
   }, []);
 
-  // Set up ScrollTrigger on desktop
+  // Set up ScrollTrigger on desktop using CSS sticky track (eliminates buggy pin-spacer)
   useEffect(() => {
     if (isMobile) return;
 
-    const section = sectionRef.current;
+    const track = trackRef.current;
     const list = listRef.current;
     const wrap = wrapRef.current;
-    if (!section || !list || !wrap) return;
+    if (!track || !list || !wrap) return;
 
     const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
     if (items.length === 0) return;
@@ -181,11 +182,9 @@ export const TrustedBrands: React.FC = () => {
     renderList(6 / (items.length - 1));
 
     const trigger = ScrollTrigger.create({
-      trigger: section,
+      trigger: track,
       start: "top top",
-      end: () => `+=${(items.length - 1) * 95}`,
-      pin: true,
-      pinSpacing: true,
+      end: "bottom bottom",
       scrub: 0.1,
       snap: 1 / (items.length - 1),
       onUpdate: (self) => {
@@ -195,7 +194,13 @@ export const TrustedBrands: React.FC = () => {
 
     scrollTriggerRef.current = trigger;
 
+    // Refresh ScrollTrigger to calculate exact pixel offsets without layout mismatch
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+
     return () => {
+      clearTimeout(refreshTimer);
       trigger.kill();
     };
   }, [isMobile, handleIndexChange]);
@@ -215,11 +220,17 @@ export const TrustedBrands: React.FC = () => {
   const currentBrand = BRANDS_DATA[activeIndex] || BRANDS_DATA[6];
 
   return (
-    <section
-      ref={sectionRef}
-      id="brands"
-      className="relative w-full h-screen min-h-[680px] max-h-[1080px] bg-[#EAE3DB] overflow-hidden select-none flex items-center"
+    <div
+      ref={trackRef}
+      id="brands-track"
+      className="relative w-full"
+      style={{ height: isMobile ? "auto" : `${(BRANDS_DATA.length - 1) * 95 + 1000}px` }}
     >
+      <section
+        ref={sectionRef}
+        id="brands"
+        className="w-full h-screen min-h-[680px] max-h-[1080px] bg-[#EAE3DB] overflow-hidden select-none flex items-center sticky top-0 z-10"
+      >
       {/* 1. Full-Bleed Dynamic Background Product Photos with soft lightness */}
       {BRANDS_DATA.map((brand, idx) => (
         <div
@@ -336,5 +347,6 @@ export const TrustedBrands: React.FC = () => {
         </div>
       </div>
     </section>
+  </div>
   );
 };

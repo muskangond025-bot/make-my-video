@@ -22,7 +22,7 @@ const MENU_ITEMS: NavItem[] = [
   { num: "05", name: "Track Record", href: "#about" },
   { num: "06", name: "Reviews", href: "#testimonials" },
   { num: "07", name: "FAQ", href: "#faq" },
-  { num: "08", name: "Contact", href: "#contact" },
+  { num: "08", name: "Contact", href: "#cta-connect" },
 ];
 
 export const Header = () => {
@@ -299,10 +299,10 @@ export const Header = () => {
             
             {/* CTA Button: "GOT A PROJECT?" - Signature Neon Lime Capsule */}
             <a
-              href="#contact"
+              href="#cta-connect"
               onClick={(e) => {
                 e.preventDefault();
-                handleLinkClick("#contact");
+                handleLinkClick("#cta-connect");
               }}
               className="hidden sm:inline-flex items-center gap-2 bg-[#D5FF3F] text-[#141416] hover:bg-[#c2ed2c] px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition-all duration-300 shadow-[0_2px_12px_rgba(213,255,63,0.35)] cursor-pointer group"
             >

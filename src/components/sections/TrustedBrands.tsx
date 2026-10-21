@@ -169,7 +169,7 @@ export const TrustedBrands: React.FC = () => {
       trigger: track,
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.05,
+      scrub: 0.6,
       onUpdate: (self) => {
         renderList(self.progress);
       },
@@ -187,44 +187,15 @@ export const TrustedBrands: React.FC = () => {
     };
   }, [isMobile, handleIndexChange]);
 
-  // Click or hover on a service in list to center on it smoothly
+  // Click on a service in list to smoothly scroll the window to that item
   const selectService = (index: number) => {
     setActiveIndex(index);
-    if (!isMobile && listRef.current && wrapRef.current) {
-      const items = itemRefs.current.filter(Boolean) as HTMLDivElement[];
-      if (items.length > 0) {
-        const itemHeight = items[0].offsetHeight || 72;
-        const wrapCenter = wrapRef.current.offsetHeight / 2;
-        const y = wrapCenter - (index * itemHeight + itemHeight / 2);
-        gsap.to(listRef.current, { y, duration: 0.35, ease: "power2.out" });
-
-        items.forEach((item, i) => {
-          const distance = Math.abs(i - index);
-          let opacity = 0.25;
-          if (distance === 0) opacity = 1;
-          else if (distance === 1) opacity = 0.85;
-          else if (distance === 2) opacity = 0.60;
-          gsap.to(item, { opacity, duration: 0.35 });
-        });
-      }
-    }
     if (scrollTriggerRef.current && !isMobile) {
       const targetProgress = index / (SERVICES_DATA.length - 1);
       const scrollPos =
         scrollTriggerRef.current.start +
         targetProgress * (scrollTriggerRef.current.end - scrollTriggerRef.current.start);
       window.scrollTo({ top: scrollPos, behavior: "smooth" });
-    }
-  };
-
-  // Direct mouse wheel on list wrapper for ultra-fast, snappy cycling
-  const handleWheel = (e: React.WheelEvent) => {
-    if (Math.abs(e.deltaY) > 20) {
-      if (e.deltaY > 0 && activeIndex < SERVICES_DATA.length - 1) {
-        selectService(activeIndex + 1);
-      } else if (e.deltaY < 0 && activeIndex > 0) {
-        selectService(activeIndex - 1);
-      }
     }
   };
 
@@ -235,7 +206,7 @@ export const TrustedBrands: React.FC = () => {
       ref={trackRef}
       id="brands-track"
       className="relative w-full"
-      style={{ height: isMobile ? "auto" : `${(SERVICES_DATA.length - 1) * 95 + 650}px` }}
+      style={{ height: isMobile ? "auto" : "320vh" }}
     >
       <section
         ref={sectionRef}
@@ -283,11 +254,10 @@ export const TrustedBrands: React.FC = () => {
           {/* Center Grid: Left Service Roller & Right Service Card */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-1 my-auto">
             
-            {/* Left Column: Service Names List (Roulette Roller with Hover, Click & Wheel) */}
+            {/* Left Column: Service Names List (Scroll-Driven Roller) */}
             <div className="lg:col-span-7 relative flex flex-col">
               <div
                 ref={wrapRef}
-                onWheel={handleWheel}
                 className="brands-list-wrap relative h-[380px] sm:h-[440px] md:h-[500px] overflow-hidden flex flex-col items-start justify-start"
               >
                 <div
@@ -303,10 +273,9 @@ export const TrustedBrands: React.FC = () => {
                           itemRefs.current[i] = el;
                         }}
                         onClick={() => selectService(i)}
-                        onMouseEnter={() => selectService(i)}
                         className={`brand-item py-3 sm:py-3.5 cursor-pointer transition-all duration-300 text-left ${
                           isActive
-                            ? "text-[#141416] opacity-100 translate-x-4 drop-shadow-sm"
+                            ? "text-[#141416] opacity-100 translate-x-4 drop-shadow-sm font-bold"
                             : "text-[#4A4658]/70 hover:text-[#141416]"
                         }`}
                       >

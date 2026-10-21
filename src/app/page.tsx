@@ -8,6 +8,7 @@ import { CtaSection } from "@/components/sections/CtaSection";
 import { SectionCrosses } from "@/components/sections/SectionCrosses";
 import { CubeShowcase } from "@/components/sections/CubeShowcase";
 import { TrustedBrands } from "@/components/sections/TrustedBrands";
+import { IndustriesServed } from "@/components/sections/IndustriesServed";
 import { PremiumFooter } from "@/components/sections/PremiumFooter";
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
 
         {/* Chapter 4: Client Portfolio & Social Proof */}
         <TrustedBrands />
+        <IndustriesServed />
         <Testimonials />
 
         {/* Chapter 5: FAQ, Dumemearts CTA & Footer */}

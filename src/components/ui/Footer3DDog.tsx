@@ -49,13 +49,20 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     const ambientLight = new THREE.AmbientLight(0xfffaf4, 1.25);
     scene.add(ambientLight);
 
-    // Warm Sun Key Light casting crisp contact shadows onto the floor
-    const keyLight = new THREE.DirectionalLight(0xfff3e2, 2.7);
-    keyLight.position.set(4.5, 7.5, 5);
+    // Warm Sun Key Light casting crisp contact shadows directly beneath paws onto the floor
+    const keyLight = new THREE.DirectionalLight(0xfff3e2, 2.6);
+    keyLight.position.set(2.0, 7.8, 2.8);
     keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.bias = -0.0003;
+    keyLight.shadow.mapSize.width = 2048;
+    keyLight.shadow.mapSize.height = 2048;
+    keyLight.shadow.bias = -0.0002;
+    keyLight.shadow.radius = 1.2;
+    keyLight.shadow.camera.left = -6;
+    keyLight.shadow.camera.right = 6;
+    keyLight.shadow.camera.top = 6;
+    keyLight.shadow.camera.bottom = -6;
+    keyLight.shadow.camera.near = 1.0;
+    keyLight.shadow.camera.far = 18;
     scene.add(keyLight);
 
     // Warm Golden Sunlight Backlight / Rim Kicker
@@ -82,10 +89,10 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     floorTileTexture.colorSpace = THREE.SRGBColorSpace;
     floorTileTexture.wrapS = THREE.RepeatWrapping;
     floorTileTexture.wrapT = THREE.RepeatWrapping;
-    floorTileTexture.repeat.set(16, 6);
+    floorTileTexture.repeat.set(32, 8);
     floorTileTexture.anisotropy = 8;
 
-    const floorGeo = new THREE.PlaneGeometry(42, 16);
+    const floorGeo = new THREE.PlaneGeometry(80, 24);
     const floorMat = new THREE.MeshBasicMaterial({
       map: floorTileTexture,
     });
@@ -126,18 +133,58 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     updateTextPlaneSize(width, height);
 
     // Soft Ground Shadow Contact Plane directly beneath paws and text
-    const shadowGeo = new THREE.PlaneGeometry(42, 16);
-    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.32 });
+    const shadowGeo = new THREE.PlaneGeometry(80, 24);
+    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.46 });
     const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
     shadowPlane.rotation.x = -Math.PI / 2;
     shadowPlane.position.set(0, -1.181, 0.4);
     shadowPlane.receiveShadow = true;
     scene.add(shadowPlane);
 
+    // Dedicated Ambient Occlusion Contact Shadow directly beneath dog paws
+    const createContactShadowTexture = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+
+      ctx.clearRect(0, 0, 512, 256);
+      ctx.save();
+      ctx.scale(1.0, 0.55);
+      const grad = ctx.createRadialGradient(256, 230, 20, 256, 230, 210);
+      grad.addColorStop(0, "rgba(18, 12, 8, 0.72)"); // dark contact core under belly & paws
+      grad.addColorStop(0.35, "rgba(22, 16, 12, 0.48)");
+      grad.addColorStop(0.70, "rgba(35, 25, 18, 0.16)");
+      grad.addColorStop(1.0, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(256, 230, 210, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    };
+
+    const contactShadowTex = createContactShadowTexture();
+    const contactShadowGeo = new THREE.PlaneGeometry(2.8, 1.45);
+    const contactShadowMat = new THREE.MeshBasicMaterial({
+      map: contactShadowTex,
+      transparent: true,
+      opacity: 0.82,
+      depthWrite: false,
+    });
+    const contactShadow = new THREE.Mesh(contactShadowGeo, contactShadowMat);
+    contactShadow.rotation.x = -Math.PI / 2;
+    contactShadow.position.set(0, -1.180, 0.3);
+    scene.add(contactShadow);
+
     // 4. Model Hierarchy & Bone Management
     const dogMasterGroup = new THREE.Group();
     scene.add(dogMasterGroup);
-    dogMasterGroup.position.set(0, -1.18, 0.3);
+    dogMasterGroup.position.set(0, -1.185, 0.3);
 
     const bones: Record<string, THREE.Bone> = {};
     const initialQuats: Record<string, THREE.Quaternion> = {};
@@ -163,16 +210,17 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
 
         const model = gltf.scene;
 
-        // Auto-center model and place paws onto ground shadow plane
+        // Scale FIRST so bounding box calculations and paw contact points are 100% accurate!
+        const TARGET_SCALE = 7.5;
+        model.scale.set(TARGET_SCALE, TARGET_SCALE, TARGET_SCALE);
+        model.updateMatrixWorld(true);
+
+        // Auto-center model and place paws firmly onto the ground floor plane
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         model.position.x = -center.x;
-        model.position.y = -box.min.y;
+        model.position.y = -box.min.y - 0.015; // Paw pads firmly touch floor without floating gap
         model.position.z = -center.z;
-
-        // Majestic, prominent scale showcasing crisp facial features, paws, and fur detail
-        const TARGET_SCALE = 7.5;
-        model.scale.set(TARGET_SCALE, TARGET_SCALE, TARGET_SCALE);
 
         // Enhance PBR materials: rich multi-tonal fur, specular sheen, and deep normal depth
         model.traverse((child) => {
@@ -231,18 +279,18 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
 
     // 5. Cursor Tracking & Kinematics Engine with Floor Plane Raycasting
     const raycaster = new THREE.Raycaster();
-    const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1.18);
+    const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1.185);
     const floorIntersect = new THREE.Vector3();
 
     const targetPos = {
       x: 0,
-      y: -1.18,
+      y: -1.185,
       z: 0.3,
     };
 
     const currentPos = {
       x: 0,
-      y: -1.18,
+      y: -1.185,
       z: 0.3,
       speed: 0,
       rotationY: 0,
@@ -278,17 +326,22 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       currentPos.normX = normX;
       currentPos.normY = normY;
 
-      // Responsive 3D stage position across full width & depth (left, right, forward, backward)
-      targetPos.x = THREE.MathUtils.clamp(normX * 5.8, -5.8, 5.8);
-      targetPos.z = THREE.MathUtils.clamp(0.35 - (normY * 1.05), -0.85, 1.35);
-      targetPos.y = -1.18;
+      // Dynamically calculate safe visible horizontal bounds at dog depth (z = 0.3)
+      const vHeightAtDog = 2 * (camera.position.z - 0.3) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      const vWidthAtDog = vHeightAtDog * camera.aspect;
+      const maxDogX = Math.max(2.4, (vWidthAtDog / 2) - 1.2);
+
+      // Responsive 3D stage position across full width & depth within safe visible frustum
+      targetPos.x = THREE.MathUtils.clamp(normX * maxDogX, -maxDogX, maxDogX);
+      targetPos.z = THREE.MathUtils.clamp(0.35 - (normY * 0.95), -0.85, 1.35);
+      targetPos.y = -1.185;
     };
 
     const handlePointerLeave = () => {
       isUserControlling = false;
       targetPos.x = 0;
       targetPos.z = 0.35;
-      targetPos.y = -1.18;
+      targetPos.y = -1.185;
       currentPos.normX = 0;
       currentPos.normY = 0;
     };
@@ -347,51 +400,77 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
         isUserControlling = false;
       }
 
-      // If user is idle, dog naturally roams and paces in all directions across the stage!
+      // If user is idle, dog naturally roams and paces gracefully across the stage
       if (!isUserControlling) {
-        const roamTime = currentTime * 0.0008;
-        targetPos.x = Math.sin(roamTime) * 3.8;
-        targetPos.z = 0.35 + Math.cos(roamTime * 1.7) * 0.65;
-        currentPos.normX = targetPos.x / 5.8;
+        const vHeightAtDog = 2 * (camera.position.z - 0.3) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        const vWidthAtDog = vHeightAtDog * camera.aspect;
+        const maxDogX = Math.max(2.4, (vWidthAtDog / 2) - 1.2);
+
+        const roamTime = currentTime * 0.00072; // ~20% faster leisurely pacing
+        targetPos.x = Math.sin(roamTime) * (maxDogX * 0.65);
+        targetPos.z = 0.35 + Math.cos(roamTime * 1.5) * 0.55;
+        currentPos.normX = targetPos.x / maxDogX;
       }
 
       const dx = targetPos.x - currentPos.x;
       const dz = targetPos.z - currentPos.z;
       const dist = Math.hypot(dx, dz);
 
-      // Dynamic follow rate: brisk and lively when running towards target in all directions
-      const followRate = THREE.MathUtils.lerp(5.5, 8.5, Math.min(dist / 1.5, 1.0));
-      const prevX = currentPos.x;
-      const prevZ = currentPos.z;
-      currentPos.x = THREE.MathUtils.damp(currentPos.x, targetPos.x, followRate, dt);
-      currentPos.z = THREE.MathUtils.damp(currentPos.z, targetPos.z, followRate, dt);
-      currentPos.y = -1.18;
+      // --- ELEGANT CANINE WALKING KINEMATICS (~20% FASTER & MORE RESPONSIVE) ---
+      const MAX_WALK_SPEED = 2.45; // ~22% faster natural canine walking speed
+      const ACCELERATION = 3.3;   // Snappy, responsive acceleration into walk
+      const DECELERATION = 4.2;   // Crisp deceleration into stop
+      const STOP_RADIUS = 0.10;   // Arrival threshold
+      const SLOW_RADIUS = 1.35;   // Gentle ease-down zone
 
-      // Real 3D physical ground velocity
-      const frameDist = Math.hypot(currentPos.x - prevX, currentPos.z - prevZ);
-      const instantVelocity = frameDist / (dt > 0 ? dt : 0.016);
-      currentPos.speed = THREE.MathUtils.damp(currentPos.speed, instantVelocity, 9.0, dt);
+      let desiredSpeed = 0;
+      if (dist > STOP_RADIUS) {
+        if (dist < SLOW_RADIUS) {
+          // Smooth ease-out deceleration curve near cursor
+          const t = dist / SLOW_RADIUS;
+          desiredSpeed = MAX_WALK_SPEED * (t * (2 - t));
+        } else {
+          desiredSpeed = MAX_WALK_SPEED;
+        }
+      }
 
-      // Locomotion weight (blends from 0 at idle to 1 at trot)
-      const targetWeight = THREE.MathUtils.clamp(currentPos.speed / 1.0, 0.0, 1.0);
+      // Smoothly ramp speed toward desired speed (no speed spikes or jumps)
+      if (currentPos.speed < desiredSpeed) {
+        currentPos.speed = Math.min(desiredSpeed, currentPos.speed + ACCELERATION * dt);
+      } else {
+        currentPos.speed = Math.max(desiredSpeed, currentPos.speed - DECELERATION * dt);
+      }
+
+      // Integrate position at steady walking pace
+      if (currentPos.speed > 0.01 && dist > 0.02) {
+        const moveDist = Math.min(currentPos.speed * dt, dist);
+        const dirX = dx / dist;
+        const dirZ = dz / dist;
+        currentPos.x += dirX * moveDist;
+        currentPos.z += dirZ * moveDist;
+      }
+      currentPos.y = -1.185;
+
+      // Locomotion weight (blends from 0 at idle to 1 at full walk)
+      const targetWeight = THREE.MathUtils.clamp(currentPos.speed / (MAX_WALK_SPEED * 0.75), 0.0, 1.0);
       currentPos.locomotionWeight = THREE.MathUtils.damp(
         currentPos.locomotionWeight,
         targetWeight,
-        8.0,
+        7.5,
         dt
       );
       const lw = currentPos.locomotionWeight;
 
-      // Smooth 3D Heading & Body Turning in direction of motion (All sides without snapping):
+      // Smooth 3D Heading & Body Turning in direction of motion (natural dog turn without snapping)
       let targetHeading = currentPos.rotationY;
-      if (dist > 0.28 && currentPos.speed > 0.12) {
+      if (dist > 0.20 && currentPos.speed > 0.08) {
         const moveAngle = Math.atan2(dx, dz);
         let diff = moveAngle - currentPos.rotationY;
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
         targetHeading = currentPos.rotationY + diff;
       } else {
-        const idleAngle = THREE.MathUtils.clamp(currentPos.normX * 0.35, -0.42, 0.42);
+        const idleAngle = THREE.MathUtils.clamp(currentPos.normX * 0.28, -0.36, 0.36);
         let diff = idleAngle - currentPos.rotationY;
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
@@ -401,32 +480,32 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       currentPos.rotationY = THREE.MathUtils.damp(
         currentPos.rotationY,
         targetHeading,
-        5.5,
+        6.2, // Faster, responsive body turns
         dt
       );
 
       // Subtle banking roll into turns
       const moveSign = dx > 0 ? 1 : -1;
-      const targetBank = -moveSign * 0.07 * lw;
-      currentPos.rotationZ = THREE.MathUtils.damp(currentPos.rotationZ, targetBank, 6.0, dt);
+      const targetBank = -moveSign * 0.05 * lw;
+      currentPos.rotationZ = THREE.MathUtils.damp(currentPos.rotationZ, targetBank, 5.5, dt);
       currentPos.turnYaw = THREE.MathUtils.damp(
         currentPos.turnYaw,
-        (targetHeading - currentPos.rotationY) * 0.3,
-        6.0,
+        (targetHeading - currentPos.rotationY) * 0.25,
+        5.5,
         dt
       );
 
-      // --- 1. VELOCITY-MATCHED STRIDE ---
-      if (currentPos.speed > 0.12) {
-        currentPos.trotPhase += Math.max(currentPos.speed, 1.4) * 4.4 * dt;
+      // --- 1. VELOCITY-MATCHED STRIDE CADENCE (~20% FASTER STEPS TO MATCH SPEED) ---
+      if (currentPos.speed > 0.04) {
+        currentPos.trotPhase += (currentPos.speed * 2.16 + 1.44) * 2.2 * dt;
       }
-      currentPos.wagPhase += dt * 5.0;
-      currentPos.breathPhase += dt * 2.5;
+      currentPos.wagPhase += dt * 5.0; // ~20% faster happy tail wag
+      currentPos.breathPhase += dt * 2.6; // ~18% livelier breathing
 
       const p = currentPos.trotPhase;
-      const legSwing = 0.52 * lw;
-      const kneeBend = 0.65 * lw;
-      const ankleBend = 0.28 * lw;
+      const legSwing = 0.44 * lw;
+      const kneeBend = 0.54 * lw;
+      const ankleBend = 0.22 * lw;
 
       // --- REAL QUADRUPED DIAGONAL TROT LOCOMOTION ---
       // 1. Diagonal A: Front-Left & Rear-Right
@@ -546,9 +625,9 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
         0.12
       );
 
-      // Butter-smooth damping so head & face movements are ultra-fluid and natural
-      currentPos.lookYaw = THREE.MathUtils.damp(currentPos.lookYaw, targetLookYaw, 6.0, dt);
-      currentPos.lookPitch = THREE.MathUtils.damp(currentPos.lookPitch, targetLookPitch, 6.0, dt);
+      // Butter-smooth damping so head & face movements are ultra-fluid and responsive
+      currentPos.lookYaw = THREE.MathUtils.damp(currentPos.lookYaw, targetLookYaw, 7.8, dt);
+      currentPos.lookPitch = THREE.MathUtils.damp(currentPos.lookPitch, targetLookPitch, 7.8, dt);
 
       const headBob = Math.cos(p * 2) * 0.03 * lw;
 
@@ -569,6 +648,11 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
       dogMasterGroup.position.set(currentPos.x, currentPos.y, currentPos.z);
       dogMasterGroup.rotation.y = currentPos.rotationY;
       dogMasterGroup.rotation.z = currentPos.rotationZ;
+
+      // Real-time Ambient Contact Shadow directly hugging floor beneath paws and body
+      contactShadow.position.x = currentPos.x;
+      contactShadow.position.z = currentPos.z;
+      contactShadow.rotation.z = currentPos.rotationY;
 
       renderer.render(scene, camera);
     };
@@ -602,13 +686,15 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
     );
     intersectionObserver.observe(container);
 
-    // 7. Responsive Resize Observer
+    // 7. Robust Responsive Resize Engine (ResizeObserver + Window Resize Listener)
     const handleResize = () => {
       if (!container) return;
       const newW = container.clientWidth;
       const newH = container.clientHeight;
+      if (newW === 0 || newH === 0) return;
       camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(newW, newH);
       updateTextPlaneSize(newW, newH);
       if (isVisible) {
@@ -618,12 +704,14 @@ export const Footer3DDog: React.FC<Footer3DDogProps> = ({
 
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
       isDisposed = true;
       stopRenderLoop();
       intersectionObserver.disconnect();
       resizeObserver.disconnect();
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("mouseleave", handlePointerLeave);
       window.removeEventListener("blur", handlePointerLeave);

@@ -92,10 +92,10 @@
   transition: opacity 0.6s var(--cube-ease), transform 0.6s var(--cube-ease);
 }
 
-.cube-scene.cube-hidden {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: scale(0.9) !important;
+/* When a video option is hovered: keep cube visible, but stop rotation (freeze static in place) */
+.cube-scene.cube-paused .cube-main.rubik-cube,
+.cube-main.rubik-cube.cube-static {
+  animation-play-state: paused !important;
 }
 
 /* THE 3D RUBIK'S CUBE WITH ISOMETRIC 3D ROTATION */

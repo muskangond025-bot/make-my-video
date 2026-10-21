@@ -550,11 +550,11 @@ a {
 }
 
 .expertise-front {
-  border: 1.5px solid rgba(117, 103, 238, 0.3) !important;
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  box-shadow: 0 20px 40px -15px rgba(20, 20, 22, 0.08), 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  border: 1.5px solid rgba(117, 103, 238, 0.35) !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 20px 40px -15px rgba(20, 20, 22, 0.35), 0 0 1px rgba(0, 0, 0, 0.2) !important;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
   padding: 26px 20px 20px 20px !important;
   border-radius: 28px !important;
@@ -569,16 +569,16 @@ a {
 
 .expertise-front:hover {
   border-color: #D5FF3F !important;
-  box-shadow: 0 24px 50px -10px rgba(117, 103, 238, 0.25), 0 0 24px rgba(213, 255, 63, 0.35) !important;
+  box-shadow: 0 24px 50px -10px rgba(117, 103, 238, 0.4), 0 0 24px rgba(213, 255, 63, 0.35) !important;
 }
 
 .expertise-front.is--1,
 .expertise-front.is--2,
 .expertise-front.is--3 {
-  background-color: rgba(255, 255, 255, 0.8) !important;
+  background-color: transparent !important;
 }
 
-/* 1. Image covers the entire card completely */
+/* 1. Image covers the entire card completely and crystal clear */
 .expertise-card .expertise-image-wrapper {
   position: absolute !important;
   inset: 0 !important;
@@ -601,20 +601,10 @@ a {
   display: block !important;
 }
 
-/* Gradient scrim so illustration covers card while text stays 100% visible on light cream theme */
+/* White snow effect completely removed for crystal clear card view */
 .expertise-card .expertise-image-wrapper::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background: linear-gradient(
-    180deg,
-    rgba(234, 227, 219, 0.96) 0%,
-    rgba(234, 227, 219, 0.82) 32%,
-    rgba(234, 227, 219, 0.15) 62%,
-    rgba(234, 227, 219, 0.72) 100%
-  ) !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
+  display: none !important;
+  content: none !important;
 }
 
 /* 2. Text layout & crisp visibility on top of full-card image */
@@ -654,9 +644,9 @@ a {
   font-weight: 700 !important;
   line-height: 1.25 !important;
   letter-spacing: 0.03em !important;
-  color: #141416 !important;
+  color: #FFFFFF !important;
   text-transform: uppercase !important;
-  text-shadow: none !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.8) !important;
   white-space: normal !important;
   word-break: normal !important;
   margin: 0 !important;
@@ -665,9 +655,9 @@ a {
 .expertise-card p {
   font-size: 11.5px !important;
   line-height: 1.5 !important;
-  color: #4A4658 !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   text-align: center !important;
-  text-shadow: none !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.8) !important;
   margin: 0 !important;
   padding: 0 6px !important;
 }

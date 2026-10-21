@@ -231,9 +231,9 @@ export const CubeShowcase: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Realistic 3x3 White Chassis Rubik's Cube Scene */}
-      <div className={`cube-scene ${hoveredProject ? "cube-hidden" : ""}`}>
-        <div id="mainCube" className="cube-main rubik-cube">
+      {/* 4. Realistic 3x3 White Chassis Rubik's Cube Scene (Static in place on hover) */}
+      <div className={`cube-scene ${hoveredProject ? "cube-paused" : ""}`}>
+        <div id="mainCube" className={`cube-main rubik-cube ${hoveredProject ? "cube-static" : ""}`}>
           {ALL_FACES.map((face) => (
             <div
               key={face.key}

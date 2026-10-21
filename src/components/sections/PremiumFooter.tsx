@@ -24,11 +24,9 @@ export const PremiumFooter = () => {
       id="contact"
       className="w-full min-w-full relative bg-[#EAE3DB] bg-dots-pattern text-zinc-900 overflow-hidden select-none font-sans pt-0 pb-0 border-t border-black/10"
     >
-      <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
-        {/* Real 3D Golden Retriever Centerpiece with Integrated Top-Left Logo and Right Directory */}
-        <div className="w-screen relative left-1/2 -translate-x-1/2 flex justify-center items-center overflow-hidden">
-          <Footer3DDog onJoinUs={() => setIsModalOpen(true)} />
-        </div>
+      {/* Full-width 3D Golden Retriever Centerpiece (responsive across all resolutions) */}
+      <div className="w-full relative flex justify-center items-center overflow-hidden">
+        <Footer3DDog onJoinUs={() => setIsModalOpen(true)} />
       </div>
 
       {/* 5. Contact / Booking Modal Form */}

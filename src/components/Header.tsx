@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
@@ -14,15 +16,18 @@ interface NavItem {
 
 const MENU_ITEMS: NavItem[] = [
   { num: "01", name: "Home", href: "/" },
-  { num: "02", name: "About", href: "/#about" },
-  { num: "03", name: "Projects", href: "/#projects" },
-  { num: "04", name: "Services", href: "/#expertise" },
-  { num: "05", name: "Join Us", href: "/#contact" },
-  { num: "06", name: "Blog", href: "/#archive" },
-  { num: "07", name: "Contact", href: "/#contact" },
+  { num: "02", name: "About", href: "/about" },
+  { num: "03", name: "Projects", href: "/projects" },
+  { num: "04", name: "Services", href: "/services" },
+  { num: "05", name: "Join Us", href: "/join-us" },
+  { num: "06", name: "Blog", href: "/blogs" },
+  { num: "07", name: "Support", href: "/support" },
 ];
 
 export const Header = () => {
+  const pathname = usePathname();
+  const isAboutActive = pathname === "/about" || pathname === "/about-us";
+
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -278,7 +283,7 @@ export const Header = () => {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 py-3.5 sm:py-4 flex items-center justify-between">
           
           {/* Brand Logo */}
-          <a
+          <Link
             href="/"
             onClick={() => setIsOpen(false)}
             className="relative z-50 flex items-center transition-all duration-300 hover:opacity-80 group cursor-pointer"
@@ -289,7 +294,7 @@ export const Header = () => {
               alt="Make My Vid Logo"
               className="h-7 sm:h-8 w-auto object-contain transition-all duration-300"
             />
-          </a>
+          </Link>
 
           {/* Right Header Navigation Controls */}
           <div className="relative z-50 flex items-center gap-2 sm:gap-3 md:gap-4">
@@ -332,6 +337,7 @@ export const Header = () => {
       {/* ========================================================= */}
       <div
         ref={menuWrapRef}
+        suppressHydrationWarning
         className="fixed inset-0 z-40 overflow-hidden select-none"
         style={{ visibility: "hidden" }}
       >
@@ -363,15 +369,16 @@ export const Header = () => {
           {/* Middle Main Grid: Primary Links & Info Columns */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center my-auto py-3 sm:py-5">
             
-            {/* Primary Numbered Hero Links (7 Items: Home, About, Projects, Services, Join Us, Blog, Contact) */}
-            <nav className="lg:col-span-7 flex flex-col gap-2.5 sm:gap-3 md:gap-3.5">
+            {/* Primary Numbered Hero Links (7 Items: Home, About, Projects, Services, Join Us, Blog, Support) */}
+            <nav suppressHydrationWarning className="lg:col-span-7 flex flex-col gap-2.5 sm:gap-3 md:gap-3.5">
               {MENU_ITEMS.map((item, idx) => (
-                <div key={item.name} className="overflow-hidden py-0.5">
+                <div key={item.num} className="overflow-hidden py-0.5">
                   <a
                     ref={(el) => {
                       linksRef.current[idx] = el;
                     }}
                     href={item.href}
+                    suppressHydrationWarning
                     onClick={(e) => {
                       if (!item.isExternal) {
                         e.preventDefault();
@@ -425,20 +432,20 @@ export const Header = () => {
 
                 {/* Email */}
                 <a
-                  href="mailto:hello@makemyvid.com"
+                  href="mailto:info@makemyvid.io"
                   className="text-base sm:text-lg font-bold text-black hover:text-[#1D4ED8] w-fit cursor-pointer transition-colors duration-200"
                   style={{ color: "#000000" }}
                 >
-                  hello@makemyvid.com
+                  info@makemyvid.io
                 </a>
 
                 {/* Phone */}
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+917977484292"
                   className="text-base sm:text-lg font-bold text-black hover:text-[#1D4ED8] w-fit cursor-pointer transition-colors duration-200"
                   style={{ color: "#000000" }}
                 >
-                  +91 (0) 98765 43210
+                  +91 79774 84292
                 </a>
               </div>
 

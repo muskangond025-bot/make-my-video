@@ -8,6 +8,10 @@ export interface BlogPost {
   readTime: string;
   image: string;
   isFeatured?: boolean;
+  author?: string;
+  authorRole?: string;
+  keyTakeaways?: string[];
+  content?: string[];
 }
 
 export const BLOGS_DATA: BlogPost[] = [
@@ -21,6 +25,18 @@ export const BLOGS_DATA: BlogPost[] = [
     readTime: "4 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/compress.jpg",
     isFeatured: true,
+    author: "Rohan Joshi",
+    authorRole: "Founder & Executive Producer, Make My Vid",
+    keyTakeaways: [
+      "Viewers retain 95% of a message when they watch it in a video, compared to 10% when reading in text.",
+      "High-production commercial films bridge consumer skepticism significantly faster than traditional ad copy.",
+      "Omni-channel video distribution across 9:16 reels, 16:9 hero landing pages, and square ads maximizes media spend ROI.",
+    ],
+    content: [
+      "In an era where attention is the world's most fiercely contested currency, video content has emerged as the definitive medium for modern brand transformation. Consumers no longer simply evaluate product feature lists; they look for narrative depth, craft, and emotional authenticity before investing their trust.",
+      "At Make My Vid, we've witnessed how a single intentional commercial video—whether an investor pitch AV, a cinematic product film, or an authentic founder documentary—can shift market perception overnight. Video activates multiple cognitive faculties simultaneously: auditory pacing, visual framing, color harmony, and human emotion.",
+      "To succeed in this visual-first landscape, brands must stop thinking of video as a one-off promotional asset and start treating it as the primary operating system for customer acquisition, brand loyalty, and executive communication.",
+    ],
   },
   {
     id: "blog-2",
@@ -32,6 +48,18 @@ export const BLOGS_DATA: BlogPost[] = [
     readTime: "5 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/blog%202%20editing%20(1)%20(1).jpg",
     isFeatured: true,
+    author: "Rohan Joshi",
+    authorRole: "Founder & Creative Director",
+    keyTakeaways: [
+      "Decentralized cloud editing allows 24-hour turnaround cycles across time zones without quality loss.",
+      "Unified ACES color management and synchronized proxies ensure broadcast fidelity worldwide.",
+      "Streamlined review portals eliminate lengthy email threads and speed up stakeholder sign-offs.",
+    ],
+    content: [
+      "The days of shipping physical hard drives across continents or requiring creative directors to sit in physical edit suites are officially behind us. High-speed fiber networks, Frame.io cloud integrations, and robust proxy workflows have permanently unlocked decentralized post-production.",
+      "Our team at Make My Vid operates across global time zones. While a client's team in New York or London concludes their business day, our senior post-production team in Mumbai is already cutting the assembly, fine-tuning sound design, and applying color grades.",
+      "By democratizing access to top-tier editing talent regardless of geography, brands can maintain rigorous cinematic quality while cutting their production schedules by more than half.",
+    ],
   },
   {
     id: "blog-3",
@@ -42,6 +70,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "12 Feb 2025",
     readTime: "4 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/editing%20workspace.%20(1)%20(1).jpg",
+    author: "Editorial Team",
+    authorRole: "Make My Vid Studio",
+    keyTakeaways: [
+      "Hook the audience within the first 1.8 seconds using kinetic visual rhythm and high contrast.",
+      "Repurpose core 16:9 hero videos into 6+ micro-assets for LinkedIn, Instagram Reels, and YouTube Shorts.",
+      "Focus on retention graphs and mid-video watch duration over vanity impression metrics.",
+    ],
+    content: [
+      "Modern digital algorithms favor one primary signal above all else: dwell time. When viewers stop scrolling and watch your content through to completion, platforms reward your brand with exponential organic reach.",
+      "Our approach centers on establishing an irresistible visual hook within the opening seconds, followed by rhythm-driven pacing that prevents viewer fatigue. Sound design is treated with equal importance as visual fidelity.",
+      "Whether it's an educational breakdown, a product release teaser, or a customer testimonial, crafting content with tailored aspect ratios and crisp kinetic captions guarantees consistent digital momentum.",
+    ],
   },
   {
     id: "blog-4",
@@ -52,6 +92,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "12 Feb 2025",
     readTime: "6 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/cine%20vs%20video%20(1)%20(1).jpg",
+    author: "Rohan Joshi",
+    authorRole: "Executive Producer",
+    keyTakeaways: [
+      "Videography captures events as they unfold; cinematography controls light, mood, and narrative deliberately.",
+      "Cinematography uses deliberate lens optics, depth of field, and color palettes to evoke specific emotional states.",
+      "Understanding which approach fits your budget and timeline prevents costly production misalignments.",
+    ],
+    content: [
+      "While the terms are often used interchangeably in commercial marketing, cinematography and videography represent fundamentally distinct philosophies of capturing moving images.",
+      "Videography is documentation-first. It relies on agility, run-and-gun versatility, and capturing genuine unrepeatable moments during live events, summits, or ceremonies.",
+      "Cinematography, by contrast, is world-building. Every shadow is sculpted with intentional lighting ratios; every lens millimeter is chosen for perspective compression; every camera movement has narrative purpose.",
+    ],
   },
   {
     id: "blog-5",
@@ -62,6 +114,19 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "14 Feb 2025",
     readTime: "7 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/DALL%C2%B7E%202025-02-14%2016.28.18%20-%20A%20professional%20video%20production%20setup%20in%20a%20studio,%20with%20a%20cinematographer%20using%20a%20high-end%20camera%20on%20a%20stabilizer.%20The%20studio%20has%20well-placed%20lighting%20(1).jpg",
+    isFeatured: true,
+    author: "Rohan Joshi",
+    authorRole: "Director of Photography & Founder",
+    keyTakeaways: [
+      "Master contrast ratios: lighting the upstage side of the actor creates immediate cinematic depth.",
+      "Combine motorized gimbal stabilizers with slow push-in dollies for refined emotional emphasis.",
+      "Sound design accounts for 50% of perceived cinematic production value.",
+    ],
+    content: [
+      "Achieving that coveted 'cinematic look' isn't just about owning an expensive RED or ARRI cinema camera. It is about understanding the delicate dance between light, shadow, texture, and movement.",
+      "In commercial video production, lighting the upstage (shadow) side of the subject instantly separates your imagery from amateur corporate videos. Introducing soft atmospheric haze and controlling background luminance creates three-dimensional separation.",
+      "Furthermore, precision camera movement—such as slow parallax push-ins or gentle orbit tracking—draws viewers deep into the narrative without feeling artificial or distracted.",
+    ],
   },
   {
     id: "blog-6",
@@ -73,6 +138,18 @@ export const BLOGS_DATA: BlogPost[] = [
     readTime: "5 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/wedding%20blog%20img%20(1).jpg",
     isFeatured: true,
+    author: "Editorial Team",
+    authorRole: "Make My Vid Production Team",
+    keyTakeaways: [
+      "Always inspect full raw edits and multicam deliverables rather than just short 30-second highlight reels.",
+      "Verify backup gear redundancy: dual memory card slots, auxiliary audio recorders, and spare camera bodies.",
+      "Ensure clear contractual turnaround times for teasers, full films, and archival footage.",
+    ],
+    content: [
+      "When planning once-in-a-lifetime summits, national expos, or milestone ceremonies, you only have one opportunity to capture the moment. Retakes do not exist in live environments.",
+      "When evaluating production partners, look beyond flashy highlight reels. Ask to see full event recordings to evaluate their ability to capture clean audio in challenging acoustic spaces and maintain consistent color across multiple cameras.",
+      "A seasoned production house brings contingency plans for everything: redundant wireless microphones, multi-battery charging banks, and on-site media offloading with checksum verification.",
+    ],
   },
   {
     id: "blog-7",
@@ -83,6 +160,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "17 Feb 2025",
     readTime: "5 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/capturing%20a%20corporate%20event.%20(1).jpg",
+    author: "Rohan Joshi",
+    authorRole: "Executive Producer",
+    keyTakeaways: [
+      "Multi-angle setups ensure keynotes, panel discussions, and audience reactions are recorded simultaneously.",
+      "Direct XLR audio feeds from the venue sound console prevent echo and room resonance in recordings.",
+      "Same-day social sizzle reels amplify company press coverage while the event is trending.",
+    ],
+    content: [
+      "Corporate conventions and enterprise summits are major capital investments. Capturing the intellectual property, executive keynotes, and partnership announcements properly ensures that value compounds long after attendees return home.",
+      "Look for teams that specialize in corporate environments: professionals who understand stage lighting conditions, respect executive scheduling constraints, and dress appropriately for high-level summits.",
+      "Make My Vid has delivered comprehensive AV coverage for industry leaders like BPCL at India Energy Week and Aditya Birla Group, delivering multi-feed recordings and instant executive soundbites for media dissemination.",
+    ],
   },
   {
     id: "blog-8",
@@ -93,6 +182,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "17 Feb 2025",
     readTime: "4 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/drone%20vid%20(1).jpg",
+    author: "Editorial Team",
+    authorRole: "Make My Vid Drone Unit",
+    keyTakeaways: [
+      "Aerial shots provide instant scale and geographical perspective for manufacturing plants and real estate.",
+      "Licensed and insured UAV pilots ensure regulatory compliance in crowded airspace zones.",
+      "FPV drones provide dynamic indoor fly-throughs that traditional camera cranes cannot match.",
+    ],
+    content: [
+      "Aerial perspectives establish immediate authority. Whether showcasing a 100-acre manufacturing plant, an expansive solar installation, or an outdoor brand festival, drone videography communicates scale in a way ground-level cameras simply cannot.",
+      "Recent advances in lightweight cinema drones and FPV (First Person View) technology have unlocked fluid, continuous indoor fly-throughs, taking viewers seamlessly from outdoor facades through office corridors and onto factory floors.",
+      "Compliance and safety remain paramount. Always partner with licensed UAV operators who carry comprehensive insurance and adhere to local airspace flight restrictions.",
+    ],
   },
   {
     id: "blog-9",
@@ -103,6 +204,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "18 Feb 2025",
     readTime: "4 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/portrait%20photography%20(1).jpg",
+    author: "Rohan Joshi",
+    authorRole: "Creative Director",
+    keyTakeaways: [
+      "Professional portraits build immediate credibility on LinkedIn, press features, and investor decks.",
+      "Lighting should flatter natural facial contours while reflecting the executive's industry persona.",
+      "Environmental portraits in real workspaces convey more authenticity than generic studio backdrops.",
+    ],
+    content: [
+      "In digital commerce, your portrait is frequently your first handshake. Before an investor reads your pitch deck or a prospective client signs a contract, they evaluate the human being leading the company.",
+      "Stiff, over-retouched studio headshots from decades past are being replaced by dynamic environmental portraits. Photographing founders and executives in their actual creative environments conveys approachability, confidence, and authenticity.",
+      "A tailored corporate portrait session establishes consistent visual branding across company websites, media press kits, and keynote speaking announcements.",
+    ],
   },
   {
     id: "blog-10",
@@ -113,6 +226,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "18 Feb 2025",
     readTime: "5 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/event%20photography%20(1).jpg",
+    author: "Editorial Team",
+    authorRole: "Studio Photography Lead",
+    keyTakeaways: [
+      "Fast prime lenses (f/1.4 - f/2.8) excel in low-light banquet halls without distracting flash bursts.",
+      "Anticipate key moments: handshake exchanges, award presentations, and candid networking laughter.",
+      "Deliver a curated press-ready selection within 24 hours for instant PR distribution.",
+    ],
+    content: [
+      "Event photography requires constant situational awareness. Photographers must remain invisible while anticipating decisive moments before they unfold.",
+      "Using fast prime lenses allows photographers to capture intimate candids and speaker presentations in dimly lit ballrooms without blasting distracting flash into guests' eyes.",
+      "Delivering a curated gallery of high-resolution, color-balanced images enables your marketing team to capitalize on event momentum across social media and trade publications immediately.",
+    ],
   },
   {
     id: "blog-11",
@@ -123,6 +248,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "19 Feb 2025",
     readTime: "6 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/live%20streaming%20(1)%20(1).jpg",
+    author: "Rohan Joshi",
+    authorRole: "Executive Producer",
+    keyTakeaways: [
+      "Bonded cellular internet connections prevent stream drops during high-density venue congestion.",
+      "Custom branded lower-thirds, sponsor bumpers, and multi-camera switching mimic network television.",
+      "Instant cloud clipping allows your marketing team to tweet soundbites seconds after they are uttered on stage.",
+    ],
+    content: [
+      "Relying on a single mobile phone or basic web camera for high-stakes product launches or corporate summits introduces massive brand risk. A buffering stream or muffled microphone destroys viewer engagement instantly.",
+      "Professional live streaming transforms physical events into broadcast-caliber television experiences. Multiple cinema cameras capture wide stage shots, speaker close-ups, and audience reactions seamlessly.",
+      "With redundant cellular bonding and backup RTMP servers, you ensure uninterrupted delivery to thousands of global remote attendees across YouTube, LinkedIn Live, and private company portals.",
+    ],
   },
   {
     id: "blog-12",
@@ -133,6 +270,18 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "19 Feb 2025",
     readTime: "5 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/future%20of%20live%20event%20(1)%20(1).jpg",
+    author: "Editorial Team",
+    authorRole: "Make My Vid Broadcast Division",
+    keyTakeaways: [
+      "Hybrid events offer 3x the total reach of purely in-person conferences at fractional incremental cost.",
+      "Interactive Q&A polling and digital breakout rooms sustain remote attendee retention.",
+      "Archived on-demand sessions continue generating leads and brand awareness for months.",
+    ],
+    content: [
+      "The modern conference is no longer bounded by four walls. Virtual and hybrid event models allow organizations to assemble international thought leaders without prohibitive travel expenses or carbon footprints.",
+      "The key to successful hybrid experiences lies in treating remote viewers as first-class participants rather than passive observers. Dedicated digital hosts, real-time live polling, and virtual Q&A integrations foster genuine community connection.",
+      "Furthermore, every recorded session becomes evergreen marketing material, fueling podcasts, blog articles, and micro-video campaigns for months following the event.",
+    ],
   },
   {
     id: "blog-13",
@@ -143,5 +292,17 @@ export const BLOGS_DATA: BlogPost[] = [
     date: "24 Feb 2025",
     readTime: "5 min read",
     image: "https://storage.googleapis.com/mkv_imagesbackend/blogs/Video%20editing%20blog%20(1).jpg",
+    author: "Rohan Joshi",
+    authorRole: "Founder & Creative Director",
+    keyTakeaways: [
+      "Pitch films need to articulate the market problem, proprietary solution, and traction within 120 seconds.",
+      "Slick motion graphics and 3D data visualization make complex financial metrics digestible.",
+      "Dynamic sound mixing with custom score composition builds immense emotional conviction for investors.",
+    ],
+    content: [
+      "When presenting to venture capital firms, angel syndicates, or Shark Tank investors, you have mere minutes to prove that your company is a viable investment opportunity.",
+      "Our work producing the pitch video for Wol3D on Shark Tank India demonstrated the profound leverage of cinematic editing: distilling years of R&D into a punchy, emotionally resonant video that captivated the sharks.",
+      "Professional post-production eliminates verbal pauses, enhances pacing, incorporates clean graphical callouts, and masters audio to cinema standards—ensuring your pitch leaves an indelible mark on investors.",
+    ],
   },
 ];

@@ -23,13 +23,9 @@ const CATEGORIES = [
   "Employee Video",
 ];
 
-const ITEMS_PER_PAGE = 4;
-
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [viewAll, setViewAll] = useState<boolean>(false);
 
   // Filter projects by category and search
   const filteredProjects = useMemo(() => {
@@ -47,18 +43,6 @@ export default function ProjectsPage() {
     });
   }, [searchQuery, selectedCategory]);
 
-  // Handle pagination
-  const isFiltering = searchQuery.trim().length > 0 || selectedCategory !== "All";
-  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
-
-  const displayedProjects = useMemo(() => {
-    if (isFiltering || viewAll) {
-      return filteredProjects;
-    }
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProjects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredProjects, currentPage, isFiltering, viewAll]);
-
   return (
     <main className="bg-[#EAE3DB] text-[#141416] min-h-screen font-sans selection:bg-[#7567EE] selection:text-white relative">
       {/* Background Ornament SVGs */}
@@ -72,74 +56,29 @@ export default function ProjectsPage() {
       <Header />
 
       <div className="flex flex-col relative w-full z-10">
-        {/* Hero Section with Search & Categories */}
+        {/* Section 1: Editorial Premium Banner with Integrated Filters */}
         <ProjectsHero
           searchQuery={searchQuery}
-          onSearchChange={(q) => {
-            setSearchQuery(q);
-            setCurrentPage(1);
-          }}
+          onSearchChange={(q) => setSearchQuery(q)}
           categories={CATEGORIES}
           selectedCategory={selectedCategory}
-          onSelectCategory={(cat) => {
-            setSelectedCategory(cat);
-            setCurrentPage(1);
-          }}
+          onSelectCategory={(cat) => setSelectedCategory(cat)}
           totalProjects={filteredProjects.length}
         />
 
-        {/* Projects Showcase */}
-        <ProjectsShowcase projects={displayedProjects} />
+        {/* Section 2: Netgíró Stacked Card Scroll Animation Showcase */}
+        <ProjectsShowcase projects={filteredProjects} />
 
-        {/* Pagination Controls when not filtering */}
-        {!isFiltering && totalPages > 1 && (
-          <div className="max-w-[1360px] mx-auto px-4 pb-16 flex flex-wrap items-center justify-center gap-3">
-            {[...Array(totalPages)].map((_, i) => {
-              const pageNum = i + 1;
-              const isActive = !viewAll && currentPage === pageNum;
-
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => {
-                    setViewAll(false);
-                    setCurrentPage(pageNum);
-                    window.scrollTo({ top: 400, behavior: "smooth" });
-                  }}
-                  className={`w-11 h-11 rounded-full text-sm font-heading font-bold transition-all ${
-                    isActive
-                      ? "bg-[#141416] text-white shadow-md"
-                      : "bg-white/50 hover:bg-white text-[#141416] border border-[#141416]/10"
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => setViewAll(!viewAll)}
-              className={`px-5 h-11 rounded-full text-xs font-sans font-semibold tracking-wide transition-all ${
-                viewAll
-                  ? "bg-[#141416] text-white shadow-md"
-                  : "bg-white/50 hover:bg-white text-[#141416] border border-[#141416]/10"
-              }`}
-            >
-              {viewAll ? "Paginate" : "View All"}
-            </button>
-          </div>
-        )}
-
-        {/* Client Testimonials */}
+        {/* Section 3: Awwwards-Grade Client Testimonials */}
         <ProjectsTestimonials />
 
-        {/* FAQs */}
+        {/* Section 4: Awwwards-Grade Projects FAQ */}
         <ProjectsFaq />
 
-        {/* Global CTA Section */}
+        {/* Section 5: Signature CTA Section */}
         <CtaSection />
 
-        {/* Footer */}
+        {/* Section 6: Premium Footer */}
         <PremiumFooter />
       </div>
     </main>

@@ -1165,3 +1165,12 @@ canvas {
 .cube-marquee-track {
   will-change: transform;
 }
+
+@keyframes expandProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}

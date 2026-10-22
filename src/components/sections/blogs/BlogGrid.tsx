@@ -2,16 +2,18 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight, Calendar, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, Calendar, ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
+import { gsap } from "@/lib/gsap";
 import { BlogPost } from "@/data/blogsData";
 
 interface BlogGridProps {
   posts: BlogPost[];
+  onSelectArticle?: (post: BlogPost) => void;
 }
 
-export const BlogGrid: React.FC<BlogGridProps> = ({ posts }) => {
+export const BlogGrid: React.FC<BlogGridProps> = ({ posts, onSelectArticle }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"grid" | "ledger">("grid");
   const postsPerPage = 6;
 
   const totalPages = Math.ceil(posts.length / postsPerPage) || 1;
@@ -20,116 +22,234 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts }) => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 400, behavior: "smooth" });
+    const gridEl = document.getElementById("publications-archive");
+    if (gridEl) {
+      gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  // 3D perspective mouse hover for individual grid cards (matching <Expertise> and <AboutMissionVision>)
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    const rotateX = -(y / rect.height) * 6;
+    const rotateY = (x / rect.width) * 6;
+
+    gsap.to(e.currentTarget, {
+      rotateX,
+      rotateY,
+      scale: 1.015,
+      duration: 0.25,
+      ease: "power1.out",
+      overwrite: "auto",
+      transformPerspective: 1000,
+    });
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    gsap.to(e.currentTarget, {
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      duration: 0.35,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  };
+
+  const handleCardClick = (post: BlogPost) => {
+    if (onSelectArticle) {
+      onSelectArticle(post);
+    }
   };
 
   return (
-    <section className="relative w-full py-24 md:py-32 px-6 lg:px-16 bg-[#EAE3DB] text-[#141416] border-b border-[#141416]/10 select-none">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-[#7567EE]" />
-              <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#4A4658]">
-                All Publications
-              </span>
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-heading font-black uppercase text-[#141416] tracking-tight">
-              LATEST <span className="text-[#7567EE]">ARTICLES</span>
+    <section
+      id="publications-archive"
+      className="relative w-full py-20 md:py-28 px-4 sm:px-6 lg:px-12 bg-[#EAE3DB] text-[#141416] border-b border-[#141416]/10 select-none overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* ========================================================================= */}
+        {/* SECTION HEADING: Single Line, Left-Aligned (per UI_RULES item 27-31)      */}
+        {/* ========================================================================= */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
+          <div className="text-left max-w-3xl">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
+              CURATED <span className="text-[#7567EE]">PUBLICATIONS.</span>
             </h2>
+            <p className="text-base sm:text-lg text-[#4A4658] font-normal text-left">
+              Browse our complete archive of production breakdowns, editing workflows, and executive media strategies.
+            </p>
           </div>
 
-          <div className="text-xs font-mono text-[#4A4658] uppercase">
-            Showing {currentPosts.length} of {posts.length} articles
+          {/* Controls Bar: View Mode Switcher with Black Icons */}
+          <div className="flex items-center gap-3 self-start lg:self-end">
+
+            {/* View Mode Toggle - Both icons explicitly in Black Color */}
+            <div className="flex items-center bg-white rounded-full p-1 border border-[#141416]/10 shadow-sm">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-2 rounded-full transition-all cursor-pointer ${
+                  viewMode === "grid"
+                    ? "bg-[#D5FF3F] shadow-sm"
+                    : "hover:bg-black/5"
+                }`}
+                title="Bento Grid View"
+                aria-label="Grid view"
+              >
+                <LayoutGrid className="w-4 h-4 text-[#141416]" />
+              </button>
+              <button
+                onClick={() => setViewMode("ledger")}
+                className={`p-2 rounded-full transition-all cursor-pointer ${
+                  viewMode === "ledger"
+                    ? "bg-[#D5FF3F] shadow-sm"
+                    : "hover:bg-black/5"
+                }`}
+                title="Editorial Ledger View"
+                aria-label="List view"
+              >
+                <List className="w-4 h-4 text-[#141416]" />
+              </button>
+            </div>
           </div>
         </div>
 
+        {/* Empty State */}
         {posts.length === 0 ? (
-          <div className="py-20 text-center bg-white rounded-3xl border border-[#141416]/10 p-12">
-            <h3 className="text-xl font-bold uppercase text-[#141416] mb-2">
-              No matching articles found
+          <div className="py-24 text-center bg-white/80 backdrop-blur-md rounded-[32px] border border-[#141416]/10 p-12 shadow-sm">
+            <h3 className="text-2xl font-heading font-black uppercase text-[#141416] mb-3">
+              No Matching Publications Found
             </h3>
-            <p className="text-sm text-[#4A4658]">
-              Try adjusting your search query or selecting a different category.
+            <p className="text-base text-[#4A4658] max-w-md mx-auto">
+              Please check back soon or explore our featured masterclass blueprints below.
             </p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        ) : viewMode === "grid" ? (
+          /* ======================================================================= */
+          /* VIEW MODE A: ARCHITECTURAL BENTO GRID (CLEAN WITHOUT UNWANTED PILLS)   */
+          /* ======================================================================= */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
             {currentPosts.map((post) => (
               <div
                 key={post.id}
-                className="group relative rounded-3xl overflow-hidden border border-[#141416]/10 bg-white p-4 flex flex-col justify-between shadow-sm transition-all duration-300 hover:border-[#7567EE] hover:shadow-xl hover:scale-[1.01]"
+                onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
+                onClick={() => handleCardClick(post)}
+                className="group relative rounded-[30px] bg-white border border-[#141416]/10 p-6 sm:p-7 shadow-[0_10px_30px_rgba(20,20,22,0.06)] hover:shadow-[0_20px_50px_rgba(20,20,22,0.16)] hover:border-[#7567EE] transition-all duration-300 flex flex-col justify-between cursor-pointer select-none"
+                style={{ transformStyle: "preserve-3d" }}
               >
+                {/* Card Corner Reticles on Hover */}
+                <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-[#7567EE] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-[#7567EE] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
                 <div>
-                  {/* Thumbnail */}
-                  <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-black/5 mb-5">
+                  {/* Thumbnail Image - Clean without floating pills or top flex items */}
+                  <div className="relative w-full aspect-[16/10] rounded-[22px] overflow-hidden bg-black/5 mb-5 border border-[#141416]/10">
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#141416] shadow-sm">
-                      {post.category}
-                    </div>
                   </div>
 
-                  {/* Metadata */}
-                  <div className="flex items-center gap-3 text-xs font-mono text-[#4A4658] px-1 mb-3">
-                    <span className="inline-flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-[#7567EE]" />
-                      {post.date}
-                    </span>
-                    <span>&bull;</span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-[#7567EE]" />
-                      {post.readTime}
-                    </span>
+                  {/* Publication Date */}
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#4A4658] mb-2.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#7567EE]" />
+                    <span>{post.date}</span>
                   </div>
 
-                  {/* Title & Excerpt */}
-                  <h3 className="text-xl font-serif text-[#141416] px-1 mb-3 leading-snug group-hover:text-[#7567EE] transition-colors line-clamp-2">
+                  {/* Headline */}
+                  <h3 className="text-xl sm:text-2xl font-heading font-black uppercase text-[#141416] tracking-tight leading-snug group-hover:text-[#7567EE] transition-colors line-clamp-2 mb-3">
                     {post.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-[#4A4658] font-normal px-1 mb-6 leading-relaxed line-clamp-2">
+                  {/* Excerpt */}
+                  <p className="text-sm text-[#33303E] font-normal leading-relaxed line-clamp-3 mb-6">
                     {post.excerpt}
                   </p>
                 </div>
 
-                {/* Footer Link */}
-                <div className="pt-3 px-1 border-t border-[#141416]/10 flex items-center justify-between">
-                  <Link
-                    href={`#read-${post.slug}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      alert(`Opening full article: "${post.title}"`);
-                    }}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#141416] font-semibold group-hover:text-[#7567EE] transition-colors"
-                  >
-                    <span>Read More</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
+                {/* Bottom Action Row matching UI_RULES item 38 */}
+                <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    {/* Circular dark action button per UI_RULES item 38 */}
+                    <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center shadow-sm group-hover:bg-[#7567EE] group-hover:scale-105 transition-all">
+                      <ArrowUpRight className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#141416] group-hover:text-[#7567EE] transition-colors">
+                      Read Story
+                    </span>
+                  </div>
 
-                  <span className="text-[11px] font-mono text-[#4A4658]">
+                  <span className="text-[11px] font-mono text-[#4A4658] uppercase">
                     Make My Vid
                   </span>
                 </div>
               </div>
             ))}
           </div>
+        ) : (
+          /* ======================================================================= */
+          /* VIEW MODE B: EDITORIAL LEDGER (CLEAN DIRECTORY ROWS)                   */
+          /* ======================================================================= */
+          <div className="flex flex-col rounded-[32px] bg-white border border-[#141416]/10 overflow-hidden shadow-sm divide-y divide-[#141416]/10">
+            {currentPosts.map((post, idx) => {
+              const displayIndex = startIndex + idx + 1;
+              return (
+                <div
+                  key={post.id}
+                  onClick={() => handleCardClick(post)}
+                  className="group px-6 sm:px-8 py-6 hover:bg-[#F3EBDD]/60 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer select-none"
+                >
+                  {/* Left: Index */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span className="text-sm font-mono font-bold text-[#141416]">
+                      0{displayIndex}
+                    </span>
+                  </div>
+
+                  {/* Middle: Title & Excerpt */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg sm:text-2xl font-heading font-black uppercase text-[#141416] tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-1 mb-1">
+                      {post.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#4A4658] line-clamp-1">
+                      {post.excerpt}
+                    </p>
+                  </div>
+
+                  {/* Right: Date & Action Button */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    <div className="text-right text-xs font-mono text-[#141416] hidden sm:block">
+                      {post.date}
+                    </div>
+
+                    <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center group-hover:bg-[#7567EE] group-hover:scale-105 transition-all shadow-sm">
+                      <ArrowUpRight className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
 
-        {/* Pagination Section (Matching genuine 3 pages) */}
+        {/* ========================================================================= */}
+        {/* PAGINATION CONTROLS: NUMBERS VISIBLE IN BLACK COLOR                       */}
+        {/* ========================================================================= */}
         {totalPages > 1 && (
-          <div className="mt-16 pt-8 border-t border-[#141416]/10 flex items-center justify-center gap-2">
+          <div className="mt-16 pt-8 border-t border-[#141416]/10 flex items-center justify-center gap-2.5">
             <button
               onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="w-10 h-10 rounded-full border border-[#141416]/15 bg-white flex items-center justify-center text-[#141416] disabled:opacity-40 disabled:pointer-events-none hover:bg-[#141416] hover:text-[#EAE3DB] transition-colors cursor-pointer"
+              className="w-11 h-11 rounded-full border border-[#141416]/15 bg-white flex items-center justify-center text-[#141416] disabled:opacity-30 disabled:pointer-events-none hover:bg-black/5 transition-all cursor-pointer shadow-sm"
+              aria-label="Previous page"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 text-[#141416]" />
             </button>
 
             {Array.from({ length: totalPages }).map((_, idx) => {
@@ -139,10 +259,10 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts }) => {
                 <button
                   key={pageNumber}
                   onClick={() => handlePageChange(pageNumber)}
-                  className={`w-10 h-10 rounded-full text-xs font-mono font-bold transition-all duration-300 cursor-pointer ${
+                  className={`w-11 h-11 rounded-full text-xs font-mono font-bold text-[#141416] transition-all duration-300 cursor-pointer shadow-sm ${
                     isActive
-                      ? "bg-[#141416] text-[#EAE3DB] shadow-md"
-                      : "bg-white text-[#141416] border border-[#141416]/15 hover:bg-black/5"
+                      ? "bg-[#D5FF3F] border border-[#141416]/25 scale-105"
+                      : "bg-white border border-[#141416]/15 hover:bg-black/5"
                   }`}
                 >
                   {pageNumber}
@@ -153,9 +273,10 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts }) => {
             <button
               onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="w-10 h-10 rounded-full border border-[#141416]/15 bg-white flex items-center justify-center text-[#141416] disabled:opacity-40 disabled:pointer-events-none hover:bg-[#141416] hover:text-[#EAE3DB] transition-colors cursor-pointer"
+              className="w-11 h-11 rounded-full border border-[#141416]/15 bg-white flex items-center justify-center text-[#141416] disabled:opacity-30 disabled:pointer-events-none hover:bg-black/5 transition-all cursor-pointer shadow-sm"
+              aria-label="Next page"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 text-[#141416]" />
             </button>
           </div>
         )}

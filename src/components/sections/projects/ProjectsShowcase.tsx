@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { ExternalLink, Video } from "lucide-react";
 import { ProjectItem } from "@/data/projectsPageData";
 import { ProjectModal } from "./ProjectModal";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface ProjectsShowcaseProps {
   projects: ProjectItem[];
@@ -179,7 +180,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
               FEATURED PRODUCTIONS
             </span>
             <h2
-              className="uppercase text-[#141416] tracking-tight leading-none"
+              className="uppercase text-[#141416] tracking-tight leading-none typo-h2"
               style={{
                 fontFamily: "'Humane', sans-serif",
                 fontWeight: 500,
@@ -265,10 +266,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
 
                   {/* Card Details: Typography & Metrics */}
                   <div className="space-y-2.5">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-baseline gap-3">
                         <h3
-                          className="text-2xl sm:text-3xl font-heading font-black tracking-tight uppercase"
+                          className="typo-h3 font-heading font-black tracking-tight uppercase"
                           style={{ color: styleConfig.textColor }}
                         >
                           {project.title}
@@ -281,22 +282,18 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
                         </span>
                       </div>
 
-                      <button
-                        type="button"
+                      <BrandButton
+                        size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveProjectForModal(project);
                         }}
-                        className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider hover:underline cursor-pointer shrink-0"
-                        style={{ color: styleConfig.textColor }}
-                      >
-                        <span>VIEW CASE</span>
-                        <ExternalLink size={13} />
-                      </button>
+                        label="VIEW CASE"
+                      />
                     </div>
 
                     <p
-                      className="text-xs sm:text-sm font-sans line-clamp-2 leading-relaxed"
+                      className="typo-small font-sans line-clamp-2 leading-relaxed"
                       style={{ color: styleConfig.descColor }}
                     >
                       {project.description}

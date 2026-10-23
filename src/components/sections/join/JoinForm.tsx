@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Check, ArrowRight, CheckCircle2 } from "lucide-react";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 export const JoinForm: React.FC = () => {
   // Calendar state: Preferred interview / availability slot
@@ -67,7 +68,7 @@ export const JoinForm: React.FC = () => {
               {/* Refined Slim JOIN US Header with Geometric Star (Identical Visual Design) */}
               <div className="flex items-center gap-4 sm:gap-6 mb-3">
                 <h2
-                  className="uppercase text-[#141416] select-none"
+                  className="uppercase text-[#141416] select-none typo-h2"
                   style={{
                     fontFamily: "'Humane', sans-serif",
                     fontWeight: 500,
@@ -88,7 +89,7 @@ export const JoinForm: React.FC = () => {
               </div>
 
               {/* Narrative Subtitle */}
-              <p className="text-sm sm:text-base text-[#4A4658] font-normal leading-relaxed mb-8 max-w-md">
+              <p className="typo-body text-[#4A4658] font-normal leading-relaxed mb-8 max-w-md">
                 Tell us about your craft, your primary specialization, and share your finest pieces of work. Join our global network of directors, editors, colorists, and motion artists.
               </p>
             </div>
@@ -378,17 +379,10 @@ export const JoinForm: React.FC = () => {
                   </div>
 
                   {/* Submit Button */}
-                  <button
+                  <BrandButton
                     type="submit"
-                    className="group inline-flex items-center gap-4 pl-8 pr-2.5 py-2.5 rounded-full bg-[#141416] hover:bg-[#7567EE] text-white transition-all shadow-md cursor-pointer self-start sm:self-auto"
-                  >
-                    <span className="font-heading font-black text-sm uppercase tracking-widest text-white">
-                      SUBMIT APPLICATION
-                    </span>
-                    <div className="w-10 h-10 rounded-full bg-[#D5FF3F] text-[#141416] flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                      <ArrowRight size={18} strokeWidth={2.5} />
-                    </div>
-                  </button>
+                    label="SUBMIT APPLICATION"
+                  />
                 </div>
               </form>
             )}

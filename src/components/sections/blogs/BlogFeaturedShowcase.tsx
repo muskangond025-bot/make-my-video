@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { BlogPost, BLOGS_DATA } from "@/data/blogsData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface MasterclassTrack {
   id: string;
@@ -123,10 +124,10 @@ export const BlogFeaturedShowcase: React.FC<BlogFeaturedShowcaseProps> = ({
         {/* SECTION HEADING: Single Line, Left-Aligned (per UI_RULES item 27-31)      */}
         {/* ========================================================================= */}
         <div className="text-left w-full mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
+          <h2 className="typo-h2 font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
             MASTERCLASS <span className="text-[#7567EE]">SERIES.</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#4A4658] font-normal text-left max-w-3xl">
+          <p className="typo-body text-[#4A4658] font-normal text-left max-w-3xl">
             Four signature creative tracks distilled from over 10+ years of commercial filming, multi-city shoots, and Shark Tank pitch films.
           </p>
         </div>
@@ -259,27 +260,22 @@ export const BlogFeaturedShowcase: React.FC<BlogFeaturedShowcaseProps> = ({
 
                 {/* Animated Track Content */}
                 <div key={activeTrack.id} className="transition-all duration-500 ease-out">
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-black uppercase text-[#141416] tracking-tight leading-tight mb-4">
+                  <h3 className="typo-h3 sm:text-3xl font-heading font-black uppercase text-[#141416] tracking-tight leading-tight mb-4">
                     {activeTrack.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base text-[#33303E] leading-relaxed mb-6 font-normal">
+                  <p className="typo-body text-[#33303E] leading-relaxed mb-6 font-normal">
                     {activeTrack.summary}
                   </p>
                 </div>
               </div>
 
-              {/* Action Buttons Row with "Read Featured Blueprint" in Light Green Color */}
+              {/* Action Buttons Row with BrandButton */}
               <div className="pt-6 border-t border-[#141416]/10 flex flex-wrap items-center justify-between gap-4">
-                <button
+                <BrandButton
                   onClick={handleReadGuide}
-                  className="px-7 py-3.5 rounded-full bg-[#141416] text-[#D5FF3F] border border-[#141416] hover:bg-[#7567EE] hover:text-white transition-all shadow-md flex items-center gap-2 cursor-pointer group"
-                >
-                  <span className="text-[#D5FF3F] font-bold font-mono text-xs uppercase tracking-wider group-hover:text-white transition-colors">
-                    Read Featured Blueprint
-                  </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#D5FF3F] group-hover:text-white transition-colors" />
-                </button>
+                  label="READ FEATURED BLUEPRINT"
+                />
 
                 <button
                   onClick={handleFilterCategory}

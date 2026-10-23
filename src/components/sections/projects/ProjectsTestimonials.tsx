@@ -65,11 +65,11 @@ export const ProjectsTestimonials: React.FC = () => {
           HEAR IT FROM
         </span>
         <h2
-          className="uppercase text-[#141416] tracking-tight leading-none"
+          className="uppercase text-[#141416] tracking-tight leading-none typo-h2"
           style={{
             fontFamily: "'Humane', sans-serif",
             fontWeight: 500,
-            fontSize: "clamp(64px, 8vw, 110px)",
+            fontSize: "clamp(56px, 7vw, 100px)",
             lineHeight: 0.85,
           }}
         >
@@ -100,19 +100,19 @@ export const ProjectsTestimonials: React.FC = () => {
 
             {/* Content Column */}
             <div className="flex-1 space-y-5 text-center md:text-left">
-              <p className="text-lg sm:text-2xl font-sans text-[#141416] font-medium leading-relaxed">
+              <p className="typo-body sm:text-xl font-sans text-[#141416] font-medium leading-relaxed">
                 &ldquo;{dipttii.quote}&rdquo;
               </p>
 
               <div className="pt-2 border-t border-[#141416]/10 flex flex-col md:flex-row md:items-center justify-between gap-2">
                 <div>
                   <div className="flex items-center justify-center md:justify-start gap-2">
-                    <h4 className="text-lg sm:text-xl font-heading font-black text-[#141416] tracking-tight uppercase">
+                    <h4 className="typo-h3 font-heading font-black text-[#141416] tracking-tight uppercase">
                       {dipttii.name}
                     </h4>
                     <CheckCircle2 size={16} className="text-[#7567EE]" />
                   </div>
-                  <p className="text-xs sm:text-sm font-sans text-[#141416]/65 font-medium">
+                  <p className="typo-small font-sans text-[#141416]/65 font-medium">
                     {dipttii.role} • <span className="font-semibold text-[#141416]">{dipttii.company}</span>
                   </p>
                 </div>
@@ -161,16 +161,16 @@ export const ProjectsTestimonials: React.FC = () => {
 
             {/* Quote Column */}
             <div className="w-full lg:w-5/12 space-y-5 text-center lg:text-left">
-              <p className="text-base sm:text-xl font-sans text-[#141416] font-medium leading-relaxed">
+              <p className="typo-body sm:text-xl font-sans text-[#141416] font-medium leading-relaxed">
                 &ldquo;{rachit.quote}&rdquo;
               </p>
 
               <div className="pt-2 border-t border-[#141416]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <h4 className="text-lg sm:text-xl font-heading font-black text-[#141416] tracking-tight uppercase">
+                  <h4 className="typo-h3 font-heading font-black text-[#141416] tracking-tight uppercase">
                     {rachit.name}
                   </h4>
-                  <p className="text-xs sm:text-sm font-sans text-[#141416]/65 font-medium">
+                  <p className="typo-small font-sans text-[#141416]/65 font-medium">
                     {rachit.role} • <span className="font-semibold text-[#141416]">{rachit.company}</span>
                   </p>
                 </div>

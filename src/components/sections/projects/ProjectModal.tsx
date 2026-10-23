@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { X, Play, ExternalLink } from "lucide-react";
 import { ProjectItem } from "@/data/projectsPageData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface ProjectModalProps {
   project: ProjectItem | null;
@@ -93,21 +94,19 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
             </div>
           )}
 
-          <div className="flex items-center justify-end pt-4 border-t border-white/10 gap-3">
-            <a
-              href={`https://www.youtube.com/watch?v=${project.youtubeId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
-            >
-              Watch on YouTube <ExternalLink size={16} />
-            </a>
+          <div className="flex flex-wrap items-center justify-end pt-4 border-t border-white/10 gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-2.5 rounded-full bg-[#7567EE] hover:bg-[#6454E5] text-white text-sm font-semibold transition-colors"
+              className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
             >
               Close
             </button>
+            <BrandButton
+              href={`https://www.youtube.com/watch?v=${project.youtubeId}`}
+              target="_blank"
+              size="sm"
+              label="WATCH ON YOUTUBE"
+            />
           </div>
         </div>
       </div>

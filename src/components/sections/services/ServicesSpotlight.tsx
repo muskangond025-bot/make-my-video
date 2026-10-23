@@ -1,70 +1,251 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import React, { useRef, useEffect } from "react";
+import Image from "next/image";
+import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { SPOTLIGHT_SERVICES } from "@/data/servicesPageData";
-import { BrandButton } from "@/components/shared/BrandButton";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 interface ServicesSpotlightProps {
   onSelectService?: (serviceName: string) => void;
 }
 
 export const ServicesSpotlight: React.FC<ServicesSpotlightProps> = ({ onSelectService }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const colLeftRef = useRef<HTMLDivElement>(null);
+  const colRightRef = useRef<HTMLDivElement>(null);
+  const cardLeftRef = useRef<HTMLDivElement>(null);
+  const cardRightRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !cardLeftRef.current || !cardRightRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Differential Parallax Drifting on independent column wrappers (avoids transform clobbering)
+      if (colLeftRef.current) {
+        gsap.to(colLeftRef.current, {
+          y: -30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+
+      if (colRightRef.current) {
+        gsap.to(colRightRef.current, {
+          y: 30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+
+      // 2. Smooth Kinetic 3D Y-Axis Tilt Entrance on inner cards
+      gsap.fromTo(
+        cardLeftRef.current,
+        {
+          x: -55,
+          rotateY: 8,
+          opacity: 0.25,
+          transformPerspective: 1200,
+        },
+        {
+          x: 0,
+          rotateY: 0,
+          opacity: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            end: "top 25%",
+            scrub: 1,
+          },
+        }
+      );
+
+      gsap.fromTo(
+        cardRightRef.current,
+        {
+          x: 55,
+          rotateY: -8,
+          opacity: 0.25,
+          transformPerspective: 1200,
+        },
+        {
+          x: 0,
+          rotateY: 0,
+          opacity: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            end: "top 25%",
+            scrub: 1,
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative px-4 sm:px-8 max-w-[1360px] mx-auto w-full pb-16">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {SPOTLIGHT_SERVICES.map((service, index) => (
-          <div
-            key={service.id}
-            className="group relative bg-white/60 hover:bg-white/90 backdrop-blur-sm border border-[#141416]/10 rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1"
-          >
-            {/* Visual Media Poster */}
-            <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden bg-[#141416]/5 mb-6 shadow-inner">
+    <section
+      ref={sectionRef}
+      className="relative px-4 sm:px-8 max-w-[1440px] mx-auto w-full py-16 sm:py-24 overflow-hidden"
+    >
+      {/* Header */}
+      <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 border-b border-[#141416]/10 pb-8">
+        <div>
+          <h2 className="typo-h1 font-heading font-black tracking-tight uppercase text-[#141416]">
+            PREMIER <span className="font-serif italic font-normal text-[#7567EE]">SOLUTIONS</span>
+          </h2>
+        </div>
+        <p className="typo-body font-sans text-[#141416]/70 max-w-[480px] leading-relaxed">
+          From on-ground multi-camera crews deployed across 50+ cities to remote cloud post-production suites built for high-stakes speed.
+        </p>
+      </div>
+
+      {/* 2 Flagship Showcase Cards in Light Theme */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch" style={{ perspective: 1200 }}>
+        
+        {/* Card 1: Multi City Video Production */}
+        {SPOTLIGHT_SERVICES[0] && (
+          <div ref={colLeftRef} className="w-full flex flex-col">
+            <div
+              ref={cardLeftRef}
+              className="group relative bg-white/90 hover:bg-white text-[#141416] rounded-3xl overflow-hidden border border-[#141416]/10 hover:border-[#7567EE]/40 p-6 sm:p-8 flex flex-col justify-between shadow-md hover:shadow-2xl transition-colors duration-300 transition-shadow duration-300 will-change-transform flex-1"
+            >
+            {/* Cinematic Widescreen Media Stage - Clean without overlays */}
+            <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-zinc-100 mb-6 border border-[#141416]/10 shadow-inner">
               <img
-                src={service.image}
-                alt={service.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src={SPOTLIGHT_SERVICES[0].image}
+                alt={SPOTLIGHT_SERVICES[0].title}
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                <span className="text-white typo-caption font-sans tracking-wider uppercase font-semibold">
-                  {service.tag}
-                </span>
-              </div>
             </div>
 
             {/* Content Details */}
-            <div className="space-y-3 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="typo-caption uppercase tracking-widest text-[#7567EE] font-semibold block mb-1">
-                  {service.tag}
-                </span>
-                <h3 className="typo-h3 font-heading font-black tracking-tight text-[#141416]">
-                  {service.title}
-                </h3>
-                <p className="typo-small font-sans text-[#141416]/75 mt-2 leading-relaxed">
-                  {service.description}
-                </p>
-              </div>
+            <div className="space-y-4 mb-6">
+              <h3 className="typo-h2 font-heading font-black tracking-tight text-[#141416] group-hover:text-[#7567EE] transition-colors">
+                {SPOTLIGHT_SERVICES[0].title}
+              </h3>
+              <p className="typo-body font-sans text-[#141416]/75 leading-relaxed">
+                {SPOTLIGHT_SERVICES[0].description}
+              </p>
 
-              <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between gap-2">
+              {/* Key Features Pill list */}
+              <div className="grid grid-cols-2 gap-2.5 pt-2">
+                <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                  <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                  <span>Verified Local Crews</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                  <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                  <span>Unified Sony FX Sensors</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                  <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                  <span>Single Creative Director</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                  <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                  <span>Same-Day DIT Uploads</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Action Bar */}
+              <div className="pt-5 border-t border-[#141416]/10 flex items-center justify-between">
                 <button
-                  onClick={() => onSelectService && onSelectService(service.title)}
-                  className="group/btn inline-flex items-center gap-1.5 typo-small font-sans font-bold text-[#141416] hover:text-[#7567EE] transition-colors"
+                  onClick={() => onSelectService && onSelectService(SPOTLIGHT_SERVICES[0].title)}
+                  className="group/btn inline-flex items-center gap-2 typo-body font-sans font-bold text-[#141416] hover:text-[#7567EE] transition-colors"
                 >
-                  <span>Know More</span>
+                  <span>Full Production Specs</span>
                   <ArrowUpRight
-                    size={16}
-                    className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                    size={18}
+                    className="transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 text-[#7567EE]"
                   />
                 </button>
-
-                <BrandButton label="GET QUOTE" href="/support" size="sm" />
               </div>
             </div>
           </div>
-        ))}
+        )}
+
+        {/* Card 2: Remote Video Editing Services */}
+        {SPOTLIGHT_SERVICES[1] && (
+          <div ref={colRightRef} className="w-full flex flex-col">
+            <div
+              ref={cardRightRef}
+              className="group relative bg-white/90 hover:bg-white text-[#141416] rounded-3xl overflow-hidden border border-[#141416]/10 hover:border-[#7567EE]/40 p-6 sm:p-8 flex flex-col justify-between shadow-md hover:shadow-2xl transition-colors duration-300 transition-shadow duration-300 will-change-transform flex-1"
+            >
+              {/* Cinematic Widescreen Media Stage - Clean without overlays */}
+              <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-zinc-100 mb-6 border border-[#141416]/10 shadow-inner">
+                <img
+                  src={SPOTLIGHT_SERVICES[1].image}
+                  alt={SPOTLIGHT_SERVICES[1].title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Content Details */}
+              <div className="space-y-4 mb-6">
+                <h3 className="typo-h2 font-heading font-black tracking-tight text-[#141416] group-hover:text-[#7567EE] transition-colors">
+                  {SPOTLIGHT_SERVICES[1].title}
+                </h3>
+                <p className="typo-body font-sans text-[#141416]/75 leading-relaxed">
+                  {SPOTLIGHT_SERVICES[1].description}
+                </p>
+
+                {/* Key Features Pill list */}
+                <div className="grid grid-cols-2 gap-2.5 pt-2">
+                  <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                    <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                    <span>Timecode Frame Reviews</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                    <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                    <span>Color Grading & Sound Master</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                    <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                    <span>Dedicated Slack Channel</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-sans text-[#141416]/80">
+                    <CheckCircle2 size={15} className="text-[#7567EE] shrink-0" />
+                    <span>High-Speed Cloud Storage</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Action Bar */}
+              <div className="pt-5 border-t border-[#141416]/10 flex items-center justify-between">
+                <button
+                  onClick={() => onSelectService && onSelectService(SPOTLIGHT_SERVICES[1].title)}
+                  className="group/btn inline-flex items-center gap-2 typo-body font-sans font-bold text-[#141416] hover:text-[#7567EE] transition-colors"
+                >
+                  <span>Full Editing Specs</span>
+                  <ArrowUpRight
+                    size={18}
+                    className="transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 text-[#7567EE]"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </section>
   );

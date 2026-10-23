@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { X, Calendar, Clock, CheckCircle2, Share2, ArrowRight } from "lucide-react";
 import { BlogPost } from "@/data/blogsData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface ArticleReaderModalProps {
   post: BlogPost | null;
@@ -147,10 +148,10 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
 
           {/* Article Title */}
           <div>
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-heading font-black uppercase text-[#141416] tracking-tight leading-[1.1] mb-4">
+            <h1 className="typo-h2 sm:text-4xl lg:text-5xl font-heading font-black uppercase text-[#141416] tracking-tight leading-[1.1] mb-4">
               {post.title}
             </h1>
-            <p className="text-base sm:text-xl text-[#33303E] font-normal leading-relaxed">
+            <p className="typo-body sm:text-xl text-[#33303E] font-normal leading-relaxed">
               {post.excerpt}
             </p>
           </div>
@@ -261,12 +262,12 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
 
           {/* Footer Close Button */}
           <div className="pt-6 pb-2 flex justify-center">
-            <button
+            <BrandButton
+              size="sm"
               onClick={onClose}
-              className="px-8 py-3 rounded-full bg-[#141416] text-[#EAE3DB] text-xs font-mono uppercase tracking-wider hover:bg-[#7567EE] hover:text-white transition-all shadow-md cursor-pointer"
-            >
-              Close Publication
-            </button>
+              label="CLOSE PUBLICATION"
+              showArrow={false}
+            />
           </div>
         </div>
       </div>

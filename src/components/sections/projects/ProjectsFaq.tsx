@@ -170,10 +170,10 @@ export const ProjectsFaq: React.FC = () => {
             
             {/* Top Header details */}
             <div className="faq-top mb-6">
-              <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl text-[#FFFFFF] font-bold tracking-tight">
+              <h2 className="font-heading typo-h2 text-[#FFFFFF] font-bold tracking-tight">
                 FREQUENT <span className="text-[#7567EE]">QUESTIONS?</span>
               </h2>
-              <p className="text-[#EAE3DB]/75 text-xs sm:text-sm mt-2 leading-relaxed font-sans max-w-[650px]">
+              <p className="typo-body text-[#EAE3DB]/75 mt-2 leading-relaxed font-sans max-w-[650px]">
                 Answers to common questions about our client collaborations, camera technologies, storytelling process, and multi-format video deliverables.
               </p>
             </div>
@@ -192,10 +192,10 @@ export const ProjectsFaq: React.FC = () => {
                     {/* Accordion Header */}
                     <div className="dropdown-top flex justify-between items-center py-4 pr-1">
                       <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 flex-1 pr-4">
-                        <h3 className="heading-style-h3 text-[#FFFFFF] text-lg sm:text-xl font-heading uppercase tracking-wide">
+                        <h3 className="heading-style-h3 typo-h3 text-[#FFFFFF] font-heading uppercase tracking-wide">
                           {faq.category}
                         </h3>
-                        <p className="text-size-small text-[#EAE3DB]/75 font-sans text-xs sm:text-sm leading-tight">
+                        <p className="typo-small text-[#EAE3DB]/75 font-sans leading-tight">
                           {faq.question}
                         </p>
                       </div>
@@ -229,11 +229,11 @@ export const ProjectsFaq: React.FC = () => {
                       className="dropdown-bottom overflow-hidden h-0 opacity-0"
                     >
                       <div className="pb-5 pt-1 pr-8 space-y-3">
-                        <p className="text-xs sm:text-sm text-[#EAE3DB]/80 font-sans leading-relaxed">
+                        <p className="typo-body text-[#EAE3DB]/85 font-sans leading-relaxed">
                           {faq.answer}
                         </p>
                         {faq.bullets && faq.bullets.length > 0 && (
-                          <ul className="space-y-1.5 pl-4 list-disc marker:text-[#7567EE] text-xs sm:text-sm text-[#EAE3DB]/80 font-sans">
+                          <ul className="space-y-1.5 pl-4 list-disc marker:text-[#7567EE] typo-small text-[#EAE3DB]/80 font-sans">
                             {faq.bullets.map((bullet: string, bIdx: number) => (
                               <li key={bIdx} className="pl-1">
                                 {bullet}

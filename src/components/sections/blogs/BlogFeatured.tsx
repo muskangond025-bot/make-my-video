@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowUpRight, Calendar } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BlogPost, BLOGS_DATA } from "@/data/blogsData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface BlogFeaturedProps {
   post?: BlogPost;
@@ -85,10 +86,10 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
         {/* SECTION HEADING: Single Line, Left-Aligned (per UI_RULES item 27-31)      */}
         {/* ========================================================================= */}
         <div className="text-left w-full mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
+          <h2 className="typo-h2 font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
             EDITORIAL <span className="text-[#7567EE]">SPOTLIGHT.</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#4A4658] font-normal text-left max-w-3xl">
+          <p className="typo-body text-[#4A4658] font-normal text-left max-w-3xl">
             Flagship case studies, creative philosophies, and commercial film breakdowns curated by Rohan Joshi and Make My Vid senior directors.
           </p>
         </div>
@@ -166,28 +167,28 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
                     </div>
 
                     {/* Flagship Headline */}
-                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-heading font-black uppercase text-[#141416] leading-tight mb-3 tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-2">
+                    <h3 className="typo-h3 sm:text-2xl lg:text-3xl font-heading font-black uppercase text-[#141416] leading-tight mb-3 tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-2">
                       {activePost.title}
                     </h3>
 
                     {/* Excerpt */}
-                    <p className="text-sm text-[#33303E] font-normal leading-relaxed mb-4 line-clamp-2">
+                    <p className="typo-body text-[#33303E] font-normal leading-relaxed mb-4 line-clamp-2">
                       {activePost.excerpt}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Action Bottom Row matching UI_RULES item 38 */}
+              {/* Action Bottom Row matching BrandButton */}
               <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 group-hover:bg-[#7567EE] transition-all">
-                    <ArrowUpRight className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#141416] group-hover:text-[#7567EE] transition-colors">
-                    Read Full Story
-                  </span>
-                </div>
+                <BrandButton
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenArticle(activePost);
+                  }}
+                  label="READ FULL STORY"
+                />
 
                 <span className="text-xs font-mono text-[#4A4658] uppercase hidden sm:inline-block">
                   Click To Read &rarr;
@@ -231,7 +232,7 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
                   <div className="flex-1 min-w-0 flex flex-col justify-between w-full h-full">
                     <div>
                       <h4
-                        className={`text-sm sm:text-base font-heading font-black uppercase tracking-tight leading-snug line-clamp-2 mb-1.5 transition-colors ${
+                        className={`typo-h3 text-sm sm:text-base font-heading font-black uppercase tracking-tight leading-snug line-clamp-2 mb-1.5 transition-colors ${
                           isActive
                             ? "text-[#7567EE]"
                             : "text-[#141416] group-hover:text-[#7567EE]"
@@ -240,7 +241,7 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
                         {sec.title}
                       </h4>
 
-                      <p className="text-xs text-[#4A4658] line-clamp-1 font-normal leading-relaxed">
+                      <p className="typo-small text-[#4A4658] line-clamp-1 font-normal leading-relaxed">
                         {sec.excerpt}
                       </p>
                     </div>

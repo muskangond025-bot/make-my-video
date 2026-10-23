@@ -35,13 +35,13 @@ export const BlogHero: React.FC<BlogHeroProps> = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Hero Title - Clean and Massive, without redundant pills or search bar */}
         <div ref={titleRef} className="max-w-4xl text-left">
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif italic text-[#141416]/90 leading-none mb-2">
+          <h1 className="typo-h1 font-serif italic text-[#141416]/90 leading-none mb-2">
             BLOGS &
           </h1>
-          <div className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black uppercase text-[#141416] leading-tight tracking-tight">
+          <div className="typo-h1 font-heading font-black uppercase text-[#141416] leading-tight tracking-tight">
             INDUSTRY <span className="text-[#7567EE]">UPDATES</span>
           </div>
-          <p className="mt-5 text-base sm:text-lg md:text-xl text-[#4A4658] font-normal max-w-3xl leading-relaxed">
+          <p className="mt-5 typo-body text-[#4A4658] font-normal max-w-3xl leading-relaxed">
             Expert breakdowns, creative philosophies, and technical guides on commercial video production, remote editing, and brand storytelling.
           </p>
         </div>

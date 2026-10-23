@@ -47,11 +47,11 @@ export const ProjectsHero: React.FC<ProjectsHeroProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-10 sm:mb-12">
           <div className="lg:col-span-8">
             <h1
-              className="uppercase text-[#141416] tracking-tight leading-none"
+              className="uppercase text-[#141416] tracking-tight leading-none typo-h1"
               style={{
                 fontFamily: "'Humane', sans-serif",
                 fontWeight: 500,
-                fontSize: "clamp(74px, 11vw, 150px)",
+                fontSize: "clamp(64px, 10vw, 140px)",
                 lineHeight: 0.82,
                 letterSpacing: "0.01em",
               }}
@@ -61,7 +61,7 @@ export const ProjectsHero: React.FC<ProjectsHeroProps> = ({
           </div>
 
           <div className="lg:col-span-4 space-y-3">
-            <p className="text-base sm:text-lg text-[#4A4658] font-normal leading-relaxed">
+            <p className="typo-body text-[#4A4658] font-normal leading-relaxed">
               From global corporate summits to intimate agrarian documentaries — explore our portfolio of cinematic commercial productions.
             </p>
             <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#141416]/60">

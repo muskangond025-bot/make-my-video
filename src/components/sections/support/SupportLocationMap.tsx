@@ -13,6 +13,7 @@ import {
   Check,
 } from "lucide-react";
 import { STUDIO_LOCATIONS, StudioLocation } from "@/data/supportPageData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 export const SupportLocationMap: React.FC = () => {
   const [selectedLocationId, setSelectedLocationId] = useState<"office" | "studio">("office");
@@ -117,18 +118,12 @@ export const SupportLocationMap: React.FC = () => {
           </div>
 
           {/* Action Buttons: Bold, High-Contrast "Open in Google Maps" Button */}
-          <div className="flex items-center gap-3 self-start lg:self-auto">
-            <a
+          <div className="flex flex-wrap items-center gap-3 self-start lg:self-auto">
+            <BrandButton
               href={activeLocation.directionsUrl}
               target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-[#141416] hover:bg-[#7567EE] text-white text-xs sm:text-sm font-sans font-black uppercase tracking-wider transition-all shadow-md cursor-pointer group"
-              style={{ color: "#FFFFFF", backgroundColor: "#141416" }}
-            >
-              <Navigation size={15} className="text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              <span className="text-white font-black tracking-wide">Open in Google Maps</span>
-              <ArrowUpRight size={16} className="text-white" />
-            </a>
+              label="OPEN IN GOOGLE MAPS"
+            />
 
             <button
               type="button"

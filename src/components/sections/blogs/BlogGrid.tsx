@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowUpRight, Calendar, ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BlogPost } from "@/data/blogsData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface BlogGridProps {
   posts: BlogPost[];
@@ -75,10 +76,10 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts, onSelectArticle }) =>
         {/* ========================================================================= */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
           <div className="text-left max-w-3xl">
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
+            <h2 className="typo-h2 font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
               CURATED <span className="text-[#7567EE]">PUBLICATIONS.</span>
             </h2>
-            <p className="text-base sm:text-lg text-[#4A4658] font-normal text-left">
+            <p className="typo-body text-[#4A4658] font-normal text-left">
               Browse our complete archive of production breakdowns, editing workflows, and executive media strategies.
             </p>
           </div>
@@ -163,27 +164,26 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts, onSelectArticle }) =>
                   </div>
 
                   {/* Headline */}
-                  <h3 className="text-xl sm:text-2xl font-heading font-black uppercase text-[#141416] tracking-tight leading-snug group-hover:text-[#7567EE] transition-colors line-clamp-2 mb-3">
+                  <h3 className="typo-h3 font-heading font-black uppercase text-[#141416] tracking-tight leading-snug group-hover:text-[#7567EE] transition-colors line-clamp-2 mb-3">
                     {post.title}
                   </h3>
 
                   {/* Excerpt */}
-                  <p className="text-sm text-[#33303E] font-normal leading-relaxed line-clamp-3 mb-6">
+                  <p className="typo-body text-[#33303E] font-normal leading-relaxed line-clamp-3 mb-6">
                     {post.excerpt}
                   </p>
                 </div>
 
-                {/* Bottom Action Row matching UI_RULES item 38 */}
+                {/* Bottom Action Row matching BrandButton */}
                 <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    {/* Circular dark action button per UI_RULES item 38 */}
-                    <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center shadow-sm group-hover:bg-[#7567EE] group-hover:scale-105 transition-all">
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#141416] group-hover:text-[#7567EE] transition-colors">
-                      Read Story
-                    </span>
-                  </div>
+                  <BrandButton
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCardClick(post);
+                    }}
+                    label="READ STORY"
+                  />
 
                   <span className="text-[11px] font-mono text-[#4A4658] uppercase">
                     Make My Vid
@@ -214,10 +214,10 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts, onSelectArticle }) =>
 
                   {/* Middle: Title & Excerpt */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg sm:text-2xl font-heading font-black uppercase text-[#141416] tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-1 mb-1">
+                    <h3 className="typo-h3 font-heading font-black uppercase text-[#141416] tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-1 mb-1">
                       {post.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#4A4658] line-clamp-1">
+                    <p className="typo-small text-[#4A4658] line-clamp-1">
                       {post.excerpt}
                     </p>
                   </div>
@@ -228,9 +228,14 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts, onSelectArticle }) =>
                       {post.date}
                     </div>
 
-                    <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center group-hover:bg-[#7567EE] group-hover:scale-105 transition-all shadow-sm">
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
+                    <BrandButton
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCardClick(post);
+                      }}
+                      label="READ"
+                    />
                   </div>
                 </div>
               );

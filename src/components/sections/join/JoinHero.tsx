@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { gsap } from "gsap";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 export const JoinHero: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
@@ -80,31 +81,28 @@ export const JoinHero: React.FC = () => {
         {/* Hero Title */}
         <h1
           ref={title1Ref}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif italic text-[#141416]/90 leading-none mb-2"
+          className="typo-h1 font-serif italic text-[#141416]/90 leading-none mb-2"
         >
           JOIN OUR
         </h1>
         <h2
           ref={title2Ref}
-          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black uppercase text-[#141416] leading-tight tracking-tight mb-6"
+          className="typo-h1 font-heading font-black uppercase text-[#141416] leading-tight tracking-tight mb-6"
         >
           CREATIVE <span className="text-[#7567EE]">COMMUNITY</span>
         </h2>
 
         {/* Description & Action */}
-        <div ref={descRef} className="max-w-2xl mx-auto">
-          <p className="text-base sm:text-lg text-[#4A4658] font-normal leading-relaxed mb-8">
+        <div ref={descRef} className="max-w-2xl mx-auto flex flex-col items-center">
+          <p className="typo-body text-[#4A4658] font-normal leading-relaxed mb-8">
             Whether you are a meticulous remote video editor or an agile mobile videographer,
             join Make My Vid to access consistent, paid commercial projects with national & international brands.
           </p>
 
-          <a
+          <BrandButton
             href="#application-form"
-            className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#141416] text-[#EAE3DB] font-semibold text-xs tracking-wider uppercase transition-all duration-300 hover:bg-[#7567EE] hover:text-white hover:shadow-[0_10px_30px_rgba(117,103,238,0.35)] cursor-pointer"
-          >
-            <span>Apply Now</span>
-            <ArrowDown className="w-4 h-4" />
-          </a>
+            label="APPLY NOW"
+          />
         </div>
       </div>
     </section>

@@ -29,20 +29,19 @@ export default function ServicesPage() {
       <Header />
 
       <div className="flex flex-col relative w-full z-10">
-        {/* Hero Section with Search */}
-        <ServicesHero
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
+        {/* Hero Section */}
+        <ServicesHero />
 
-        {/* 3 Flagship Spotlight Services */}
-        <ServicesSpotlight
-          onSelectService={(name) => {
-            setSearchQuery(name);
-            const el = document.getElementById("services-catalog");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-          }}
-        />
+        {/* 2 Flagship Spotlight Services */}
+        <div id="services-spotlight">
+          <ServicesSpotlight
+            onSelectService={(name) => {
+              setSearchQuery(name);
+              const el = document.getElementById("services-catalog");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+        </div>
 
         {/* Key Features & Company Values */}
         <ServicesKeyFeatures />

@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { ArrowRight, Volume2, VolumeX } from "lucide-react";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface SpotlightItem {
   id: string;
@@ -97,17 +98,11 @@ export const JoinSpotlights: React.FC = () => {
           
           {/* Top Bar: Clean Right-Aligned (APPLY) -> Button (No border-b dividing line) */}
           <div className="flex items-center justify-end mb-6">
-            <a
+            <BrandButton
+              size="sm"
               href="#application-form"
-              className="group inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full border border-[#141416]/20 bg-transparent hover:bg-[#141416] transition-all cursor-pointer shadow-xs"
-            >
-              <span className="font-sans font-bold text-xs sm:text-sm uppercase tracking-wider text-[#141416] group-hover:text-white transition-colors">
-                APPLY
-              </span>
-              <div className="w-8 h-8 rounded-full bg-[#D5FF3F] text-[#141416] flex items-center justify-center group-hover:translate-x-0.5 transition-transform duration-300">
-                <ArrowRight size={15} strokeWidth={2.5} />
-              </div>
-            </a>
+              label="APPLY"
+            />
           </div>
 
           {/* Two-Column Internal Sliding Stage */}
@@ -161,7 +156,7 @@ export const JoinSpotlights: React.FC = () => {
                   >
                     {SPOTLIGHTS.map((s) => (
                       <div key={s.id} className="h-full shrink-0 flex items-start">
-                        <p className="text-sm sm:text-base text-[#4A4658] font-normal leading-relaxed max-w-xl">
+                        <p className="typo-body text-[#4A4658] font-normal leading-relaxed max-w-xl">
                           {s.description}
                         </p>
                       </div>

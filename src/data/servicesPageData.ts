@@ -23,6 +23,7 @@ export interface ServiceDetailItem {
 }
 
 export interface ServiceFaqItem {
+  category?: string;
   question: string;
   answer: string;
   bullets?: string[];
@@ -44,14 +45,6 @@ export const SPOTLIGHT_SERVICES: SpotlightService[] = [
     description: "Outsource editing to our high-caliber remote post-production studio with lightning-fast turnarounds and cloud review tools.",
     image: "https://storage.googleapis.com/mkv_imagesbackend/sliders/67972eb47e0e2_MMV Website service page 440 x 622 (2).png",
     slug: "remote-editing-work",
-  },
-  {
-    id: "social-csr",
-    title: "Social Initiatives & CSR Videos",
-    tag: "Impact Documentaries",
-    description: "Emotive storytelling that highlights grassroots social change, volunteer heroics, and measurable ESG milestones.",
-    image: "https://storage.googleapis.com/mkv_imagesbackend/sliders/67972ef0af787_13 (1) (1).png",
-    slug: "social-initiatives-documentation",
   },
 ];
 
@@ -145,10 +138,12 @@ export const FEATURED_CAPABILITIES: string[] = [
 
 export const SERVICE_FAQS: ServiceFaqItem[] = [
   {
+    category: "Cost & Scope",
     question: "How much does video production cost?",
     answer: "The cost depends on the project's scope, including video length, complexity, shooting locations, talent, and specific post-production requirements. Contact us for a tailored quote structured to maximize your return on investment.",
   },
   {
+    category: "Logistics",
     question: "How does Make My Vid coordinate and manage video production across multiple cities?",
     answer: "Make My Vid uses a streamlined process to manage multi-city video production effectively:",
     bullets: [
@@ -159,6 +154,7 @@ export const SERVICE_FAQS: ServiceFaqItem[] = [
     ],
   },
   {
+    category: "Industries",
     question: "What industries benefit most from multi-city video production services?",
     answer: "Industries that frequently rely on our multi-city video production include:",
     bullets: [
@@ -170,6 +166,7 @@ export const SERVICE_FAQS: ServiceFaqItem[] = [
     ],
   },
   {
+    category: "Quality",
     question: "Can Make My Vid maintain consistent quality and branding across various locations?",
     answer: "Yes, Make My Vid guarantees brand consistency through:",
     bullets: [
@@ -180,6 +177,7 @@ export const SERVICE_FAQS: ServiceFaqItem[] = [
     ],
   },
   {
+    category: "Remote Edit",
     question: "How does Make My Vid collaborate with clients for remote editing projects?",
     answer: "Our remote editing workflow is frictionless and transparent:",
     bullets: [
@@ -190,6 +188,7 @@ export const SERVICE_FAQS: ServiceFaqItem[] = [
     ],
   },
   {
+    category: "Post Suite",
     question: "What tools and platforms are used for seamless remote editing services?",
     answer: "We utilize industry-standard creative and post-production software:",
     bullets: [
@@ -200,10 +199,12 @@ export const SERVICE_FAQS: ServiceFaqItem[] = [
     ],
   },
   {
+    category: "Events",
     question: "What types of corporate events does Make My Vid specialize in covering?",
     answer: "We specialize in capturing high-stakes corporate occasions including Annual General Meetings (AGMs), flagship product unveils, leadership townhalls, awards galas, delegate summits, and employee celebrations.",
   },
   {
+    category: "Live Stream",
     question: "How does Make My Vid ensure smooth live telecast experiences for events?",
     answer: "We guarantee seamless streaming through dedicated bonded cellular uplinks, redundant backup encoders, multi-camera video switchers, lower-third graphics integration, and real-time audio mastering.",
   },

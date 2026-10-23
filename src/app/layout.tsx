@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./dumemearts.css";
 import { cn } from "@/lib/utils";
-import { SmoothScroll } from "@/components/SmoothScroll";
+import { SmoothScroll } from "@/components/shared/SmoothScroll";
 import { AgentationProvider } from "@/components/AgentationProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/shared/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Make My Vid | Professional Video Production & Editing Services",

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
-import { SectionCrosses } from "@/components/sections/SectionCrosses";
-import { CtaSection } from "@/components/sections/CtaSection";
-import { PremiumFooter } from "@/components/sections/PremiumFooter";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Header } from "@/components/layout/Header";
+import { SectionCrosses } from "@/components/shared/SectionCrosses";
+import { CtaSection } from "@/components/shared/CtaSection";
+import { PremiumFooter } from "@/components/layout/PremiumFooter";
 
 // Redesigned About Sections (Harmonized with Home Page color system & typography)
 import { AboutHero } from "@/components/sections/about/AboutHero";

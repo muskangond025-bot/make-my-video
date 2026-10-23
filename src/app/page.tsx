@@ -1,15 +1,17 @@
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
-import { Hero } from "@/components/sections/Hero";
-import { Expertise } from "@/components/sections/Expertise";
-import { Testimonials } from "@/components/sections/Testimonials";
-import { Faq } from "@/components/sections/Faq";
-import { CtaSection } from "@/components/sections/CtaSection";
-import { SectionCrosses } from "@/components/sections/SectionCrosses";
-import { CubeShowcase } from "@/components/sections/CubeShowcase";
-import { TrustedBrands } from "@/components/sections/TrustedBrands";
-import { IndustriesServed } from "@/components/sections/IndustriesServed";
-import { PremiumFooter } from "@/components/sections/PremiumFooter";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Header } from "@/components/layout/Header";
+import { PremiumFooter } from "@/components/layout/PremiumFooter";
+import { SectionCrosses } from "@/components/shared/SectionCrosses";
+import { CtaSection } from "@/components/shared/CtaSection";
+import { Faq } from "@/components/shared/Faq";
+import {
+  Hero,
+  Expertise,
+  CubeShowcase,
+  TrustedBrands,
+  IndustriesServed,
+  Testimonials,
+} from "@/components/sections/home";
 
 export default function Home() {
   return (

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
-import { CtaSection } from "@/components/sections/CtaSection";
-import { PremiumFooter } from "@/components/sections/PremiumFooter";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Header } from "@/components/layout/Header";
+import { CtaSection } from "@/components/shared/CtaSection";
+import { PremiumFooter } from "@/components/layout/PremiumFooter";
 
 import { ServicesHero } from "@/components/sections/services/ServicesHero";
 import { ServicesSpotlight } from "@/components/sections/services/ServicesSpotlight";

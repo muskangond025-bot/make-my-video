@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Sidebar } from "@/components/Sidebar";
-import { Header } from "@/components/Header";
-import { CtaSection } from "@/components/sections/CtaSection";
-import { PremiumFooter } from "@/components/sections/PremiumFooter";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { Header } from "@/components/layout/Header";
+import { CtaSection } from "@/components/shared/CtaSection";
+import { PremiumFooter } from "@/components/layout/PremiumFooter";
 
 import { SupportHero } from "@/components/sections/support/SupportHero";
 import { SupportInquiryForm } from "@/components/sections/support/SupportInquiryForm";

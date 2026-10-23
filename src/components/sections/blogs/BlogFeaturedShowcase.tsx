@@ -151,25 +151,32 @@ export const BlogFeaturedShowcase: React.FC<BlogFeaturedShowcaseProps> = ({
                   <button
                     key={track.id}
                     onClick={() => setActiveTrackIndex(idx)}
-                    className={`group relative text-left p-5 sm:p-6 rounded-[24px] border transition-all duration-300 cursor-pointer flex items-center justify-between gap-4 overflow-hidden ${
+                    className={`group relative text-left p-5 sm:p-6 rounded-[26px] border transition-all duration-300 cursor-pointer flex items-center justify-between gap-4 overflow-hidden select-none ${
                       isActive
-                        ? "bg-white border-2 border-[#7567EE] shadow-[0_10px_30px_rgba(117,103,238,0.15)] scale-[1.01]"
-                        : "bg-white/80 border-[#141416]/10 hover:bg-white hover:border-[#141416]/20"
+                        ? "bg-white border-2 border-[#7567EE] shadow-[0_20px_45px_rgba(117,103,238,0.15),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-[#7567EE]/30 scale-[1.015]"
+                        : "bg-white/75 hover:bg-white border-[#141416]/10 hover:border-[#141416]/22 shadow-[0_6px_24px_rgba(20,20,22,0.03),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-sm hover:scale-[1.008]"
                     }`}
                   >
-                    <div className="flex items-start gap-4">
+                    {/* Active Indicator Accent Bar */}
+                    {isActive && (
+                      <div className="absolute left-0 top-5 bottom-5 w-1 rounded-r-full bg-[#7567EE]" />
+                    )}
+
+                    <div className="flex items-start gap-4 flex-1 min-w-0">
                       <span
-                        className={`text-sm font-mono font-bold transition-colors ${
-                          isActive ? "text-[#7567EE]" : "text-[#141416]"
+                        className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md border shrink-0 transition-colors ${
+                          isActive 
+                            ? "bg-[#7567EE]/10 border-[#7567EE]/30 text-[#7567EE]" 
+                            : "bg-[#141416]/5 border-[#141416]/10 text-[#141416]/60"
                         }`}
                       >
-                        [ {track.index} ]
+                        {track.index}
                       </span>
 
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h4
-                          className={`text-base sm:text-lg font-heading font-black uppercase tracking-tight transition-colors line-clamp-2 ${
-                            isActive ? "text-[#141416]" : "text-[#141416]/80 group-hover:text-[#141416]"
+                          className={`text-sm sm:text-base font-heading font-black uppercase tracking-tight transition-colors line-clamp-2 ${
+                            isActive ? "text-[#141416]" : "text-[#141416]/85 group-hover:text-[#7567EE]"
                           }`}
                         >
                           {track.title}
@@ -178,10 +185,10 @@ export const BlogFeaturedShowcase: React.FC<BlogFeaturedShowcaseProps> = ({
                     </div>
 
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                      className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all ${
                         isActive
-                          ? "bg-[#141416] text-[#D5FF3F] scale-105"
-                          : "bg-black/5 text-[#141416] group-hover:bg-[#141416] group-hover:text-white"
+                          ? "bg-[#141416] text-[#D5FF3F] scale-105 shadow-sm"
+                          : "bg-[#141416]/5 text-[#141416]/60 group-hover:bg-[#141416] group-hover:text-white"
                       }`}
                     >
                       <ArrowUpRight className="w-4 h-4" />

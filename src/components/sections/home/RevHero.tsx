@@ -7,7 +7,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { BrandButton } from "@/components/shared/BrandButton";
 
 export const RevHero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -309,10 +308,6 @@ export const RevHero: React.FC = () => {
                     {rotatingWords[wordIndex]}
                   </span>
                 </h2>
-
-                <div className="mt-5 sm:mt-7 pointer-events-auto">
-                  <BrandButton label="EXPLORE WORK" href="#projects" size="md" />
-                </div>
               </div>
             </div>
 

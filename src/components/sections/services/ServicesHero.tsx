@@ -2,129 +2,66 @@
 
 import React, { useRef, useEffect } from "react";
 import Image from "next/image";
-import { Film, Compass, ArrowDown } from "lucide-react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { BrandButton } from "@/components/shared/BrandButton";
+import { gsap } from "@/lib/gsap";
 
 export const ServicesHero: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const fgRef = useRef<HTMLDivElement>(null);
-  const contentOverlayRef = useRef<HTMLDivElement>(null);
 
-  // 3D Perspective Tilt on Mouse Movement (Desktop)
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!stageRef.current) return;
-    const rect = stageRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-
-    gsap.to(stageRef.current, {
-      rotateY: x * 4,
-      rotateX: -y * 4,
-      scale: 1.01,
-      duration: 0.4,
-      ease: "power2.out",
-      transformPerspective: 1400,
-    });
-
-    if (textRef.current) {
-      gsap.to(textRef.current, {
-        x: x * 12,
-        y: y * 8,
-        duration: 0.5,
-        ease: "power2.out",
-      });
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!stageRef.current) return;
-    gsap.to(stageRef.current, {
-      rotateY: 0,
-      rotateX: 0,
-      scale: 1,
-      duration: 0.6,
-      ease: "power2.out",
-    });
-    if (textRef.current) {
-      gsap.to(textRef.current, {
-        x: 0,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      });
-    }
-  };
-
-  // Multi-Layer Cinematic Parallax Scroll Scrubbing (Matching Reference Video)
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    const stage = stageRef.current;
+    const textEl = textRef.current;
+    if (!container || !stage || !textEl) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=120%",
-          scrub: 1.2,
-          pin: false,
+      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+      // 1. Smooth Banner Entrance Settle
+      tl.fromTo(
+        stage,
+        {
+          opacity: 0.25,
+          scale: 0.98,
         },
-      });
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: "power2.out",
+        }
+      );
 
-      // 1. Deep Background layer moves slowly with subtle zoom
-      if (bgRef.current) {
-        tl.to(
-          bgRef.current,
+      // 2. Ken Burns Horizon Pan: background glides smoothly along X-axis
+      if (imageRef.current) {
+        tl.fromTo(
+          imageRef.current,
           {
-            y: 80,
-            scale: 1.08,
-            ease: "none",
+            scale: 1.15,
+            xPercent: -5,
+            filter: "brightness(0.65)",
+          },
+          {
+            scale: 1.0,
+            xPercent: 0,
+            filter: "brightness(0.85)",
+            duration: 1.8,
+            ease: "power2.out",
           },
           0
         );
       }
 
-      // 2. Middle Typography ('SERVICES') moves up at medium speed, sinking behind the mountain ridges
-      if (textRef.current) {
-        tl.to(
-          textRef.current,
-          {
-            y: -140,
-            opacity: 0.4,
-            ease: "none",
-          },
-          0
-        );
-      }
-
-      // 3. Foreground Ridge Layer moves up rapidly, occluding the typography
-      if (fgRef.current) {
-        tl.to(
-          fgRef.current,
-          {
-            y: -190,
-            ease: "none",
-          },
-          0
-        );
-      }
-
-      // 4. Floating UI and Center CTA Pill fade gently as user navigates down
-      if (contentOverlayRef.current) {
-        tl.to(
-          contentOverlayRef.current,
-          {
-            y: -60,
-            opacity: 0.85,
-            ease: "none",
-          },
-          0
-        );
-      }
-    }, containerRef);
+      // 3. Lateral Kinetic Typography Slide from Left
+      tl.fromTo(
+        textEl.children,
+        { x: -50, opacity: 0 },
+        { x: 0, opacity: 1, duration: 1.0, stagger: 0.14, ease: "power3.out" },
+        "-=1.1"
+      );
+    }, container);
 
     return () => ctx.revert();
   }, []);
@@ -132,130 +69,39 @@ export const ServicesHero: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative pt-24 sm:pt-32 pb-8 sm:pb-14 px-4 sm:px-8 max-w-[1400px] mx-auto w-full select-none"
+      className="relative w-full pt-28 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-8 max-w-[1440px] mx-auto select-none"
     >
-      {/* ========================================================================= */}
-      {/* 3D TILT CINEMATIC STAGE CONTAINER (Matches Reference Mockup Aesthetic)    */}
-      {/* ========================================================================= */}
+      {/* 70% Viewport Height Banner Stage with Ken Burns Horizon Pan */}
       <div
         ref={stageRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="relative w-full h-[540px] sm:h-[640px] md:h-[720px] rounded-[36px] sm:rounded-[48px] overflow-hidden border border-[#141416]/12 shadow-[0_24px_70px_rgba(0,0,0,0.14)] bg-[#0C1B24] transition-shadow duration-500"
-        style={{ transformStyle: "preserve-3d" }}
+        className="relative w-full h-[70vh] min-h-[480px] max-h-[620px] rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.18)] will-change-transform"
       >
-        {/* ----------------------------------------------------------------------- */}
-        {/* LAYER 1: Deep Alpine Sky & Distant Mountain Peaks Backdrop              */}
-        {/* ----------------------------------------------------------------------- */}
-        <div
-          ref={bgRef}
-          className="absolute inset-0 w-full h-[120%] -top-[10%] select-none pointer-events-none will-change-transform"
-        >
+        {/* Full-Width Background Cinema Image */}
+        <div ref={imageRef} className="absolute inset-0 w-[110%] -left-[5%] h-full will-change-transform">
           <Image
-            src="/images/services/services_hero_lake.jpg"
-            alt="Alpine Landscape Panorama Background"
+            src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2070&auto=format&fit=crop"
+            alt="Commercial Video Production Cinema Camera Rig"
             fill
             priority
-            className="object-cover object-top filter brightness-[0.98] contrast-[1.05]"
+            className="object-cover object-center"
             sizes="100vw"
           />
-          {/* Subtle gradient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0C1B24]/90 via-transparent to-black/30" />
+          {/* Top-Left Biased Gradient Scrim for Top-Left Heading Readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/55 to-black/25" />
         </div>
 
-        {/* ----------------------------------------------------------------------- */}
-        {/* LAYER 2: Massive 3D Sandwiched Typography ('SERVICES')                  */}
-        {/* ----------------------------------------------------------------------- */}
-        <div
-          ref={textRef}
-          className="absolute inset-x-0 top-[18%] sm:top-[16%] md:top-[15%] flex items-center justify-center pointer-events-none z-10 select-none will-change-transform"
-        >
-          <h1
-            className="text-white font-black tracking-tight text-center uppercase drop-shadow-[0_12px_30px_rgba(0,0,0,0.6)]"
-            style={{
-              fontFamily: "'Humane', sans-serif",
-              fontSize: "clamp(90px, 18vw, 250px)",
-              lineHeight: 0.82,
-              letterSpacing: "0.02em",
-              textShadow: "0 10px 40px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.7)",
-            }}
-          >
-            SERVICES
-          </h1>
-        </div>
-
-        {/* ----------------------------------------------------------------------- */}
-        {/* LAYER 3: Foreground Pine Ridges, Mountain Slope & Serene Lake Shore     */}
-        {/* (Transparent cutout: occludes the typography as it scrolls up!)         */}
-        {/* ----------------------------------------------------------------------- */}
-        <div
-          ref={fgRef}
-          className="absolute inset-0 w-full h-[120%] -top-[5%] select-none pointer-events-none z-20 will-change-transform"
-        >
-          <Image
-            src="/images/services/services_lake_fg.png"
-            alt="Alpine Mountain Ridges Foreground Cutout"
-            fill
-            priority
-            className="object-cover object-top"
-            sizes="100vw"
-          />
-          {/* Seamless bottom fade into deep stage tone */}
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#0C1B24] via-[#0C1B24]/70 to-transparent" />
-        </div>
-
-        {/* ----------------------------------------------------------------------- */}
-        {/* LAYER 4: Interactive Floating UI Layer (Clean, Uncluttered, Pure Focus)  */}
-        {/* ----------------------------------------------------------------------- */}
-        <div
-          ref={contentOverlayRef}
-          className="absolute inset-0 z-30 flex flex-col justify-between p-6 sm:p-10 md:p-12 pointer-events-none"
-        >
-          {/* Top Metadata Row: Minimal editorial navigation */}
-          <div className="flex items-center justify-between gap-4 pointer-events-auto">
-            {/* Left Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white text-xs font-mono uppercase tracking-wider shadow-sm">
-              <Film size={13} className="text-[#D4FF1F]" />
-              <span className="font-semibold">DIRECTORS ARCHIVE • 2026</span>
+        {/* Minimal Editorial Content Layer - Top-Left Corner Aligned */}
+        <div className="absolute inset-0 z-10 flex flex-col justify-start items-start p-8 sm:p-12 md:p-14 text-white">
+          <div ref={textRef} className="max-w-3xl text-left">
+            <h1 className="font-serif italic text-white/90 text-3xl sm:text-5xl md:text-6xl leading-none mb-2.5 drop-shadow-md">
+              CAPABILITIES &
+            </h1>
+            <div className="font-heading font-black uppercase text-white text-4xl sm:text-6xl md:text-7xl tracking-tight leading-none drop-shadow-lg">
+              PRODUCTION <span className="text-[#7567EE]">SOLUTIONS</span>
             </div>
-
-            {/* Center Logo Monogram Accent */}
-            <div className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white font-mono font-bold text-xs shadow-sm">
-              M
-            </div>
-
-            {/* Right Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white text-xs font-mono uppercase tracking-wider shadow-sm">
-              <Compass size={13} className="text-[#7567EE]" />
-              <span className="font-semibold">4K CINEMA MASTERING</span>
-            </div>
-          </div>
-
-          {/* Center Floating Action Pill: Signature Neon BrandButton */}
-          <div className="flex flex-col items-center justify-center my-auto pointer-events-auto pt-16 sm:pt-20">
-            <span className="text-white/80 font-mono text-[11px] sm:text-xs uppercase tracking-[0.25em] mb-3 text-center drop-shadow-md">
-              Full Spectrum Commercial Video Production
-            </span>
-
-            <BrandButton
-              size="lg"
-              href="#services-spotlight"
-              label="EXPLORE SERVICES"
-            />
-          </div>
-
-          {/* Bottom Row: Micro Narrative & Smooth Scroll Prompt */}
-          <div className="flex items-end justify-between gap-4 pointer-events-auto pt-4">
-            <div className="max-w-xs sm:max-w-md hidden sm:block">
-              <p className="text-xs sm:text-sm text-white/90 font-sans leading-relaxed drop-shadow-md">
-                From high-stakes multi-city shoots to rapid decentralized post-production — explore our end-to-end commercial filmmaking capabilities.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 text-white/80 font-mono text-[11px] sm:text-xs uppercase tracking-wider ml-auto">
-              <ArrowDown size={14} className="text-[#D4FF1F] animate-bounce" />
-              <span>Scroll To Discover</span>
-            </div>
+            <p className="mt-4 sm:mt-5 text-white/80 font-sans text-xs sm:text-sm md:text-base max-w-xl leading-relaxed drop-shadow-md">
+              From on-ground multi-camera crews deployed across 50+ cities to remote cloud post-production suites engineered for high-stakes speed and tier-1 reliability.
+            </p>
           </div>
         </div>
       </div>

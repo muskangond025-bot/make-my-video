@@ -97,93 +97,91 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
         {/* ========================================================================= */}
         {/* EDITORIAL MASTER STAGE: Balanced Height Across Left and Right Columns     */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* ----------------------------------------------------------------------- */}
-          {/* PRIMARY COLUMN: Flagship Stage Card (Perfect Height Balance) (7 Cols)   */}
+          {/* PRIMARY COLUMN: Flagship Stage Card (Compact, Content-Hugging) (7 Cols) */}
           {/* ----------------------------------------------------------------------- */}
-          <div className="lg:col-span-7 flex flex-col h-full">
+          <div className="lg:col-span-7 flex flex-col">
             <div
               ref={stageRef}
               onMouseEnter={() => setIsPaused(true)}
               onMouseMove={handleStageMouseMove}
               onMouseLeave={handleStageMouseLeave}
               onClick={() => handleOpenArticle(activePost)}
-              className="group relative w-full h-full rounded-[28px] sm:rounded-[36px] overflow-hidden bg-white text-[#141416] border border-[#141416]/10 p-6 sm:p-8 shadow-[0_12px_36px_rgba(20,20,22,0.06)] hover:shadow-[0_18px_48px_rgba(20,20,22,0.12)] hover:border-[#7567EE] transition-all duration-300 flex flex-col justify-between cursor-pointer"
+              className="group relative w-full rounded-[28px] sm:rounded-[32px] overflow-hidden bg-white text-[#141416] border border-[#141416]/10 p-5 sm:p-6 shadow-[0_12px_36px_rgba(20,20,22,0.06)] hover:shadow-[0_18px_48px_rgba(20,20,22,0.12)] hover:border-[#7567EE] transition-all duration-300 flex flex-col cursor-pointer"
               style={{ transformStyle: "preserve-3d" }}
             >
               {/* Corner Viewfinder Reticles [ ] in Signature Lavender */}
-              <div className="absolute top-5 left-5 w-5 h-5 border-t-2 border-l-2 border-[#7567EE] pointer-events-none z-20" />
-              <div className="absolute top-5 right-5 w-5 h-5 border-t-2 border-r-2 border-[#7567EE] pointer-events-none z-20" />
-              <div className="absolute bottom-5 left-5 w-5 h-5 border-b-2 border-l-2 border-[#7567EE] pointer-events-none z-20" />
-              <div className="absolute bottom-5 right-5 w-5 h-5 border-b-2 border-r-2 border-[#7567EE] pointer-events-none z-20" />
+              <div className="absolute top-4 left-4 w-5 h-5 border-t-2 border-l-2 border-[#7567EE] pointer-events-none z-20" />
+              <div className="absolute top-4 right-4 w-5 h-5 border-t-2 border-r-2 border-[#7567EE] pointer-events-none z-20" />
+              <div className="absolute bottom-4 left-4 w-5 h-5 border-b-2 border-l-2 border-[#7567EE] pointer-events-none z-20" />
+              <div className="absolute bottom-4 right-4 w-5 h-5 border-b-2 border-r-2 border-[#7567EE] pointer-events-none z-20" />
 
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  {/* Visual Media Container: Perfectly proportioned aspect ratio */}
-                  <div className="relative w-full aspect-[16/10] sm:aspect-[16/9.5] rounded-[22px] sm:rounded-[26px] overflow-hidden bg-black/5 mb-5 border border-[#141416]/10">
-                    {featuredPosts.map((p, idx) => (
-                      <div
-                        key={p.id}
-                        className="absolute inset-0 transition-all duration-700 ease-out"
-                        style={{
-                          opacity: idx === currentIndex ? 1 : 0,
-                          transform: idx === currentIndex ? "scale(1)" : "scale(1.05)",
-                          pointerEvents: idx === currentIndex ? "auto" : "none",
-                        }}
-                      >
-                        <Image
-                          src={p.image}
-                          alt={p.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1024px) 100vw, 60vw"
-                          priority={idx === 0}
-                        />
-                      </div>
-                    ))}
-
-                    {/* Subtle 3-Second Cycle Progress Bar Indicator */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10 overflow-hidden z-20">
-                      <div
-                        key={currentIndex}
-                        className="h-full bg-[#7567EE]"
-                        style={{
-                          animation: isPaused ? "none" : "linear 3s forwards expandProgress",
-                        }}
+              <div>
+                {/* Visual Media Container: Clean 16:9 Cinema Aspect Ratio */}
+                <div className="relative w-full aspect-[16/9] rounded-[20px] overflow-hidden bg-black/5 mb-4 border border-[#141416]/10">
+                  {featuredPosts.map((p, idx) => (
+                    <div
+                      key={p.id}
+                      className="absolute inset-0 transition-all duration-700 ease-out"
+                      style={{
+                        opacity: idx === currentIndex ? 1 : 0,
+                        transform: idx === currentIndex ? "scale(1)" : "scale(1.05)",
+                        pointerEvents: idx === currentIndex ? "auto" : "none",
+                      }}
+                    >
+                      <Image
+                        src={p.image}
+                        alt={p.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 60vw"
+                        priority={idx === 0}
                       />
                     </div>
+                  ))}
+
+                  {/* Subtle 3-Second Cycle Progress Bar Indicator */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10 overflow-hidden z-20">
+                    <div
+                      key={currentIndex}
+                      className="h-full bg-[#7567EE]"
+                      style={{
+                        animation: isPaused ? "none" : "linear 3s forwards expandProgress",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Animated Text Content Block */}
+                <div key={activePost.id} className="transition-all duration-500 ease-out">
+                  {/* Metadata Line */}
+                  <div className="flex items-center gap-2.5 text-xs font-mono text-[#4A4658] mb-2">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-[#7567EE]" />
+                      {activePost.date}
+                    </span>
+                    <span>&bull;</span>
+                    <span>By Rohan Joshi</span>
                   </div>
 
-                  {/* Animated Text Content Block */}
-                  <div key={activePost.id} className="transition-all duration-500 ease-out">
-                    {/* Metadata Line */}
-                    <div className="flex items-center gap-2.5 text-xs font-mono text-[#4A4658] mb-2.5">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-[#7567EE]" />
-                        {activePost.date}
-                      </span>
-                      <span>&bull;</span>
-                      <span>By Rohan Joshi</span>
-                    </div>
+                  {/* Flagship Headline */}
+                  <h3 className="typo-h3 sm:text-2xl lg:text-[26px] font-heading font-black uppercase text-[#141416] leading-snug mb-2 tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-2">
+                    {activePost.title}
+                  </h3>
 
-                    {/* Flagship Headline */}
-                    <h3 className="typo-h3 sm:text-2xl lg:text-3xl font-heading font-black uppercase text-[#141416] leading-tight mb-3 tracking-tight group-hover:text-[#7567EE] transition-colors line-clamp-2">
-                      {activePost.title}
-                    </h3>
-
-                    {/* Excerpt */}
-                    <p className="typo-body text-[#33303E] font-normal leading-relaxed mb-4 line-clamp-2">
-                      {activePost.excerpt}
-                    </p>
-                  </div>
+                  {/* Excerpt */}
+                  <p className="typo-body text-[#33303E] text-sm sm:text-base font-normal leading-relaxed line-clamp-2">
+                    {activePost.excerpt}
+                  </p>
                 </div>
               </div>
 
-              {/* Action Bottom Row matching BrandButton */}
-              <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between">
+              {/* Action Bottom Row sitting neatly under excerpt with zero awkward gap */}
+              <div className="mt-4 pt-3.5 border-t border-[#141416]/10 flex items-center justify-between">
                 <BrandButton
                   size="sm"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleOpenArticle(activePost);
                   }}
@@ -198,11 +196,12 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
           </div>
 
           {/* ----------------------------------------------------------------------- */}
-          {/* SECONDARY COLUMN: Strictly 3 Cards Matching Left Column Height (5 Cols) */}
+          {/* SECONDARY COLUMN: Perfectly Sized, Proportional 3 Cards (5 Cols)        */}
           {/* ----------------------------------------------------------------------- */}
-          <div className="lg:col-span-5 flex flex-col justify-between gap-3.5 h-full">
+          <div className="lg:col-span-5 flex flex-col gap-3">
             {featuredPosts.map((sec, idx) => {
               const isActive = idx === currentIndex;
+
               return (
                 <div
                   key={sec.id}
@@ -211,14 +210,19 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
                   }}
                   onMouseEnter={() => setIsPaused(true)}
                   onMouseLeave={() => setIsPaused(false)}
-                  className={`group relative flex-1 rounded-[22px] sm:rounded-[26px] p-4 sm:p-5 transition-all duration-300 cursor-pointer flex flex-col sm:flex-row gap-4 items-center justify-between select-none ${
+                  className={`group relative rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-4 transition-all duration-300 cursor-pointer flex flex-col sm:flex-row gap-3.5 items-center justify-between select-none border ${
                     isActive
-                      ? "bg-white border-2 border-[#7567EE] shadow-[0_10px_30px_rgba(117,103,238,0.12)] scale-[1.01]"
-                      : "bg-white/80 border border-[#141416]/10 hover:bg-white hover:border-[#141416]/20"
+                      ? "bg-white border-2 border-[#7567EE] shadow-[0_16px_36px_rgba(117,103,238,0.14),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-[#7567EE]/25 scale-[1.01]"
+                      : "bg-white/80 hover:bg-white border-[#141416]/10 hover:border-[#141416]/22 shadow-[0_4px_16px_rgba(20,20,22,0.03),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-sm hover:scale-[1.006]"
                   }`}
                 >
-                  {/* Thumbnail */}
-                  <div className="relative w-full sm:w-32 aspect-[16/10] sm:aspect-[16/11] rounded-[16px] overflow-hidden shrink-0 bg-black/5">
+                  {/* Active Indicator Bar */}
+                  {isActive && (
+                    <div className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full bg-[#7567EE]" />
+                  )}
+
+                  {/* Thumbnail with Cinema Bezel (No PART badge) */}
+                  <div className="relative w-full sm:w-28 sm:h-24 aspect-[16/10] sm:aspect-auto rounded-[14px] overflow-hidden shrink-0 bg-black/5 shadow-inner border border-[#141416]/10">
                     <Image
                       src={sec.image}
                       alt={sec.title}
@@ -228,11 +232,11 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
                     />
                   </div>
 
-                  {/* Info */}
+                  {/* Info Column (No [02 // ...] badge) */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between w-full h-full">
                     <div>
                       <h4
-                        className={`typo-h3 text-sm sm:text-base font-heading font-black uppercase tracking-tight leading-snug line-clamp-2 mb-1.5 transition-colors ${
+                        className={`text-sm sm:text-[15px] font-heading font-black uppercase tracking-tight leading-snug line-clamp-2 mb-1 transition-colors ${
                           isActive
                             ? "text-[#7567EE]"
                             : "text-[#141416] group-hover:text-[#7567EE]"
@@ -241,19 +245,23 @@ export const BlogFeatured: React.FC<BlogFeaturedProps> = ({
                         {sec.title}
                       </h4>
 
-                      <p className="typo-small text-[#4A4658] line-clamp-1 font-normal leading-relaxed">
+                      <p className="text-xs font-sans text-[#4A4658] line-clamp-1 font-normal leading-relaxed">
                         {sec.excerpt}
                       </p>
                     </div>
 
-                    <div className="pt-2 mt-2 border-t border-[#141416]/10 flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#4A4658] text-[11px]">{sec.date}</span>
+                    <div className="pt-2 mt-1.5 border-t border-[#141416]/10 flex items-center justify-between text-xs font-mono">
+                      <span className="text-[#4A4658] text-[11px] font-medium">{sec.date}</span>
                       <button
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleOpenArticle(sec);
                         }}
-                        className="inline-flex items-center gap-1 text-[#141416] font-bold hover:text-[#7567EE] transition-colors text-[11px]"
+                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold font-sans transition-all ${
+                          isActive
+                            ? "bg-[#7567EE] text-white shadow-sm"
+                            : "bg-[#141416]/5 text-[#141416] hover:bg-[#7567EE] hover:text-white"
+                        }`}
                       >
                         <span>Inspect</span>
                         <ArrowUpRight className="w-3 h-3" />

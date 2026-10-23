@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { ArrowRight, Volume2, VolumeX } from "lucide-react";
-import { BrandButton } from "@/components/shared/BrandButton";
 
 interface SpotlightItem {
   id: string;
@@ -96,17 +95,8 @@ export const JoinSpotlights: React.FC = () => {
         {/* Stationary Light Stage Card */}
         <div className="w-full max-w-[1360px] rounded-[36px] sm:rounded-[48px] bg-white border border-[#141416]/10 text-[#141416] p-7 sm:p-11 lg:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.06)] relative overflow-hidden">
           
-          {/* Top Bar: Clean Right-Aligned (APPLY) -> Button (No border-b dividing line) */}
-          <div className="flex items-center justify-end mb-6">
-            <BrandButton
-              size="sm"
-              href="#application-form"
-              label="APPLY"
-            />
-          </div>
-
           {/* Two-Column Internal Sliding Stage */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center pt-2 sm:pt-4">
             
             {/* ------------------------------------------------------------------- */}
             {/* LEFT COLUMN: ROLLING TYPOGRAPHY & TAGS STACK                        */}
@@ -146,8 +136,8 @@ export const JoinSpotlights: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 2. Rolling Description (Zero quotes, clean paragraph) */}
-                <div className="h-[80px] sm:h-[95px] overflow-hidden relative mb-8">
+                {/* 2. Rolling Description (Generous height so multi-line text is never clipped) */}
+                <div className="h-[110px] sm:h-[120px] overflow-hidden relative mb-6">
                   <div
                     className="h-full flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
                     style={{
@@ -156,7 +146,7 @@ export const JoinSpotlights: React.FC = () => {
                   >
                     {SPOTLIGHTS.map((s) => (
                       <div key={s.id} className="h-full shrink-0 flex items-start">
-                        <p className="typo-body text-[#4A4658] font-normal leading-relaxed max-w-xl">
+                        <p className="typo-body text-[#4A4658] font-normal leading-relaxed text-sm sm:text-base max-w-xl">
                           {s.description}
                         </p>
                       </div>

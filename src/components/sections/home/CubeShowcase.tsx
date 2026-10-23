@@ -129,20 +129,85 @@ const ALL_FACES: { key: "front" | "back" | "right" | "left" | "top" | "bottom" }
 export const CubeShowcase: React.FC = () => {
   const [hoveredProject, setHoveredProject] = useState<ProjectItem | null>(null);
   const [isMarqueeStopped, setIsMarqueeStopped] = useState(false);
+  const hoveredProjectRef = useRef<ProjectItem | null>(null);
   const marqueeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const leaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pauseTimeoutsRef = useRef<Record<string, NodeJS.Timeout>>({});
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
 
-  // Instant smooth video playback and pausing
+  const handleItemMouseEnter = (project: ProjectItem) => {
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+    hoveredProjectRef.current = project;
+    setHoveredProject(project);
+  };
+
+  const handleListMouseLeave = () => {
+    if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+    leaveTimerRef.current = setTimeout(() => {
+      hoveredProjectRef.current = null;
+      setHoveredProject(null);
+    }, 120);
+  };
+
+  // Preload and ensure all videos are buffered and ready
+  useEffect(() => {
+    FEATURED_PROJECTS.forEach((project) => {
+      const vid = videoRefs.current[project.id];
+      if (vid) {
+        vid.muted = true;
+        vid.playsInline = true;
+        if (vid.readyState === 0) {
+          vid.load();
+        }
+      }
+    });
+  }, []);
+
+  // Cinematic smooth video playback and graceful dissolve
   useEffect(() => {
     FEATURED_PROJECTS.forEach((project) => {
       const vid = videoRefs.current[project.id];
       if (!vid) return;
 
       if (hoveredProject?.id === project.id) {
-        vid.currentTime = 0;
-        vid.play().catch(() => {});
+        // Cancel any pending pause timeout for the newly active video
+        if (pauseTimeoutsRef.current[project.id]) {
+          clearTimeout(pauseTimeoutsRef.current[project.id]);
+          delete pauseTimeoutsRef.current[project.id];
+        }
+
+        // Always ensure muted to guarantee browser autoplay compliance
+        vid.muted = true;
+
+        // Start playback
+        const playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // If interrupted by quick hover switch, retry once after a short tick
+            setTimeout(() => {
+              if (hoveredProjectRef.current?.id === project.id && vid.paused) {
+                vid.play().catch(() => {});
+              }
+            }, 60);
+          });
+        }
       } else {
-        vid.pause();
+        // Video is not active: clear any existing pause timeout for this video
+        if (pauseTimeoutsRef.current[project.id]) {
+          clearTimeout(pauseTimeoutsRef.current[project.id]);
+        }
+
+        // Schedule pause after CSS fadeout (600ms) so dissolve is smooth
+        pauseTimeoutsRef.current[project.id] = setTimeout(() => {
+          if (hoveredProjectRef.current?.id !== project.id) {
+            vid.pause();
+            vid.currentTime = 0;
+          }
+          delete pauseTimeoutsRef.current[project.id];
+        }, 600);
       }
     });
 
@@ -150,16 +215,24 @@ export const CubeShowcase: React.FC = () => {
       if (marqueeTimerRef.current) clearTimeout(marqueeTimerRef.current);
       marqueeTimerRef.current = setTimeout(() => {
         setIsMarqueeStopped(true);
-      }, 1000);
+      }, 800);
     } else {
       if (marqueeTimerRef.current) clearTimeout(marqueeTimerRef.current);
       setIsMarqueeStopped(false);
     }
+  }, [hoveredProject]);
 
+  // Clean up all timers on unmount
+  useEffect(() => {
     return () => {
       if (marqueeTimerRef.current) clearTimeout(marqueeTimerRef.current);
+      if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+      Object.keys(pauseTimeoutsRef.current).forEach((key) => {
+        clearTimeout(pauseTimeoutsRef.current[key]);
+        delete pauseTimeoutsRef.current[key];
+      });
     };
-  }, [hoveredProject]);
+  }, []);
 
   return (
     <section
@@ -194,7 +267,7 @@ export const CubeShowcase: React.FC = () => {
                 muted
                 loop
                 playsInline
-                preload="none"
+                preload="auto"
               />
 
               {/* Minimal Dark Scrim on Bottom to Keep Subtle UI Clear */}
@@ -259,10 +332,11 @@ export const CubeShowcase: React.FC = () => {
         </div>
       </div>
 
-      {/* 5. Minimal List View (Direct On/Off on Item Hover/Unhover) */}
+      {/* 5. Minimal List View (Reliable Instant Hover & Seamless Switching) */}
       <div
         className={`cube-archive-list ${hoveredProject ? "video-active" : ""}`}
         id="js-list"
+        onMouseLeave={handleListMouseLeave}
       >
         {FEATURED_PROJECTS.map((project) => {
           const isActive = hoveredProject?.id === project.id;
@@ -270,8 +344,7 @@ export const CubeShowcase: React.FC = () => {
             <div
               key={project.id}
               className={`cube-list-item ${isActive ? "active" : ""}`}
-              onMouseEnter={() => setHoveredProject(project)}
-              onMouseLeave={() => setHoveredProject(null)}
+              onMouseEnter={() => handleItemMouseEnter(project)}
             >
               {project.number}. {project.name}
             </div>

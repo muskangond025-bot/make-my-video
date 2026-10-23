@@ -16,8 +16,8 @@ export const CtaSection: React.FC = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        start: "top 75%",
-        toggleActions: "restart pause resume pause",
+        start: "top 80%",
+        toggleActions: "play none none reverse",
       },
     });
 
@@ -40,18 +40,18 @@ export const CtaSection: React.FC = () => {
       tl.fromTo(
         pillRef.current,
         {
-          scale: 0.82,
+          scale: 0.88,
           opacity: 0,
-          y: 35,
+          y: 20,
         },
         {
           scale: 1,
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.7,
           ease: "power3.out",
         },
-        "-=0.6"
+        "-=0.5"
       );
     }
 
@@ -109,34 +109,41 @@ export const CtaSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Overlaid Center Neon Pill Button matching the site-wide design */}
-        <a
-          ref={pillRef}
-          href="#contact"
-          className="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group inline-flex items-center justify-between gap-3 sm:gap-5 bg-[#D4FF1F] hover:bg-[#c9f518] active:bg-[#bde814] rounded-full py-2.5 sm:py-3.5 pl-6 sm:pl-8 pr-3 sm:pr-4 shadow-[0_0_35px_rgba(212,255,31,0.55)] hover:shadow-[0_0_50px_rgba(212,255,31,0.8)] transition-all duration-300 hover:scale-105 active:scale-95 will-change-transform cursor-pointer"
-        >
-          {/* Inner White Outline Pill Hugging the Contact Typography */}
-          <span className="inline-flex items-center justify-center border border-white/90 rounded-full px-4 sm:px-5 py-1 sm:py-1.5 font-sans font-black text-lg sm:text-2xl md:text-3xl text-black tracking-wider uppercase select-none">
-            CONTACT
-          </span>
+        {/* Overlaid Center Pill Button (Restored Previous Signature Design) */}
+        <div className="absolute z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto flex items-center justify-center">
+          <a
+            ref={pillRef}
+            href="#contact"
+            className="group flex items-center gap-3 sm:gap-5 bg-[#17171A]/95 hover:bg-[#1C1C20] border-2 border-white/25 hover:border-white/60 rounded-full pl-6 sm:pl-9 pr-3 sm:pr-4 py-2.5 sm:py-3.5 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-300 hover:scale-105 will-change-transform cursor-pointer"
+          >
+            {/* Contact Label with Distinct Ring Highlight */}
+            <span className="font-heading font-black text-xl sm:text-2xl md:text-3xl text-white tracking-wider flex items-center relative">
+              C
+              <span className="relative inline-flex items-center justify-center">
+                O
+                <span className="absolute inset-0 m-auto w-3.5 h-3.5 rounded-full bg-white/20 border border-white/50 animate-ping pointer-events-none" />
+              </span>
+              NTACT
+            </span>
 
-          {/* Right Purple Circle with Black Arrow */}
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#7567EE] flex items-center justify-center text-black flex-shrink-0 shadow-sm transition-transform duration-300 group-hover:translate-x-1">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#000000"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-5 h-5 sm:w-6 sm:h-6"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </div>
-        </a>
+            {/* Right White Circle Button with Black Arrow */}
+            <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white group-hover:bg-zinc-100 flex items-center justify-center text-black flex-shrink-0 shadow-[0_4px_16px_rgba(255,255,255,0.25)] transition-all duration-300 group-hover:translate-x-1">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-5 h-5 sm:w-6 sm:h-6"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+        </div>
 
       </div>
 

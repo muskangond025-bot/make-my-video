@@ -1,108 +1,98 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { ArrowDown, Sparkles } from "lucide-react";
-import { gsap } from "gsap";
-import { BrandButton } from "@/components/shared/BrandButton";
+import React, { useRef, useEffect } from "react";
+import Image from "next/image";
+import { gsap } from "@/lib/gsap";
 
 export const JoinHero: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
-  const title1Ref = useRef<HTMLHeadingElement>(null);
-  const title2Ref = useRef<HTMLHeadingElement>(null);
-  const descRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const stageRef = useRef<HTMLDivElement>(null);
+  const shroudRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    const container = containerRef.current;
+    const stage = stageRef.current;
+    const shroud = shroudRef.current;
+    const textEl = textRef.current;
+    if (!container || !stage || !shroud || !textEl) return;
 
-      tl.fromTo(
-        title1Ref.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.0 }
-      )
-        .fromTo(
-          title2Ref.current,
-          { y: 70, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1.1 },
-          "-=0.7"
-        )
-        .fromTo(
-          descRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.9 },
-          "-=0.6"
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+      // 1. Cinematic Shroud Fade-Out Animation (dissolves away to unveil scene)
+      tl.to(shroud, {
+        opacity: 0,
+        duration: 1.4,
+        ease: "power2.inOut",
+      });
+
+      // 2. Background image subtle de-magnification
+      if (imageRef.current) {
+        tl.fromTo(
+          imageRef.current,
+          { scale: 1.12, filter: "brightness(0.65)" },
+          { scale: 1.0, filter: "brightness(0.85)", duration: 1.6, ease: "power2.out" },
+          0
         );
-    }, containerRef);
+      }
+
+      // 3. Crisp Top-Left Typography Fade-In
+      tl.fromTo(
+        textEl.children,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.14, ease: "power3.out" },
+        "-=0.9"
+      );
+    }, container);
 
     return () => ctx.revert();
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
   return (
     <section
       ref={containerRef}
-      onMouseMove={handleMouseMove}
-      className="relative w-full pt-36 pb-16 md:pt-44 md:pb-24 px-6 lg:px-16 overflow-hidden bg-[#EAE3DB] text-[#141416] border-b border-[#141416]/10 select-none"
+      className="relative w-full pt-28 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-8 max-w-[1440px] mx-auto select-none"
     >
-      {/* Soft Interactive Radial Glow matching Home & About */}
+      {/* 70% Viewport Height Banner Stage with Fade-Out Shroud */}
       <div
-        className="absolute pointer-events-none transition-transform duration-500 ease-out"
-        style={{
-          left: mousePos.x,
-          top: mousePos.y,
-          width: "550px",
-          height: "550px",
-          transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(117,103,238,0.14) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Background Ornament Rings */}
-      <div className="absolute top-12 right-12 w-80 h-80 rounded-full border border-[#141416]/5 pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto relative z-10 text-center">
-        {/* Subtle Minimal Eyebrow */}
-        <div className="inline-flex items-center gap-2 mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#7567EE]" />
-          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#4A4658]">
-            Creative Network & Careers
-          </span>
+        ref={stageRef}
+        className="relative w-full h-[70vh] min-h-[480px] max-h-[620px] rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.18)] will-change-transform"
+      >
+        {/* Full-Width Background Imagery */}
+        <div ref={imageRef} className="absolute inset-0 w-full h-full will-change-transform">
+          <Image
+            src="https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?q=80&w=2070&auto=format&fit=crop"
+            alt="Film Crew & Production On-Set Collaboration"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          {/* Top-Left Biased Gradient Scrim for Top-Left Heading Readability */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/55 to-black/25" />
         </div>
 
-        {/* Hero Title */}
-        <h1
-          ref={title1Ref}
-          className="typo-h1 font-serif italic text-[#141416]/90 leading-none mb-2"
-        >
-          JOIN OUR
-        </h1>
-        <h2
-          ref={title2Ref}
-          className="typo-h1 font-heading font-black uppercase text-[#141416] leading-tight tracking-tight mb-6"
-        >
-          CREATIVE <span className="text-[#7567EE]">COMMUNITY</span>
-        </h2>
+        {/* Cinematic Fade-Out Shroud Layer */}
+        <div
+          ref={shroudRef}
+          className="absolute inset-0 z-20 bg-[#141416] pointer-events-none will-change-transform"
+        />
 
-        {/* Description & Action */}
-        <div ref={descRef} className="max-w-2xl mx-auto flex flex-col items-center">
-          <p className="typo-body text-[#4A4658] font-normal leading-relaxed mb-8">
-            Whether you are a meticulous remote video editor or an agile mobile videographer,
-            join Make My Vid to access consistent, paid commercial projects with national & international brands.
-          </p>
-
-          <BrandButton
-            href="#application-form"
-            label="APPLY NOW"
-          />
+        {/* Minimal Hero Content Layer - Top-Left Corner Aligned */}
+        <div className="absolute inset-0 z-10 flex flex-col justify-start items-start p-8 sm:p-12 md:p-14 text-white">
+          <div ref={textRef} className="max-w-3xl text-left">
+            <h1 className="font-serif italic text-white/90 text-3xl sm:text-5xl md:text-6xl leading-none mb-2.5 drop-shadow-md">
+              JOIN OUR
+            </h1>
+            <div className="font-heading font-black uppercase text-white text-4xl sm:text-6xl md:text-7xl tracking-tight leading-none drop-shadow-lg">
+              CREATIVE <span className="text-[#7567EE]">COMMUNITY</span>
+            </div>
+            <p className="mt-4 sm:mt-5 text-white/80 font-sans text-xs sm:text-sm md:text-base max-w-xl leading-relaxed drop-shadow-md">
+              Whether you are an agile on-ground cinema camera operator or a remote post-production artist, collaborate with Make My Vid on tier-1 commercial brand productions.
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -79,7 +79,7 @@ export const ServicesKeyFeatures: React.FC = () => {
         {/* Full-Width Interactive Cine-Metrics Stage in Clean Light Theme */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: Clean Light Pillar Selector Cards (6 Cols) */}
+          {/* Left Column: Ultra-Premium Luxury Pillar Selector Cards (6 Cols) */}
           <div className="lg:col-span-6 flex flex-col justify-between space-y-4">
             {METRICS.map((metric, idx) => {
               const isSelected = activeTab === idx;
@@ -88,26 +88,37 @@ export const ServicesKeyFeatures: React.FC = () => {
                 <div
                   key={metric.id}
                   onClick={() => setActiveTab(idx)}
-                  className={`p-6 sm:p-7 rounded-3xl cursor-pointer transition-all duration-300 border ${
+                  className={`group relative p-6 sm:p-7 rounded-[26px] cursor-pointer transition-all duration-300 border ${
                     isSelected
-                      ? "bg-white text-[#141416] border-[#7567EE] shadow-xl scale-[1.01] ring-1 ring-[#7567EE]/30"
-                      : "bg-white/60 hover:bg-white text-[#141416] border-[#141416]/10 hover:border-[#141416]/20 shadow-sm"
+                      ? "bg-white text-[#141416] border-[#7567EE] shadow-[0_20px_45px_rgba(117,103,238,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-[#7567EE]/35 scale-[1.015]"
+                      : "bg-white/70 hover:bg-white text-[#141416] border-[#141416]/10 hover:border-[#141416]/25 shadow-[0_6px_24px_rgba(20,20,22,0.04),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-md hover:scale-[1.008]"
                   }`}
                 >
-                  <div className="flex items-center gap-3.5 mb-2.5">
-                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
-                      isSelected ? "bg-[#7567EE]/15" : "bg-[#141416]/5"
+                  {/* Active Indicator Accent Bar */}
+                  {isSelected && (
+                    <div className="absolute left-0 top-6 bottom-6 w-1.5 rounded-r-full bg-[#7567EE]" />
+                  )}
+
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      isSelected 
+                        ? "bg-[#7567EE] text-white shadow-md shadow-[#7567EE]/25 scale-105" 
+                        : "bg-[#141416]/5 text-[#141416]/75 group-hover:bg-[#7567EE]/10 group-hover:text-[#7567EE]"
                     }`}>
-                      {metric.icon}
+                      {React.cloneElement(metric.icon as React.ReactElement<{ className?: string }>, {
+                        className: isSelected ? "text-white" : "text-[#7567EE]"
+                      })}
                     </div>
-                    <h3 className={`typo-h3 font-heading font-black tracking-tight transition-colors ${
-                      isSelected ? "text-[#7567EE]" : "text-[#141416]"
-                    }`}>
-                      {metric.tagline}
-                    </h3>
+                    <div>
+                      <h3 className={`typo-h3 font-heading font-black tracking-tight text-lg sm:text-xl transition-colors ${
+                        isSelected ? "text-[#141416]" : "text-[#141416] group-hover:text-[#7567EE]"
+                      }`}>
+                        {metric.tagline}
+                      </h3>
+                    </div>
                   </div>
 
-                  <p className="typo-body font-sans text-[#141416]/75 leading-relaxed pl-13 sm:pl-[54px]">
+                  <p className="typo-body font-sans text-[#141416]/80 text-sm sm:text-base leading-relaxed pl-1 sm:pl-2">
                     {metric.description}
                   </p>
                 </div>

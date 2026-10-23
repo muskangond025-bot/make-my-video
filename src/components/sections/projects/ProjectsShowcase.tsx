@@ -97,7 +97,7 @@ const CARD_STYLES = [
 export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState<boolean>(false);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [cardProgress, setCardProgress] = useState<number>(0);
   const [activeProjectForModal, setActiveProjectForModal] = useState<ProjectItem | null>(null);
 
   const totalCards = projects.length;
@@ -106,32 +106,66 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
     setMounted(true);
   }, []);
 
-  // Handle scroll progress to advance cards in the deck
+  // Continuous cinematic scroll progress with smooth 60fps RAF lerp (zero layout thrashing)
   useEffect(() => {
     if (!mounted || totalCards <= 1) return;
 
-    const handleScroll = () => {
+    let rafId: number;
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let cachedTop = 0;
+    let cachedDistance = 1;
+
+    const measure = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const scrollableDistance = rect.height - windowHeight;
-      if (scrollableDistance <= 0) return;
-
-      const scrolled = -rect.top;
-      const progress = Math.min(Math.max(scrolled / scrollableDistance, 0), 1);
-
-      const rawIndex = Math.floor(progress * totalCards);
-      const nextIndex = Math.min(rawIndex, totalCards - 1);
-      setActiveIndex(nextIndex);
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      cachedTop = rect.top + scrollTop;
+      cachedDistance = Math.max(containerRef.current.offsetHeight - window.innerHeight, 1);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrolled = scrollTop - cachedTop;
+      const raw = Math.min(Math.max(scrolled / cachedDistance, 0), 1);
+      targetProgress = raw * (totalCards - 1);
+    };
+
+    const updateLoop = () => {
+      // Cinematic lerp damping for silky, seamless filmic motion
+      const delta = targetProgress - currentProgress;
+      if (Math.abs(delta) > 0.0005) {
+        currentProgress += delta * 0.16;
+        setCardProgress(currentProgress);
+      }
+      rafId = requestAnimationFrame(updateLoop);
+    };
+
+    measure();
     handleScroll();
+    currentProgress = targetProgress;
+    setCardProgress(currentProgress);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", measure, { passive: true });
+    rafId = requestAnimationFrame(updateLoop);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", measure);
+      cancelAnimationFrame(rafId);
     };
   }, [mounted, totalCards]);
+
+  const scrollToCard = (cardIdx: number) => {
+    if (!containerRef.current || totalCards <= 1) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const scrollableDistance = rect.height - windowHeight;
+    const targetScroll = scrollTop + rect.top + (cardIdx / (totalCards - 1)) * scrollableDistance;
+    window.scrollTo({ top: targetScroll, behavior: "smooth" });
+  };
 
   if (projects.length === 0) {
     return (
@@ -196,48 +230,49 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
           <div className="relative w-full max-w-[800px] h-[460px] sm:h-[480px] md:h-[510px] z-10 flex items-center justify-center">
             {projects.map((project, idx) => {
               const styleConfig = CARD_STYLES[idx % CARD_STYLES.length];
-              const effectiveIndex = mounted ? activeIndex : 0;
-              const isPast = idx < effectiveIndex;
-              const isCurrent = idx === effectiveIndex;
-              const isUpcoming = idx > effectiveIndex;
-              const offsetFromActive = idx - effectiveIndex;
+              const diff = mounted ? idx - cardProgress : idx;
 
-              let transform = "";
+              let translateY = 0;
+              let rotate = 0;
+              let scale = 1;
               let opacity = 1;
-              let zIndex = totalCards - idx;
+              let zIndex = 50;
               let pointerEvents: "auto" | "none" = "none";
 
-              if (isPast) {
-                // Card has peeled away to the top with rotation
-                transform = `translate3d(0, -125%, 0) rotate(${styleConfig.defaultRotate * 1.5}deg) scale(0.9)`;
-                opacity = 0;
-                zIndex = 0;
-              } else if (isCurrent) {
-                // Front active card: straight, fully visible, interactive
-                transform = "translate3d(0, 0, 0) rotate(0deg) scale(1)";
-                opacity = 1;
-                zIndex = 50;
-                pointerEvents = "auto";
+              if (diff < 0) {
+                // Card is peeling away upwards into the past
+                const exitProgress = Math.min(Math.abs(diff), 1.5);
+                translateY = -exitProgress * 125; // %
+                rotate = (styleConfig.defaultRotate * 1.5) + (diff * 7);
+                scale = Math.max(1 - exitProgress * 0.08, 0.85);
+                opacity = Math.max(1 - exitProgress * 1.35, 0);
+                zIndex = Math.max(50 + Math.round(diff * 10), 1);
+                pointerEvents = exitProgress < 0.25 ? "auto" : "none";
               } else {
-                // Stacked behind: fan rotation, step-scaled down
-                const stackScale = Math.max(1 - offsetFromActive * 0.04, 0.85);
-                const stackY = offsetFromActive * 10;
-                const fanRotate = styleConfig.defaultRotate;
-                transform = `translate3d(0, ${stackY}px, 0) rotate(${fanRotate}deg) scale(${stackScale})`;
-                opacity = Math.max(1 - offsetFromActive * 0.15, 0.4);
-                zIndex = 40 - offsetFromActive;
+                // Current active card (diff ~ 0) or stacked behind (diff > 0)
+                const stackProgress = Math.min(diff, 6);
+                translateY = stackProgress * 12; // px
+                rotate = styleConfig.defaultRotate * Math.min(stackProgress, 1);
+                scale = Math.max(1 - stackProgress * 0.045, 0.80);
+                opacity = Math.max(1 - stackProgress * 0.16, 0.35);
+                zIndex = Math.max(50 - Math.round(stackProgress * 5), 5);
+                pointerEvents = diff < 0.35 ? "auto" : "none";
               }
+
+              const transform = diff < 0
+                ? `translate3d(0, ${translateY}%, 0) rotate(${rotate}deg) scale(${scale})`
+                : `translate3d(0, ${translateY}px, 0) rotate(${rotate}deg) scale(${scale})`;
 
               return (
                 <div
                   key={project.id}
                   suppressHydrationWarning
                   onClick={() => {
-                    if (isUpcoming && offsetFromActive <= 2) {
-                      setActiveIndex(idx);
+                    if (diff > 0.4 && diff <= 3) {
+                      scrollToCard(idx);
                     }
                   }}
-                  className="absolute inset-0 w-full h-full rounded-[32px] sm:rounded-[38px] p-5 sm:p-7 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.10)] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col justify-between overflow-hidden cursor-pointer"
+                  className="absolute inset-0 w-full h-full rounded-[32px] sm:rounded-[38px] p-5 sm:p-7 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.10)] will-change-transform flex flex-col justify-between overflow-hidden cursor-pointer"
                   style={{
                     backgroundColor: styleConfig.bg,
                     border: `2px solid ${styleConfig.border}`,
@@ -246,9 +281,12 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
                     opacity,
                     zIndex,
                     pointerEvents,
+                    transformStyle: "preserve-3d",
+                    backfaceVisibility: "hidden",
+                    transition: "border-color 0.3s ease, background-color 0.3s ease",
                   }}
                 >
-                  {/* Card Video: Continuously Playing in muted loop */}
+                  {/* Card Video: Active Card Plays YouTube in Muted Loop; Stacked Cards show Crisp Poster (Zero Lag) */}
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
@@ -256,12 +294,28 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
                     }}
                     className="relative w-full aspect-video rounded-[20px] sm:rounded-[24px] overflow-hidden bg-black shadow-md border border-black/10 mb-3 sm:mb-4 group/video"
                   >
-                    <iframe
-                      src={`https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&mute=1&loop=1&playlist=${project.youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
-                      title={project.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      className="w-full h-full border-0 pointer-events-none"
-                    />
+                    {Math.abs(diff) < 1.15 ? (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&mute=1&loop=1&playlist=${project.youtubeId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
+                        title={project.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        className="w-full h-full border-0 pointer-events-none"
+                      />
+                    ) : (
+                      <div className="relative w-full h-full bg-black">
+                        <img
+                          src={`https://img.youtube.com/vi/${project.youtubeId}/hqdefault.jpg`}
+                          alt={project.title}
+                          className="w-full h-full object-cover opacity-85"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                          <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40 text-white shadow-lg">
+                            <Video size={20} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Card Details: Typography & Metrics */}
@@ -284,7 +338,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ projects }) 
 
                       <BrandButton
                         size="sm"
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           setActiveProjectForModal(project);
                         }}

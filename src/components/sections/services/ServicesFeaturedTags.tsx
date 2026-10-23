@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import Link from "next/link";
 import { ArrowUpRight, Sparkles, Film, Disc, Cpu, Compass } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 
@@ -118,7 +117,7 @@ export const ServicesFeaturedTags: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Interactive Capability List (7 Cols) */}
-          <div className="lg:col-span-7 flex flex-col space-y-3">
+          <div className="lg:col-span-7 flex flex-col space-y-3.5">
             {CAPABILITIES.map((item) => {
               const isActive = activeItem.id === item.id;
 
@@ -126,37 +125,49 @@ export const ServicesFeaturedTags: React.FC = () => {
                 <div
                   key={item.id}
                   onMouseEnter={() => handleMouseEnter(item)}
-                  className={`group relative py-5 sm:py-6 px-5 sm:px-7 rounded-2xl transition-all duration-300 cursor-pointer border ${
+                  className={`group relative py-5 sm:py-6 px-5 sm:px-7 rounded-[24px] transition-all duration-300 cursor-pointer border ${
                     isActive
-                      ? "bg-white border-[#7567EE] shadow-lg scale-[1.01]"
-                      : "bg-white/60 hover:bg-white border-[#141416]/10 hover:border-[#141416]/20 shadow-sm"
+                      ? "bg-white border-[#7567EE] shadow-[0_20px_45px_rgba(117,103,238,0.13),inset_0_1px_0_rgba(255,255,255,0.95)] ring-1 ring-[#7567EE]/30 scale-[1.012]"
+                      : "bg-white/70 hover:bg-white border-[#141416]/10 hover:border-[#141416]/22 shadow-[0_6px_20px_rgba(20,20,22,0.03),inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-sm hover:scale-[1.006]"
                   }`}
                 >
+                  {/* Left Active Glow Indicator */}
+                  {isActive && (
+                    <div className="absolute left-0 top-5 bottom-5 w-1 rounded-r-full bg-[#7567EE]" />
+                  )}
+
                   <div className="flex items-start sm:items-center justify-between gap-4">
-                    <div className="flex items-start sm:items-center gap-4 sm:gap-6">
-                      <span className="font-mono text-sm sm:text-base text-[#7567EE] font-bold">
-                        {item.number}
-                      </span>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className={`typo-h3 font-heading font-black tracking-tight transition-colors duration-200 ${
-                            isActive ? "text-[#7567EE]" : "text-[#141416] group-hover:text-[#7567EE]"
-                          }`}>
-                            {item.title}
-                          </h3>
-                        </div>
-                        <p className="typo-small font-sans text-[#141416]/70 mt-1 max-w-[520px] leading-relaxed">
+                    <div className="flex items-start gap-4 sm:gap-5 flex-1 min-w-0">
+                      {/* Monospace Index + Icon Badge */}
+                      <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                        isActive 
+                          ? "bg-[#7567EE] text-white shadow-md shadow-[#7567EE]/25 scale-105" 
+                          : "bg-[#141416]/5 text-[#141416]/60 group-hover:bg-[#7567EE]/10 group-hover:text-[#7567EE]"
+                      }`}>
+                        {React.cloneElement(item.icon as React.ReactElement<{ className?: string }>, {
+                          className: isActive ? "text-white" : "text-[#7567EE]"
+                        })}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <h3 className={`typo-h3 font-heading font-black tracking-tight text-base sm:text-lg mb-1 transition-colors ${
+                          isActive ? "text-[#7567EE]" : "text-[#141416] group-hover:text-[#7567EE]"
+                        }`}>
+                          {item.title}
+                        </h3>
+
+                        <p className="typo-small font-sans text-[#141416]/75 text-xs sm:text-sm leading-relaxed">
                           {item.subtitle}
                         </p>
                       </div>
                     </div>
 
-                    <div className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                       isActive
-                        ? "bg-[#7567EE] text-white rotate-45 shadow-md"
-                        : "bg-[#141416]/5 text-[#141416]/60 group-hover:bg-[#7567EE] group-hover:text-white"
+                        ? "bg-[#7567EE] text-white rotate-45 shadow-md shadow-[#7567EE]/30 scale-105"
+                        : "bg-[#141416]/5 text-[#141416]/50 group-hover:bg-[#7567EE] group-hover:text-white"
                     }`}>
-                      <ArrowUpRight size={17} />
+                      <ArrowUpRight size={18} />
                     </div>
                   </div>
                 </div>
@@ -184,15 +195,6 @@ export const ServicesFeaturedTags: React.FC = () => {
                   <h4 className="font-heading font-black text-lg text-[#141416]">
                     {activeItem.title}
                   </h4>
-                  <div className="flex items-center gap-2 mt-3.5">
-                    <Link
-                      href="/#contact"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#141416] hover:bg-[#7567EE] text-white font-bold text-xs uppercase font-sans tracking-wide transition-all shadow-md group/btn"
-                    >
-                      <span className="text-white">Inquire Specialty</span>
-                      <ArrowUpRight size={15} className="text-[#D5FF3F] transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                    </Link>
-                  </div>
                 </div>
               </div>
 

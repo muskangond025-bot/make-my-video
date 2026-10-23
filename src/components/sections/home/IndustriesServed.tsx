@@ -138,23 +138,12 @@ export const IndustriesServed: React.FC = () => {
   return (
     <section
       id="industries"
-      className="relative w-full bg-[#EAE3DB] text-[#141416] py-16 sm:py-24 px-4 sm:px-8 lg:px-12 select-none overflow-hidden"
+      className="relative w-full bg-[#EAE3DB] text-[#141416] pt-8 sm:pt-12 pb-16 sm:pb-24 px-4 sm:px-8 lg:px-12 select-none overflow-hidden"
     >
       {/* 1. Header Block with Dumemearts Star Accent & Monumental Heading */}
-      <div className="w-full max-w-[1440px] mx-auto text-center mb-16 sm:mb-20 flex flex-col items-center">
-        {/* Eyebrow with Animated Sparkle */}
-        <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-[#141416]/5 border border-[#141416]/10 mb-8 sm:mb-12 backdrop-blur-sm">
-          <span className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-[#141416]/80">
-            INDUSTRIES WE SERVE
-          </span>
-          <span className="text-[#7567EE] text-xs animate-pulse">✦</span>
-          <span className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-[#7567EE]">
-            SPECIALIZED EXPERTISE
-          </span>
-        </div>
-
-        {/* Big Editorial Heading - Dedicated wrapper with generous breathing room and lineHeight: 1.2 */}
-        <div className="w-full py-4 sm:py-8 my-2 flex items-center justify-center">
+      <div className="w-full max-w-[1440px] mx-auto text-center mb-10 sm:mb-14 flex flex-col items-center">
+        {/* Big Editorial Heading - Dedicated wrapper with generous breathing room */}
+        <div className="w-full py-2 flex items-center justify-center">
           <h2
             className="font-humane text-[#141416] uppercase font-medium select-none whitespace-nowrap drop-shadow-xs"
             style={{
@@ -167,8 +156,8 @@ export const IndustriesServed: React.FC = () => {
           </h2>
         </div>
 
-        {/* Minimal Subtitle with generous top gap */}
-        <p className="font-sans text-xs sm:text-sm md:text-base text-[#6E6B7B] max-w-2xl mt-8 sm:mt-12 leading-relaxed font-normal">
+        {/* Minimal Subtitle with tight, elegant spacing */}
+        <p className="font-sans text-xs sm:text-sm md:text-base text-[#6E6B7B] max-w-2xl mt-4 sm:mt-6 leading-relaxed font-normal">
           Every industry demands its own visual dialect, compliance standards, and audience psychology. We engineer bespoke cinema-grade visual assets tailored to each sector.
         </p>
       </div>

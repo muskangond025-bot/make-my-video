@@ -143,10 +143,10 @@ export const AboutTeam: React.FC = () => {
         {/* SECTION HEADER: Single Line & Left-Aligned in Light Colors                */}
         {/* ========================================================================= */}
         <div className="max-w-4xl mb-12 sm:mb-16 text-left">
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
+          <h2 className="typo-h1 font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
             OUR <span className="text-[#7567EE]">MEMBERS.</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#4A4658] font-normal leading-relaxed text-left">
+          <p className="typo-body text-[#4A4658] font-normal leading-relaxed text-left">
             The visionary directors, cinematographers, drone pilots, and editors who bring our productions to life.
           </p>
         </div>

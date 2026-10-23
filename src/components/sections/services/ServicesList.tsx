@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { ArrowRight, ChevronDown, CheckCircle2, ArrowUpRight } from "lucide-react";
 import { ALL_SERVICES_CATALOG, ServiceDetailItem } from "@/data/servicesPageData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface ServicesListProps {
   searchQuery: string;
@@ -33,7 +33,7 @@ export const ServicesList: React.FC<ServicesListProps> = ({ searchQuery }) => {
         <span className="block font-serif italic text-2xl sm:text-3xl text-[#141416]/80 tracking-wide mb-1">
           WIDE RANGE
         </span>
-        <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-black tracking-tight uppercase text-[#141416]">
+        <h2 className="typo-h1 font-heading font-black tracking-tight uppercase text-[#141416]">
           OF SERVICES TO CHOOSE
         </h2>
       </div>
@@ -64,7 +64,7 @@ export const ServicesList: React.FC<ServicesListProps> = ({ searchQuery }) => {
                   className="w-full text-left px-6 sm:px-10 py-6 flex items-center justify-between gap-4"
                   aria-expanded={isExpanded}
                 >
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-heading font-black text-[#141416] tracking-tight">
+                  <h3 className="typo-h3 font-heading font-black text-[#141416] tracking-tight">
                     {service.title}
                   </h3>
 
@@ -91,26 +91,20 @@ export const ServicesList: React.FC<ServicesListProps> = ({ searchQuery }) => {
                         <p className="text-xs font-sans text-[#141416]/60">
                           Tailored production scopes designed for agency standards and corporate requirements.
                         </p>
-                        <div className="flex flex-wrap gap-3 pt-2">
-                          <Link
-                            href="/#contact"
-                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#141416] hover:bg-[#7567EE] text-white text-xs font-sans font-semibold transition-colors shadow-sm"
-                          >
-                            <span>Get Quote</span>
-                            <ArrowUpRight size={14} />
-                          </Link>
-                          <Link
+                        <div className="flex flex-wrap items-center gap-3 pt-2">
+                          <BrandButton label="GET QUOTE" href="/support" size="sm" />
+                          <a
                             href="/projects"
-                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#141416]/5 border border-[#141416]/15 text-[#141416] text-xs font-sans font-semibold transition-colors"
+                            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white hover:bg-[#141416]/5 border border-[#141416]/15 text-[#141416] text-xs font-sans font-semibold transition-colors"
                           >
                             <span>View Projects</span>
-                          </Link>
+                          </a>
                         </div>
                       </div>
 
                       {/* Right Column: Narrative & Deliverables */}
                       <div className="lg:col-span-8 space-y-5">
-                        <p className="text-base sm:text-lg font-sans text-[#141416]/85 leading-relaxed">
+                        <p className="typo-body font-sans text-[#141416]/85 leading-relaxed">
                           {service.description}
                         </p>
 

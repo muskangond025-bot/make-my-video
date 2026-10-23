@@ -15,7 +15,7 @@ export const ServicesFaq: React.FC = () => {
     <section className="relative py-20 px-4 sm:px-8 max-w-[1040px] mx-auto w-full border-t border-[#141416]/10">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-12 border-b border-[#141416]/10 pb-6">
-        <h2 className="text-4xl sm:text-6xl font-heading font-black tracking-tight uppercase text-[#141416]">
+        <h2 className="typo-h1 font-heading font-black tracking-tight uppercase text-[#141416]">
           FAQS
         </h2>
         <span className="font-serif italic text-lg sm:text-xl text-[#141416]/60">
@@ -42,7 +42,7 @@ export const ServicesFaq: React.FC = () => {
                 className="w-full text-left px-6 sm:px-8 py-5 flex items-center justify-between gap-4"
                 aria-expanded={isOpen}
               >
-                <h3 className="text-base sm:text-lg font-heading font-bold text-[#141416] tracking-tight">
+                <h3 className="typo-h3 font-heading font-bold text-[#141416] tracking-tight">
                   {faq.question}
                 </h3>
                 <div
@@ -57,7 +57,7 @@ export const ServicesFaq: React.FC = () => {
               </button>
 
               {isOpen && (
-                <div className="px-6 sm:px-8 pb-6 pt-1 text-sm sm:text-base font-sans text-[#141416]/80 leading-relaxed space-y-3 border-t border-black/5">
+                <div className="px-6 sm:px-8 pb-6 pt-1 typo-body font-sans text-[#141416]/80 leading-relaxed space-y-3 border-t border-black/5">
                   <p>{faq.answer}</p>
                   {faq.bullets && faq.bullets.length > 0 && (
                     <ul className="space-y-2 pl-4 list-disc marker:text-[#7567EE]">

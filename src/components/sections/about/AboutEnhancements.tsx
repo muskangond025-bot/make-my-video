@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from '@/lib/gsap';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
+import { BrandButton } from '@/components/shared/BrandButton';
 
 export const AboutEnhancements = () => {
   const { resolvedTheme } = useTheme();
@@ -157,7 +158,7 @@ export const AboutEnhancements = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(232,60,37,0.02),transparent_40%)] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10 flex flex-col items-center gap-8">
-          <h2 className="text-3xl md:text-5xl font-heading font-black tracking-tight text-white uppercase leading-[0.95] text-shadow-glow">
+          <h2 className="typo-h1 font-heading font-black tracking-tight text-white uppercase leading-[0.95] text-shadow-glow">
             Building the Future of <br />
             Workplaces, Together
           </h2>
@@ -172,14 +173,7 @@ export const AboutEnhancements = () => {
           </div>
 
           <div className="mt-4">
-            <Link href="/support">
-              <button className="px-8 py-4 bg-primary-red hover:bg-primary-red/90 text-white rounded-xl text-xs font-bold tracking-widest uppercase flex items-center gap-2 shadow-lg shadow-[#0C329E]/35 hover:scale-[1.02] transition-all duration-300">
-                <svg width="15" height="15" viewBox="0 0 41 37" fill="none" xmlns="http://www.w3.org/2000/svg" className="transform rotate-180">
-                  <path d="M0.500008 21.7256L0.5 15.5L34.7563 17.229L16.5207 6.72555L16.5207 0.5L40.5 18.5269L16.5207 36.5L16.5207 30.5451L35.0306 19.9213L0.500008 21.7256Z" fill="currentColor"/>
-                </svg>
-                Book Demo
-              </button>
-            </Link>
+            <BrandButton label="BOOK DEMO" href="/support" size="md" />
           </div>
         </div>
       </section>

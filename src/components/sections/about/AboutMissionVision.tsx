@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { gsap, ScrollTrigger, CustomEase } from "@/lib/gsap";
 import { Play } from "lucide-react";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 export const AboutMissionVision: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
@@ -114,10 +115,10 @@ export const AboutMissionVision: React.FC = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header: Single Line & Left-Aligned */}
         <div className="text-left max-w-4xl mb-10 sm:mb-14">
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
+          <h2 className="typo-h1 font-heading font-black tracking-tight uppercase leading-none mb-3 text-[#141416] text-left">
             DREAM <span className="text-[#7567EE]">TO ACHIEVE.</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#4A4658] font-normal text-left">
+          <p className="typo-body text-[#4A4658] font-normal text-left">
             The core vision and mission that fuel every frame we produce.
           </p>
         </div>
@@ -135,26 +136,23 @@ export const AboutMissionVision: React.FC = () => {
             className="w-full rounded-[30px] bg-white border border-[#141416]/10 p-7 sm:p-9 shadow-lg hover:shadow-2xl hover:border-[#7567EE] flex flex-col justify-between text-left cursor-pointer select-none"
             style={{
               transformStyle: "preserve-3d",
-              // Critical: NO CSS transition on transform so GSAP mouse tilt is 100% butter smooth
             }}
           >
             <div>
-              {/* Title as per web */}
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-sans font-medium text-[#141416] tracking-tight mb-4 text-left">
+              {/* Title */}
+              <h3 className="typo-h3 font-sans font-medium text-[#141416] tracking-tight mb-4 text-left">
                 Our Mission
               </h3>
 
-              {/* Body written in one continuous flow as per web */}
-              <p className="text-sm sm:text-base md:text-lg text-[#33303E] font-normal leading-relaxed text-left">
+              {/* Body */}
+              <p className="typo-body text-[#33303E] font-normal leading-relaxed text-left">
                 At Make My Vid, we’re passionate about helping brands tell their unique stories through engaging video content. We believe in harnessing the power of video content to elevate the value of your brand, making sure your messages not only reach the target audience but also leave a lasting impact.
               </p>
             </div>
 
-            {/* Bottom Action Icon as per web */}
+            {/* Bottom Action */}
             <div className="mt-6 pt-2 flex items-center justify-start">
-              <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center shadow-sm">
-                <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
-              </div>
+              <BrandButton label="OUR MISSION" size="sm" showArrow={true} />
             </div>
           </div>
 
@@ -166,26 +164,23 @@ export const AboutMissionVision: React.FC = () => {
             className="w-full rounded-[30px] bg-white border border-[#141416]/10 p-7 sm:p-9 shadow-lg hover:shadow-2xl hover:border-[#7567EE] flex flex-col justify-between text-left cursor-pointer select-none"
             style={{
               transformStyle: "preserve-3d",
-              // Critical: NO CSS transition on transform so GSAP mouse tilt is 100% butter smooth
             }}
           >
             <div>
-              {/* Title as per web */}
-              <h3 className="text-3xl sm:text-4xl font-sans font-medium text-[#141416] tracking-tight mb-5 text-left">
+              {/* Title */}
+              <h3 className="typo-h3 font-sans font-medium text-[#141416] tracking-tight mb-4 text-left">
                 Our Vision
               </h3>
 
-              {/* Body written in one continuous flow as per web */}
-              <p className="text-base sm:text-lg text-[#33303E] font-normal leading-relaxed text-left">
-                At Make My Vid, our vision is to be a leading platform for video content, known for our creativity and commitment to delivering real value to our clients. We aim to empower brands, entrepreneurs, and creators worldwide to effectively share their stories through engaging video content. Our goal is to be the preferred partner for diverse video needs, simplifying the process of creating impactful content that resonates with audiences everywhere.
+              {/* Body */}
+              <p className="typo-body text-[#33303E] font-normal leading-relaxed text-left">
+                At Make My Vid, our vision is to be a leading platform for video content, known for our creativity and commitment to delivering real value to our clients. We aim to empower brands, entrepreneurs, and creators worldwide to effectively share their stories through engaging video content.
               </p>
             </div>
 
-            {/* Bottom Action Icon as per web */}
-            <div className="mt-8 pt-2 flex items-center justify-start">
-              <div className="w-9 h-9 rounded-full bg-[#141416] text-white flex items-center justify-center shadow-sm">
-                <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
-              </div>
+            {/* Bottom Action */}
+            <div className="mt-6 pt-2 flex items-center justify-start">
+              <BrandButton label="OUR VISION" size="sm" showArrow={true} />
             </div>
           </div>
         </div>

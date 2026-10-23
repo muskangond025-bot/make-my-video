@@ -167,7 +167,7 @@ export const AboutStory: React.FC = () => {
         {/* SECTION HEADING: Outside and Above the Box in a Single Line               */}
         {/* ========================================================================= */}
         <div className="w-full mb-8 sm:mb-12 text-left">
-          <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[4.75rem] font-heading font-black tracking-tight uppercase leading-none text-[#141416] text-left">
+          <h2 className="typo-h1 font-heading font-black tracking-tight uppercase leading-none text-[#141416] text-left">
             STORY OF <span className="text-[#7567EE]">MAKE MY VID.</span>
           </h2>
         </div>

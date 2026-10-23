@@ -11,7 +11,7 @@ export const ServicesKeyFeatures: React.FC = () => {
         <span className="block font-serif italic text-2xl sm:text-3xl text-[#141416]/80 tracking-wide mb-1">
           KEY
         </span>
-        <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-black tracking-tight uppercase text-[#141416]">
+        <h2 className="typo-h1 font-heading font-black tracking-tight uppercase text-[#141416]">
           FEATURES
         </h2>
       </div>
@@ -32,11 +32,11 @@ export const ServicesKeyFeatures: React.FC = () => {
                 />
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-heading font-bold text-[#141416] mb-3">
+              <h3 className="typo-h3 font-heading font-bold text-[#141416] mb-3">
                 {feature.title}
               </h3>
 
-              <p className="text-sm sm:text-base font-sans text-[#141416]/80 leading-relaxed">
+              <p className="typo-body font-sans text-[#141416]/80 leading-relaxed">
                 {feature.description}
               </p>
             </div>

@@ -4,26 +4,21 @@ import React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { FEATURED_CAPABILITIES } from "@/data/servicesPageData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 export const ServicesFeaturedTags: React.FC = () => {
   return (
     <section className="relative py-16 px-4 sm:px-8 max-w-[1360px] mx-auto w-full border-t border-[#141416]/10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
-          <span className="text-xs uppercase tracking-widest text-[#7567EE] font-semibold block mb-1">
+          <span className="typo-caption uppercase tracking-widest text-[#7567EE] font-semibold block mb-1">
             CREATIVE PRODUCTION
           </span>
-          <h2 className="text-2xl sm:text-4xl font-heading font-black tracking-tight uppercase text-[#141416]">
+          <h2 className="typo-h2 font-heading font-black tracking-tight uppercase text-[#141416]">
             FEATURED SERVICES & SPECIALTIES
           </h2>
         </div>
-        <Link
-          href="/#contact"
-          className="inline-flex items-center gap-2 text-sm font-sans font-bold text-[#141416] hover:text-[#7567EE] transition-colors"
-        >
-          <span>Custom Project Request</span>
-          <ArrowUpRight size={16} />
-        </Link>
+        <BrandButton label="CUSTOM REQUEST" href="/support" size="sm" />
       </div>
 
       <div className="flex flex-wrap gap-3 sm:gap-4">

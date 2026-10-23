@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -175,9 +176,14 @@ export const AboutHero: React.FC = () => {
 
               {/* Professional Editorial Subheading */}
               <div className="overflow-hidden pt-4 sm:pt-6 max-w-3xl">
-                <p className="kinetic-line text-sm sm:text-base md:text-lg text-white/95 leading-relaxed font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
+                <p className="kinetic-line typo-body text-white/95 leading-relaxed font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
                   What began as a solo passion for cinematic editing by founder Rohan Joshi has grown into a globally recognized video production house. Today, we craft high-retention commercial films, visionary brand campaigns, and cultural visual stories for ambitious brands worldwide.
                 </p>
+              </div>
+
+              {/* Action Button */}
+              <div className="overflow-hidden pt-5 sm:pt-7 pointer-events-auto">
+                <BrandButton label="EXPLORE OUR STORY" href="#story" size="md" />
               </div>
 
             </div>

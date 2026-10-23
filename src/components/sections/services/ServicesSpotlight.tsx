@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowUpRight, Play, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { SPOTLIGHT_SERVICES } from "@/data/servicesPageData";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface ServicesSpotlightProps {
   onSelectService?: (serviceName: string) => void;
@@ -27,7 +28,7 @@ export const ServicesSpotlight: React.FC<ServicesSpotlightProps> = ({ onSelectSe
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                <span className="text-white text-xs font-sans tracking-wider uppercase font-semibold">
+                <span className="text-white typo-caption font-sans tracking-wider uppercase font-semibold">
                   {service.tag}
                 </span>
               </div>
@@ -36,21 +37,21 @@ export const ServicesSpotlight: React.FC<ServicesSpotlightProps> = ({ onSelectSe
             {/* Content Details */}
             <div className="space-y-3 flex-1 flex flex-col justify-between">
               <div>
-                <span className="text-xs uppercase tracking-widest text-[#7567EE] font-semibold block mb-1">
+                <span className="typo-caption uppercase tracking-widest text-[#7567EE] font-semibold block mb-1">
                   {service.tag}
                 </span>
-                <h3 className="text-xl sm:text-2xl font-heading font-black tracking-tight text-[#141416]">
+                <h3 className="typo-h3 font-heading font-black tracking-tight text-[#141416]">
                   {service.title}
                 </h3>
-                <p className="text-sm font-sans text-[#141416]/75 mt-2 leading-relaxed">
+                <p className="typo-small font-sans text-[#141416]/75 mt-2 leading-relaxed">
                   {service.description}
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between">
+              <div className="pt-4 border-t border-[#141416]/10 flex items-center justify-between gap-2">
                 <button
                   onClick={() => onSelectService && onSelectService(service.title)}
-                  className="group/btn inline-flex items-center gap-2 text-sm font-sans font-bold text-[#141416] hover:text-[#7567EE] transition-colors"
+                  className="group/btn inline-flex items-center gap-1.5 typo-small font-sans font-bold text-[#141416] hover:text-[#7567EE] transition-colors"
                 >
                   <span>Know More</span>
                   <ArrowUpRight
@@ -59,12 +60,7 @@ export const ServicesSpotlight: React.FC<ServicesSpotlightProps> = ({ onSelectSe
                   />
                 </button>
 
-                <Link
-                  href="/#contact"
-                  className="px-4 py-2 rounded-full bg-[#141416] text-[#EAE3DB] hover:bg-[#7567EE] text-xs font-sans font-semibold transition-colors"
-                >
-                  Get Quote
-                </Link>
+                <BrandButton label="GET QUOTE" href="/support" size="sm" />
               </div>
             </div>
           </div>

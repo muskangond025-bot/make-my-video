@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { Search, X, ArrowUpRight } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { BrandButton } from "@/components/shared/BrandButton";
 
 interface ServicesHeroProps {
   searchQuery: string;
@@ -18,25 +18,16 @@ export const ServicesHero: React.FC<ServicesHeroProps> = ({
       {/* Top Banner Row */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-10 pb-8 border-b border-[#141416]/10">
         <div>
-          <span className="block font-serif italic text-2xl sm:text-3xl md:text-4xl text-[#141416]/80 tracking-wide mb-1">
+          <span className="block font-serif italic text-xl sm:text-2xl md:text-3xl text-[#141416]/80 tracking-wide mb-1">
             AWESOME
           </span>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-black tracking-tighter uppercase text-[#141416] leading-none">
+          <h1 className="typo-h1 font-heading font-black tracking-tighter uppercase text-[#141416] leading-none">
             VIDEO SOLUTIONS FOR
           </h1>
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <Link
-            href="/#contact"
-            className="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#141416] text-[#EAE3DB] hover:bg-[#7567EE] transition-all duration-300 font-sans font-semibold tracking-wide shadow-lg hover:shadow-xl"
-          >
-            <span>Get Quote</span>
-            <ArrowUpRight
-              size={18}
-              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
-          </Link>
+          <BrandButton label="GET QUOTE" href="/support" size="md" />
         </div>
       </div>
 

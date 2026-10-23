@@ -222,10 +222,10 @@ export const AboutBtsSlider: React.FC = () => {
         {/* OUT OF BOX: Heading & Description on the Warm Light Background           */}
         {/* ========================================================================= */}
         <div className="max-w-4xl mb-10 sm:mb-14 text-left">
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-black tracking-tight uppercase leading-none mb-4 text-[#141416] text-left">
+          <h2 className="typo-h1 font-heading font-black tracking-tight uppercase leading-none mb-4 text-[#141416] text-left">
             MAGIC <span className="text-[#7567EE]">BEHIND CAMERA.</span>
           </h2>
-          <p className="text-base sm:text-lg text-[#4A4658] font-normal leading-relaxed text-left max-w-2xl">
+          <p className="typo-body text-[#4A4658] font-normal leading-relaxed text-left max-w-2xl">
             A cinematic glimpse into our on-ground commercial film sets, creative directing, camera rigs, and production artistry.
           </p>
         </div>

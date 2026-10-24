@@ -50,14 +50,14 @@ interface CardInitialConfig {
   zIndex: number;
 }
 
-// Exact reference cascade and organic fanned deck transforms
-// Cards stack naturally from left to right (z-index: 2, 3, 4, 5, 6)
-const INITIAL_CONFIG: CardInitialConfig[] = [
+// Dumemearts reference cascade and organic fanned deck transforms
+// Natural left-to-right ascending z-index (2, 3, 4, 5, 6)
+const CARD_CONFIGS: CardInitialConfig[] = [
   { rotation: -9.5, xPercent: -2, yPercent: 4, zIndex: 2 },
-  { rotation: -5.5, xPercent: 1, yPercent: -1, zIndex: 3 },
-  { rotation: -1.5, xPercent: -1, yPercent: -4, zIndex: 4 },
-  { rotation: 2.5, xPercent: 1, yPercent: -1, zIndex: 5 },
-  { rotation: 6.5, xPercent: 2, yPercent: 4, zIndex: 6 },
+  { rotation: -5.5, xPercent: 1, yPercent: 0, zIndex: 3 },
+  { rotation: -1.5, xPercent: -1, yPercent: -3, zIndex: 4 },
+  { rotation: 2.5, xPercent: 1, yPercent: 0, zIndex: 5 },
+  { rotation: 7.0, xPercent: 2, yPercent: 4, zIndex: 6 },
 ];
 
 export const AboutBtsSlider: React.FC = () => {
@@ -83,29 +83,27 @@ export const AboutBtsSlider: React.FC = () => {
     const activeCard = cards[i];
     if (!activeCard) return;
 
-    // Active priority card: straightens up, elevates upward, scales to hero size, full brightness
+    // Active card: straightens up to rotation 0, scales up, floats up slightly
     gsap.to(activeCard, {
       xPercent: 0,
-      yPercent: -14,
+      yPercent: -12,
       rotation: 0,
       scale: 1.08,
-      opacity: 1,
       duration: 0.8,
       ease: "elastic.out(1, 0.75)",
       overwrite: "auto",
     });
 
-    // Sibling cards: gently part with a refined gap (26%), subtly recede and dim to frame the active hero
+    // Sibling cards: parted using Dumemearts' exact 80 / (index - i) reciprocal formula
     cards.forEach((card, index) => {
       if (index !== i) {
-        const baseConf = INITIAL_CONFIG[index] || INITIAL_CONFIG[0];
-        const pushX = 26 / (index - i);
+        const baseConf = CARD_CONFIGS[index] || CARD_CONFIGS[0];
+        const pushX = 80 / (index - i);
         gsap.to(card, {
           xPercent: baseConf.xPercent + pushX,
-          yPercent: baseConf.yPercent + 2,
-          rotation: baseConf.rotation * 0.85,
-          scale: 0.96,
-          opacity: 0.72,
+          yPercent: baseConf.yPercent,
+          rotation: baseConf.rotation,
+          scale: 0.98,
           duration: 0.8,
           ease: "elastic.out(1, 0.75)",
           overwrite: "auto",
@@ -118,13 +116,12 @@ export const AboutBtsSlider: React.FC = () => {
     const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
     const card = cards[index];
     if (!card) return;
-    const baseConf = INITIAL_CONFIG[index] || INITIAL_CONFIG[0];
+    const baseConf = CARD_CONFIGS[index] || CARD_CONFIGS[0];
     gsap.to(card, {
       xPercent: baseConf.xPercent,
       yPercent: baseConf.yPercent,
       rotation: baseConf.rotation,
       scale: 1,
-      opacity: 1,
       duration: 0.8,
       ease: "elastic.out(1, 0.75)",
       overwrite: "auto",
@@ -136,13 +133,12 @@ export const AboutBtsSlider: React.FC = () => {
     currentPortionRef.current = 0;
     const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
     cards.forEach((card, index) => {
-      const baseConf = INITIAL_CONFIG[index] || INITIAL_CONFIG[0];
+      const baseConf = CARD_CONFIGS[index] || CARD_CONFIGS[0];
       gsap.to(card, {
         xPercent: baseConf.xPercent,
         yPercent: baseConf.yPercent,
         rotation: baseConf.rotation,
         scale: 1,
-        opacity: 1,
         duration: 0.8,
         ease: "elastic.out(1, 0.75)",
         overwrite: "auto",
@@ -171,13 +167,12 @@ export const AboutBtsSlider: React.FC = () => {
 
     // Set initial resting fanned transforms
     cards.forEach((card, idx) => {
-      const conf = INITIAL_CONFIG[idx] || INITIAL_CONFIG[0];
+      const conf = CARD_CONFIGS[idx] || CARD_CONFIGS[0];
       gsap.set(card, {
         xPercent: conf.xPercent,
         yPercent: conf.yPercent,
         rotation: conf.rotation,
         scale: 1,
-        opacity: 1,
         transformOrigin: "center center",
       });
     });
@@ -244,8 +239,8 @@ export const AboutBtsSlider: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative w-full py-20 md:py-28 bg-[#EAE3DB] text-[#141416] border-b border-[#141416]/10 select-none overflow-hidden">
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative w-full py-20 md:py-28 px-4 sm:px-6 md:px-10 lg:px-14 bg-[#EAE3DB] text-[#141416] border-b border-[#141416]/10 select-none overflow-hidden">
+      <div className="max-w-[1520px] mx-auto">
         {/* ========================================================================= */}
         {/* OUT OF BOX: Heading & Description on the Warm Light Background           */}
         {/* ========================================================================= */}
@@ -259,11 +254,11 @@ export const AboutBtsSlider: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* PLAIN BLACK STAGE: Widened Horizontal Stage Housing the Fanned Cards      */}
+        {/* PLAIN BLACK STAGE: Perfectly Centered Stage Housing the Fanned Cards      */}
         {/* ========================================================================= */}
         <div
           ref={containerRef}
-          className="relative w-full rounded-[32px] sm:rounded-[40px] bg-[#0A0A0C] border border-[#141416]/30 p-4 sm:p-6 lg:px-8 lg:py-12 shadow-2xl overflow-hidden"
+          className="relative w-full rounded-[32px] sm:rounded-[40px] bg-[#0A0A0C] border border-[#141416]/30 p-6 sm:p-10 lg:p-14 shadow-2xl overflow-hidden"
         >
           {/* Lower Half Dotted Texture - Fills entire lower half seamlessly right to edges */}
           <div
@@ -309,21 +304,23 @@ export const AboutBtsSlider: React.FC = () => {
                   }}
                   onClick={() => setActiveModalClip(clip)}
                   onMouseEnter={() => activateCardByIndex(i)}
-                  className={`relative flex-shrink-0 w-[230px] sm:w-[290px] md:w-[340px] lg:w-[380px] aspect-[16/11] select-none transition-shadow duration-300 ${i > 0
-                      ? "-ml-[105px] sm:-ml-[150px] md:-ml-[190px] lg:-ml-[220px]"
+                  className={`relative flex-shrink-0 w-[240px] sm:w-[310px] md:w-[360px] lg:w-[400px] aspect-[16/11] select-none transition-shadow duration-300 ${
+                    i > 0
+                      ? "-ml-[110px] sm:-ml-[155px] md:-ml-[190px] lg:-ml-[220px]"
                       : ""
-                    }`}
+                  }`}
                   style={{
-                    zIndex: INITIAL_CONFIG[i]?.zIndex ?? i + 2,
-                    willChange: "transform, opacity",
+                    zIndex: CARD_CONFIGS[i]?.zIndex ?? i + 2,
+                    willChange: "transform",
                   }}
                 >
                   {/* Tablet Bezel Outer Frame */}
                   <div
-                    className={`relative w-full h-full rounded-[22px] sm:rounded-[28px] p-2 sm:p-2.5 bg-[#0F0F13] border-2 transition-all duration-300 flex flex-col justify-between overflow-hidden ${isHovered
+                    className={`relative w-full h-full rounded-[22px] sm:rounded-[28px] p-2 sm:p-2.5 bg-[#0F0F13] border-2 transition-all duration-300 flex flex-col justify-between overflow-hidden ${
+                      isHovered
                         ? "border-[#7567EE] shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(117,103,238,0.5)]"
                         : "border-white/15 hover:border-white/40 shadow-2xl"
-                      }`}
+                    }`}
                   >
                     {/* Clean Video Viewport */}
                     <div className="relative w-full h-full rounded-[16px] sm:rounded-[22px] overflow-hidden bg-black shadow-inner">

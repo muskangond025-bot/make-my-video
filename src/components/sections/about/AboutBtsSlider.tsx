@@ -43,28 +43,28 @@ const BTS_CLIPS: BtsClip[] = [
   },
 ];
 
-interface CardRestingConfig {
+interface CardInitialConfig {
   rotation: number;
-  y: number;
-  xOffset: number;
+  xPercent: number;
+  yPercent: number;
   zIndex: number;
 }
 
-// Precise reference-matched organic fanned deck transforms
-// Progresses smoothly from leftward tilt to upright to gentle rightward tilt
-const RESTING_CONFIG: CardRestingConfig[] = [
-  { rotation: -9.5, y: 16, xOffset: -4, zIndex: 10 },
-  { rotation: -5.8, y: 7, xOffset: 2, zIndex: 20 },
-  { rotation: -2.2, y: -5, xOffset: 0, zIndex: 30 },
-  { rotation: 0.8, y: -1, xOffset: -2, zIndex: 40 },
-  { rotation: 4.2, y: 13, xOffset: 3, zIndex: 50 },
+// Exact reference cascade and organic fanned deck transforms
+// Cards stack naturally from left to right (z-index: 2, 3, 4, 5, 6)
+const INITIAL_CONFIG: CardInitialConfig[] = [
+  { rotation: -9.5, xPercent: -2, yPercent: 4, zIndex: 2 },
+  { rotation: -5.5, xPercent: 1, yPercent: -1, zIndex: 3 },
+  { rotation: -1.5, xPercent: -1, yPercent: -4, zIndex: 4 },
+  { rotation: 2.5, xPercent: 1, yPercent: -1, zIndex: 5 },
+  { rotation: 6.5, xPercent: 2, yPercent: 4, zIndex: 6 },
 ];
 
 export const AboutBtsSlider: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const currentActiveRef = useRef<number>(-1);
+  const currentPortionRef = useRef<number>(0);
 
   const [activeModalClip, setActiveModalClip] = useState<BtsClip | null>(null);
   const [hoveredCardIndex, setHoveredCardIndex] = useState<number>(-1);
@@ -77,6 +77,90 @@ export const AboutBtsSlider: React.FC = () => {
     setMutedStates((prev) => ({ ...prev, [clipId]: !prev[clipId] }));
   };
 
+  const newPortion = (i: number) => {
+    setHoveredCardIndex(i);
+    const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+    const activeCard = cards[i];
+    if (!activeCard) return;
+
+    // Active priority card: straightens up, elevates upward, scales to hero size, full brightness
+    gsap.to(activeCard, {
+      xPercent: 0,
+      yPercent: -14,
+      rotation: 0,
+      scale: 1.08,
+      opacity: 1,
+      duration: 0.8,
+      ease: "elastic.out(1, 0.75)",
+      overwrite: "auto",
+    });
+
+    // Sibling cards: gently part with a refined gap (26%), subtly recede and dim to frame the active hero
+    cards.forEach((card, index) => {
+      if (index !== i) {
+        const baseConf = INITIAL_CONFIG[index] || INITIAL_CONFIG[0];
+        const pushX = 26 / (index - i);
+        gsap.to(card, {
+          xPercent: baseConf.xPercent + pushX,
+          yPercent: baseConf.yPercent + 2,
+          rotation: baseConf.rotation * 0.85,
+          scale: 0.96,
+          opacity: 0.72,
+          duration: 0.8,
+          ease: "elastic.out(1, 0.75)",
+          overwrite: "auto",
+        });
+      }
+    });
+  };
+
+  const resetPortion = (index: number) => {
+    const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+    const card = cards[index];
+    if (!card) return;
+    const baseConf = INITIAL_CONFIG[index] || INITIAL_CONFIG[0];
+    gsap.to(card, {
+      xPercent: baseConf.xPercent,
+      yPercent: baseConf.yPercent,
+      rotation: baseConf.rotation,
+      scale: 1,
+      opacity: 1,
+      duration: 0.8,
+      ease: "elastic.out(1, 0.75)",
+      overwrite: "auto",
+    });
+  };
+
+  const resetAll = () => {
+    setHoveredCardIndex(-1);
+    currentPortionRef.current = 0;
+    const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+    cards.forEach((card, index) => {
+      const baseConf = INITIAL_CONFIG[index] || INITIAL_CONFIG[0];
+      gsap.to(card, {
+        xPercent: baseConf.xPercent,
+        yPercent: baseConf.yPercent,
+        rotation: baseConf.rotation,
+        scale: 1,
+        opacity: 1,
+        duration: 0.8,
+        ease: "elastic.out(1, 0.75)",
+        overwrite: "auto",
+      });
+    });
+  };
+
+  const activateCardByIndex = (i: number) => {
+    const activePortion = i + 1;
+    if (currentPortionRef.current !== activePortion) {
+      if (currentPortionRef.current !== 0) {
+        resetPortion(currentPortionRef.current - 1);
+      }
+      currentPortionRef.current = activePortion;
+      newPortion(i);
+    }
+  };
+
   useEffect(() => {
     const deck = deckRef.current;
     if (!deck) return;
@@ -85,139 +169,83 @@ export const AboutBtsSlider: React.FC = () => {
     const cardsLength = cards.length;
     if (cardsLength === 0) return;
 
-    const getStep = () => {
-      const width = window.innerWidth;
-      if (width < 640) return 55;
-      if (width < 1024) return 100;
-      return 145;
-    };
-
-    let cardStep = getStep();
-
-    const handleResize = () => {
-      cardStep = getStep();
-      applyRestingState(0.4);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    const applyRestingState = (duration = 0) => {
-      cards.forEach((card, idx) => {
-        const conf = RESTING_CONFIG[idx] || RESTING_CONFIG[0];
-        const targetX = (idx - 2) * cardStep + conf.xOffset;
-        const targetY = conf.y;
-
-        if (duration === 0) {
-          gsap.set(card, {
-            x: targetX,
-            y: targetY,
-            xPercent: -50,
-            yPercent: -50,
-            rotation: conf.rotation,
-            scale: 1,
-            zIndex: conf.zIndex,
-            transformOrigin: "center center",
-          });
-        } else {
-          gsap.to(card, {
-            x: targetX,
-            y: targetY,
-            xPercent: -50,
-            yPercent: -50,
-            rotation: conf.rotation,
-            scale: 1,
-            zIndex: conf.zIndex,
-            duration,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        }
+    // Set initial resting fanned transforms
+    cards.forEach((card, idx) => {
+      const conf = INITIAL_CONFIG[idx] || INITIAL_CONFIG[0];
+      gsap.set(card, {
+        xPercent: conf.xPercent,
+        yPercent: conf.yPercent,
+        rotation: conf.rotation,
+        scale: 1,
+        opacity: 1,
+        transformOrigin: "center center",
       });
-    };
-
-    // Initialize resting positions
-    applyRestingState(0);
-
-    const activateCard = (i: number) => {
-      setHoveredCardIndex(i);
-      const activeCard = cards[i];
-      if (!activeCard) return;
-
-      const conf = RESTING_CONFIG[i] || RESTING_CONFIG[0];
-      const targetX = (i - 2) * cardStep + conf.xOffset;
-
-      // Active priority card elevates smoothly, straightens up, scales up slightly
-      gsap.to(activeCard, {
-        x: targetX,
-        y: -24,
-        xPercent: -50,
-        yPercent: -50,
-        rotation: 0,
-        scale: 1.08,
-        zIndex: 60,
-        duration: 0.45,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-
-      // Sibling cards gently part without z-index hopping (prevents visual disturbance)
-      cards.forEach((card, index) => {
-        if (index !== i) {
-          const sibConf = RESTING_CONFIG[index] || RESTING_CONFIG[0];
-          const dir = index < i ? -1 : 1;
-          const dist = Math.abs(index - i);
-          const push = dir * (55 / dist);
-
-          gsap.to(card, {
-            x: (index - 2) * cardStep + sibConf.xOffset + push,
-            y: sibConf.y,
-            xPercent: -50,
-            yPercent: -50,
-            rotation: sibConf.rotation,
-            scale: 0.96,
-            zIndex: sibConf.zIndex,
-            duration: 0.45,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        }
-      });
-    };
-
-    const resetAll = () => {
-      setHoveredCardIndex(-1);
-      currentActiveRef.current = -1;
-      applyRestingState(0.5);
-    };
+    });
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = deck.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const percentage = Math.max(0, Math.min(1, mouseX / rect.width));
-      const activeIndex = Math.min(
-        cardsLength - 1,
-        Math.max(0, Math.floor(percentage * cardsLength))
-      );
+      const activePortion = Math.ceil(percentage * cardsLength);
 
-      if (currentActiveRef.current !== activeIndex) {
-        currentActiveRef.current = activeIndex;
-        activateCard(activeIndex);
+      if (
+        currentPortionRef.current !== activePortion &&
+        activePortion > 0 &&
+        activePortion <= cardsLength
+      ) {
+        if (currentPortionRef.current !== 0) {
+          resetPortion(currentPortionRef.current - 1);
+        }
+        currentPortionRef.current = activePortion;
+        newPortion(activePortion - 1);
       }
     };
 
+    const handleMouseLeave = () => {
+      resetAll();
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 0) return;
+      const touch = e.touches[0];
+      const rect = deck.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, touchX / rect.width));
+      const activePortion = Math.ceil(percentage * cardsLength);
+
+      if (
+        currentPortionRef.current !== activePortion &&
+        activePortion > 0 &&
+        activePortion <= cardsLength
+      ) {
+        if (currentPortionRef.current !== 0) {
+          resetPortion(currentPortionRef.current - 1);
+        }
+        currentPortionRef.current = activePortion;
+        newPortion(activePortion - 1);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      resetAll();
+    };
+
     deck.addEventListener("mousemove", handleMouseMove);
-    deck.addEventListener("mouseleave", resetAll);
+    deck.addEventListener("mouseleave", handleMouseLeave);
+    deck.addEventListener("touchmove", handleTouchMove, { passive: true });
+    deck.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
       deck.removeEventListener("mousemove", handleMouseMove);
-      deck.removeEventListener("mouseleave", resetAll);
+      deck.removeEventListener("mouseleave", handleMouseLeave);
+      deck.removeEventListener("touchmove", handleTouchMove);
+      deck.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
   return (
     <section className="relative w-full py-20 md:py-28 bg-[#EAE3DB] text-[#141416] border-b border-[#141416]/10 select-none overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* ========================================================================= */}
         {/* OUT OF BOX: Heading & Description on the Warm Light Background           */}
         {/* ========================================================================= */}
@@ -231,11 +259,11 @@ export const AboutBtsSlider: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* PLAIN BLACK STAGE: Perfectly Centered Stage Housing the Fanned Cards      */}
+        {/* PLAIN BLACK STAGE: Widened Horizontal Stage Housing the Fanned Cards      */}
         {/* ========================================================================= */}
         <div
           ref={containerRef}
-          className="relative w-full rounded-[32px] sm:rounded-[40px] bg-[#0A0A0C] border border-[#141416]/30 p-6 sm:p-10 lg:p-14 shadow-2xl overflow-hidden"
+          className="relative w-full rounded-[32px] sm:rounded-[40px] bg-[#0A0A0C] border border-[#141416]/30 p-4 sm:p-6 lg:px-8 lg:py-12 shadow-2xl overflow-hidden"
         >
           {/* Lower Half Dotted Texture - Fills entire lower half seamlessly right to edges */}
           <div
@@ -267,7 +295,7 @@ export const AboutBtsSlider: React.FC = () => {
           {/* Stage Container: Cards Deck Area */}
           <div
             ref={deckRef}
-            className="relative z-10 w-full max-w-5xl mx-auto h-[380px] sm:h-[440px] lg:h-[480px] cursor-pointer flex items-center justify-center"
+            className="relative z-10 w-full max-w-7xl mx-auto h-[380px] sm:h-[440px] lg:h-[480px] cursor-pointer flex items-center justify-center overflow-visible"
           >
             {BTS_CLIPS.map((clip, i) => {
               const isMuted = mutedStates[clip.id] ?? true;
@@ -280,18 +308,22 @@ export const AboutBtsSlider: React.FC = () => {
                     cardsRef.current[i] = el;
                   }}
                   onClick={() => setActiveModalClip(clip)}
-                  className="absolute top-1/2 left-1/2 w-[270px] sm:w-[330px] md:w-[370px] lg:w-[400px] aspect-[16/11] select-none transition-shadow duration-300"
+                  onMouseEnter={() => activateCardByIndex(i)}
+                  className={`relative flex-shrink-0 w-[230px] sm:w-[290px] md:w-[340px] lg:w-[380px] aspect-[16/11] select-none transition-shadow duration-300 ${i > 0
+                      ? "-ml-[105px] sm:-ml-[150px] md:-ml-[190px] lg:-ml-[220px]"
+                      : ""
+                    }`}
                   style={{
-                    willChange: "transform",
+                    zIndex: INITIAL_CONFIG[i]?.zIndex ?? i + 2,
+                    willChange: "transform, opacity",
                   }}
                 >
                   {/* Tablet Bezel Outer Frame */}
                   <div
-                    className={`relative w-full h-full rounded-[22px] sm:rounded-[28px] p-2 sm:p-2.5 bg-[#0F0F13] border-2 transition-all duration-300 flex flex-col justify-between overflow-hidden ${
-                      isHovered
+                    className={`relative w-full h-full rounded-[22px] sm:rounded-[28px] p-2 sm:p-2.5 bg-[#0F0F13] border-2 transition-all duration-300 flex flex-col justify-between overflow-hidden ${isHovered
                         ? "border-[#7567EE] shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_35px_rgba(117,103,238,0.5)]"
                         : "border-white/15 hover:border-white/40 shadow-2xl"
-                    }`}
+                      }`}
                   >
                     {/* Clean Video Viewport */}
                     <div className="relative w-full h-full rounded-[16px] sm:rounded-[22px] overflow-hidden bg-black shadow-inner">
